@@ -15,5 +15,5 @@ Link to OLC::PixelGameEngine: https://github.com/OneLoneCoder/olcPixelGameEngine
 This folder contains Arduino projects
 
 ### Simon says
-simon_says is a game where a sequence is shown and the player has to input the correct sequence in order to adcvance.
+simon_says is a game where a sequence is shown and the player has to input the correct sequence in order to advance.
 This game is made on an Arduino Uno, it uses leds to show the sequence and buttons to enable input from the player.
