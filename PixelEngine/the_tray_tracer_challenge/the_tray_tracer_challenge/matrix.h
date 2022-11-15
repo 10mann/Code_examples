@@ -38,4 +38,11 @@ namespace RayTracer
 		Matrix operator*(Matrix const& matrix);
 		Tuple operator*(Tuple const& tuple);
 	};
+
+	Matrix translation(double x, double y, double z);
+	Matrix scaling(double x, double y, double z);
+	Matrix rotationX(double rotation);
+	Matrix rotationY(double rotation);
+	Matrix rotationZ(double rotation);
+	Matrix shearing(double xY, double xZ, double yX, double yZ, double zX, double zY);
 }

@@ -2,6 +2,7 @@
 #include "DoubleHelpers.h"
 
 #include <iostream>
+#include <cmath>
 
 namespace RayTracer
 {
@@ -255,5 +256,67 @@ namespace RayTracer
 			m[3][3] * tuple.w;
 
 		return Tuple(x, y, z, w);
+	}
+
+	Matrix translation(double x, double y, double z)
+	{
+		Matrix transformMatrix = Matrix::identityMatrix;
+		transformMatrix[0][3] = x;
+		transformMatrix[1][3] = y;
+		transformMatrix[2][3] = z;
+
+		return transformMatrix;
+	}
+
+	Matrix scaling(double x, double y, double z)
+	{
+		Matrix transformMatrix = Matrix::identityMatrix;
+		transformMatrix[0][0] = x;
+		transformMatrix[1][1] = y;
+		transformMatrix[2][2] = z;
+
+		return transformMatrix;
+	}
+
+	Matrix rotationX(double rotation)
+	{
+		Matrix rotationMatrix = Matrix::identityMatrix;
+		rotationMatrix[1][1] = cos(rotation);
+		rotationMatrix[2][2] = cos(rotation);
+		rotationMatrix[2][1] = sin(rotation);
+		rotationMatrix[1][2] = -sin(rotation);
+		return rotationMatrix;
+	}
+
+	Matrix rotationY(double rotation)
+	{
+		Matrix rotationMatrix = Matrix::identityMatrix;
+		rotationMatrix[0][0] = cos(rotation);
+		rotationMatrix[2][2] = cos(rotation);
+		rotationMatrix[0][2] = sin(rotation);
+		rotationMatrix[2][0] = -sin(rotation);
+		return rotationMatrix;
+	}
+
+	Matrix rotationZ(double rotation)
+	{
+		Matrix rotationMatrix = Matrix::identityMatrix;
+		rotationMatrix[0][0] = cos(rotation);
+		rotationMatrix[1][1] = cos(rotation);
+		rotationMatrix[1][0] = sin(rotation);
+		rotationMatrix[0][1] = -sin(rotation);
+		return rotationMatrix;
+	}
+
+	Matrix shearing(double xY, double xZ, double yX, double yZ, double zX, double zY)
+	{
+		Matrix shearingMatrix = Matrix::identityMatrix;
+		shearingMatrix[0][1] = xY;
+		shearingMatrix[0][2] = xZ;
+		shearingMatrix[1][0] = yX;
+		shearingMatrix[1][2] = yZ;
+		shearingMatrix[2][0] = zX;
+		shearingMatrix[2][1] = zY;
+		return shearingMatrix;
 	}
 }
