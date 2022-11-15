@@ -1,0 +1,60 @@
+#include "color.h"
+
+#include "DoubleHelpers.h"
+
+#include <iostream>
+
+namespace RayTracer
+{
+	using DoubleHelpers::isEqualDouble;
+
+	// ============================ Constructors ============================
+	Color::Color()
+		:red(0.0), green(0.0), blue(0.0), alpha(0.0)
+	{
+
+	}
+
+	Color::Color(double r, double g, double b, double a)
+		:red(r), green(g), blue(b), alpha(a)
+	{
+
+	}
+
+
+	// ============================ Methods ============================
+
+
+	// ============================ Operators ============================
+	Color Color::operator+(Color const& color)
+	{
+		return Color(red + color.red, green + color.green, blue + color.blue, alpha + color.alpha);
+	}
+
+	Color Color::operator-(Color const& color)
+	{
+		return Color(red - color.red, green - color.green, blue - color.blue, alpha - color.alpha);
+	}
+
+	bool operator==(Color const& c1, Color const& c2)
+	{
+		return ((isEqualDouble(c1.red, c2.red)) &&
+			(isEqualDouble(c1.green, c2.green)) &&
+			(isEqualDouble(c1.blue, c2.blue)));
+	}
+
+	Color Color::operator*(double n)
+	{
+		return Color(red * n, green * n, blue * n);
+	}
+
+	Color RayTracer::Color::operator*(Color color)
+	{
+		return Color(red * color.red, green * color.green, blue * color.blue);
+	}
+
+	void Color::print()
+	{
+		std::cout << "(" << red << ", " << green << ", " << blue << ")";
+	}
+}
