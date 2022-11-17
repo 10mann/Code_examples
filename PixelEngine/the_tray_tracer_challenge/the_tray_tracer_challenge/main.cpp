@@ -6,6 +6,10 @@
 #include "color.h"
 #include "matrix.h"
 #include "DoubleHelpers.h"
+#include "ray.h"
+#include "sphere.h"
+#include "intersection.h"
+#include "intersection_list.h"
 
 #include <iostream>
 #include <chrono>
@@ -18,6 +22,10 @@ using RayTracer::rotationY;
 using RayTracer::rotationZ;
 using RayTracer::translation;
 using RayTracer::scaling;
+using RayTracer::Ray;
+using RayTracer::Sphere;
+using RayTracer::Intersection;
+using RayTracer::IntersectionList;
 using DoubleHelpers::MATH_PI;
 
 void benchmarkMatrixMult()
@@ -78,6 +86,20 @@ void benchmarkMatrixMult()
 	avgDuration /= testTimes;
 
 	std::cout << "Exectuion time: " << avgDuration << std::endl;
+}
+
+void drawClock(olc::PixelGameEngine* engine)
+{		
+	// Draw clock using rotation matrix
+	Tuple clockP = RayTracer::point(0, 1, 0);
+
+	for (double rads = 0.0; rads < (2.0 * MATH_PI); rads += (MATH_PI / 6.0))
+	{
+		Tuple hourP = rotationZ(rads) * clockP;
+		hourP = scaling(150, 150, 150) * hourP;
+		hourP = translation(engine->ScreenWidth() / 2, engine->ScreenHeight() / 2, 0) * hourP;
+		engine->FillCircle({ (int)(hourP.x), (int)(hourP.y) }, 3);
+	}
 }
 
 class Projectile
@@ -149,17 +171,14 @@ public:
 			RayTracer::Tuple(-0.0, 0.0, 0.0, 0.0),
 			RayTracer::Tuple(0.0, -0.4, 0.0, 0.0));
 
-		// Draw clock using rotation matrix
-		Tuple clockP = RayTracer::point(0, 1, 0);
+		drawClock(this);
 
-		for (double rads = 0.0; rads < (2.0 * MATH_PI); rads += (MATH_PI / 6.0))
-		{
-			Tuple hourP = rotationZ(rads) * clockP;
-			hourP = scaling(150, 150, 150) * hourP;
-			hourP = translation(ScreenWidth() / 2, ScreenHeight() / 2, 0) * hourP;
-			FillCircle({ (int)(hourP.x), (int)(hourP.y) }, 3);
-		}
-		
+		Sphere sphere;
+		Intersection i1(1, &sphere);
+		Intersection i2(2, &sphere);
+		IntersectionList list(i1, i2);
+		Intersection iHit = list.hit();
+		std::cout << iHit.i << std::endl;
 		return true;
 	}
 

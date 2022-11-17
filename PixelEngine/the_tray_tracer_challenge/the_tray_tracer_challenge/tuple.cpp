@@ -47,27 +47,32 @@ namespace RayTracer
 			isEqualDouble(w, tuple.w));
 	}
 
-	double RayTracer::Tuple::getMagnitude()
+	double Tuple::getMagnitude()
 	{
 		return std::sqrt((x * x) + (y * y) + (z * z) + (w * w));
 	}
 
-	Tuple RayTracer::Tuple::getNormalized()
+	double Tuple::getMagnitudeSquared()
+	{
+		return (x * x) + (y * y) + (z * z) + (w * w);
+	}
+
+	Tuple Tuple::getNormalized()
 	{
 		return (*this) / this->getMagnitude();
 	}
 
-	void RayTracer::Tuple::normalize()
+	void Tuple::normalize()
 	{
 		(*this) = (*this) / this->getMagnitude();
 	}
 
-	double RayTracer::Tuple::dotProduct(Tuple const& tuple)
+	double Tuple::dotProduct(Tuple const& tuple)
 	{
 		return ((x * tuple.x) + (y * tuple.y) + (z * tuple.z) + (w * tuple.w));
 	}
 
-	Tuple RayTracer::Tuple::crossProduct(Tuple const& tuple)
+	Tuple Tuple::crossProduct(Tuple const& tuple)
 	{
 		return Tuple(
 			(y * tuple.z) - (tuple.y * z), 
@@ -88,7 +93,7 @@ namespace RayTracer
 		return Tuple(x - tuple.x, y - tuple.y, z - tuple.z, w - tuple.w);
 	}
 
-	bool RayTracer::operator==(Tuple const& t1, Tuple const& t2)
+	bool operator==(Tuple const& t1, Tuple const& t2)
 	{
 		return ((isEqualDouble(t1.x, t2.x)) &&
 			(isEqualDouble(t1.y, t2.y)) &&

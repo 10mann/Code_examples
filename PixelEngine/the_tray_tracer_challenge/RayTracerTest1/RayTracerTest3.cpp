@@ -10,9 +10,9 @@ using RayTracer::Matrix;
 using RayTracer::Tuple;
 using DoubleHelpers::isEqualDouble;
 
-namespace RayTracerTest2
+namespace RayTracerTest3
 {
-	TEST_CLASS(RayTracerTest2)
+	TEST_CLASS(RayTracerTest3)
 	{
 	public:
 

@@ -17,9 +17,9 @@ using RayTracer::rotationZ;
 using RayTracer::shearing;
 using DoubleHelpers::MATH_PI;
 
-namespace RayTracerTest2
+namespace RayTracerTest4
 {
-	TEST_CLASS(RayTracerTest2)
+	TEST_CLASS(RayTracerTest4)
 	{
 	public:
 

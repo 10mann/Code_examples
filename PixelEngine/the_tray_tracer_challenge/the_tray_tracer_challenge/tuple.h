@@ -21,6 +21,7 @@ namespace RayTracer
 		bool isVector(void);
 		bool isEqual(Tuple const& tuple);
 		double getMagnitude();
+		double getMagnitudeSquared();
 		Tuple getNormalized();
 		void normalize();
 		double dotProduct(Tuple const& tuple);

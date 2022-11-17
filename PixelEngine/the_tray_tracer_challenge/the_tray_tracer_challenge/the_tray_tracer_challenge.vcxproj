@@ -128,17 +128,28 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="canvas.cpp" />
+    <ClCompile Include="class_source_template.cpp" />
     <ClCompile Include="color.cpp" />
     <ClCompile Include="DoubleHelpers.cpp" />
+    <ClCompile Include="intersection.cpp" />
+    <ClCompile Include="intersection_list.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="matrix.cpp" />
+    <ClCompile Include="ray.cpp" />
+    <ClCompile Include="sphere.cpp" />
     <ClCompile Include="tuple.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="canvas.h" />
     <ClInclude Include="color.h" />
+    <ClInclude Include="class_header_template.h" />
+    <ClInclude Include="intersection.h" />
+    <ClInclude Include="intersection_list.h" />
     <ClInclude Include="matrix.h" />
     <ClInclude Include="olcPixelGameEngine.h" />
+    <ClInclude Include="ray.h" />
+    <ClInclude Include="shape.h" />
+    <ClInclude Include="sphere.h" />
     <ClInclude Include="tuple.h" />
     <ClInclude Include="DoubleHelpers.h" />
   </ItemGroup>
