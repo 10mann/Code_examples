@@ -25,6 +25,7 @@ namespace RayTracer
 		// Methods
 		void print(void);
 		void transpose(void);
+		Matrix getTranspose(void);
 		double getDeterminant(void);
 		Matrix getSubMatrix(int row, int col);
 		double getMinor(int row, int col);
@@ -34,9 +35,13 @@ namespace RayTracer
 
 		// Operators
 		double* operator[](int index);
-		bool operator==(Matrix const& matrix);
-		Matrix operator*(Matrix const& matrix);
+		friend bool operator== (Matrix const& m1, Matrix const& m2);
+		//bool operator==(Matrix& matrix);
+		//Matrix operator*(Matrix const& matrix);
+		//friend Matrix operator* (const Matrix& m1, const Matrix& m2);
+		friend Matrix operator* (Matrix m1, Matrix m2);
 		Tuple operator*(Tuple const& tuple);
+		friend Tuple operator* (Matrix const& m, Tuple const& tuple);
 	};
 
 	Matrix translation(double x, double y, double z);

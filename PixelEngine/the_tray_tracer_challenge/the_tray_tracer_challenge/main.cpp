@@ -10,6 +10,9 @@
 #include "sphere.h"
 #include "intersection.h"
 #include "intersection_list.h"
+#include "material.h"
+#include "point_light.h"
+#include "world.h"
 
 #include <iostream>
 #include <chrono>
@@ -17,16 +20,27 @@
 
 using RayTracer::Matrix;
 using RayTracer::Tuple;
+using RayTracer::Ray;
+using RayTracer::Sphere;
+using RayTracer::Intersection;
+using RayTracer::IntersectionList;
+using RayTracer::World;
+using RayTracer::Material;
+using RayTracer::Color;
+using RayTracer::PointLight;
+using RayTracer::Canvas;
+
 using RayTracer::rotationX;
 using RayTracer::rotationY;
 using RayTracer::rotationZ;
 using RayTracer::translation;
 using RayTracer::scaling;
-using RayTracer::Ray;
-using RayTracer::Sphere;
-using RayTracer::Intersection;
-using RayTracer::IntersectionList;
+using RayTracer::getLighting;
+using RayTracer::createDfaultWorld;
+
 using DoubleHelpers::MATH_PI;
+
+
 
 void benchmarkMatrixMult()
 {
@@ -97,9 +111,180 @@ void drawClock(olc::PixelGameEngine* engine)
 	{
 		Tuple hourP = rotationZ(rads) * clockP;
 		hourP = scaling(150, 150, 150) * hourP;
-		hourP = translation(engine->ScreenWidth() / 2, engine->ScreenHeight() / 2, 0) * hourP;
+		hourP = translation(engine->ScreenWidth() / 2.0, engine->ScreenHeight() / 2.0, 0) * hourP;
 		engine->FillCircle({ (int)(hourP.x), (int)(hourP.y) }, 3);
 	}
+}
+
+void drawCirclebByRay(olc::PixelGameEngine* engine)
+{
+	int width = engine->ScreenWidth();
+	int height = engine->ScreenHeight();
+	Sphere s;
+	//Matrix m = RayTracer::rotationY(DoubleHelpers::MATH_PI / 4);
+	//m = m * RayTracer::scaling(1, 1, 0.5);
+	//s.setTransform(m);
+	double wallZ = 10;
+	Tuple origin = RayTracer::point(0, 0, -5);
+	double wallSize = ((wallZ - origin.z) / std::abs(origin.z)) * 2 + 1;
+	double pixelSizeY = wallSize / height;
+	double pixelSizeX = wallSize / height;
+
+	for (int y = 0; y < height; y++)
+	{
+		double worldY = (wallSize / 2) - (pixelSizeY * y);
+		for (int x = 0; x < width; x++)
+		{
+			double worldX = -(wallSize / 2) + (pixelSizeX * x);
+			Tuple wallPoint = RayTracer::point(worldX, worldY, wallZ);
+			Tuple dir = (wallPoint - origin);
+			dir.normalize();
+			Ray ray(origin, dir);
+			if (ray.getIntersection(s).count() > 0)
+			{
+				engine->Draw({ x, y }, olc::Pixel(0, 255, 0));
+			}
+			else
+			{
+				engine->Draw({ x, y }, olc::Pixel(0, 0, 0));
+			}
+		}
+	}
+}
+
+void drawSpherebByRay(olc::PixelGameEngine* engine)
+{
+	//int width = engine->ScreenWidth();
+	//int height = engine->ScreenHeight();
+	//Canvas canvas(width, height);
+	//Sphere s;
+	//s.material = Material();
+	//s.material.color = Color(0.25, 0.74, 0.96);
+	//s.material.shininess = 200;
+	//PointLight light(Color(1, 1, 1), RayTracer::point(0, 0, -10));
+
+	//double wallZ = 10;
+	//Tuple origin = RayTracer::point(0, 0, -5);
+	////double wallSize = ((wallZ - origin.z) / std::abs(origin.z)) * 2 + 1;
+	//double wallSize = 10;
+	//double pixelSizeY = wallSize / height;
+	//double pixelSizeX = wallSize / height;
+	//
+	//for (int y = 0; y < height; y++)
+	//{
+	//	double worldY = (wallSize / 2) - (pixelSizeY * y);
+	//	for (int x = 0; x < width; x++)
+	//	{
+	//		double worldX = -(wallSize / 2) + (pixelSizeX * x);
+	//		Tuple wallPoint = RayTracer::point(worldX, worldY, wallZ);
+	//		Tuple dir = (wallPoint - origin);
+	//		dir.normalize();
+	//		Ray ray(origin, dir);
+	//		IntersectionList hits = ray.getIntersection(&s);
+	//		if (hits.count() > 0)
+	//		{
+	//			Intersection hit = hits.hit();
+	//			Tuple hitPos = ray.getPosition(hit.i);
+	//			Tuple normal = s.getNormal(hitPos);
+	//			Tuple eyeDir = -ray.direction;
+	//			Color pixelColor = getLighting(hit.object->material, light, hitPos, eyeDir, normal);
+	//			int16_t colorR = pixelColor.red * 255;
+	//			if (colorR > 255)
+	//			{
+	//				colorR = 255;
+	//			}
+
+	//			int16_t colorG = pixelColor.green * 255;
+	//			if (colorG > 255)
+	//			{
+	//				colorG = 255;
+	//			}
+
+	//			int16_t colorB = pixelColor.blue * 255;
+	//			if (colorB > 255)
+	//			{
+	//				colorB = 255;
+	//			}
+	//			engine->Draw({ x, height - y }, olc::Pixel(colorR, colorG, colorB));
+	//			canvas.writePixel(x, y, pixelColor);
+	//		}
+	//		else
+	//		{
+	//			engine->Draw({ x, y }, olc::Pixel(0, 0, 0));
+	//		}
+	//	}
+	//}
+
+	//std::ofstream file("sphere.ppm");
+	//file << canvas.getPPM();
+	//file.close();
+}
+
+long long benchmarkDrawSphere(int iterations)
+{
+	int width = 680;
+	int height = 680;
+	Canvas canvas(width, height);
+	Sphere s;
+	s.material = Material();
+	s.material.color = Color(0.25, 0.74, 0.96);
+	s.material.shininess = 200;
+	PointLight light(Color(1, 1, 1), RayTracer::point(0, 0, -10));
+
+	double wallZ = 10;
+	Tuple origin = RayTracer::point(0, 0, -5);
+	//double wallSize = ((wallZ - origin.z) / std::abs(origin.z)) * 2 + 1;
+	double wallSize = 10;
+	double pixelSizeY = wallSize / height;
+	double pixelSizeX = wallSize / height;
+	auto timeStart = std::chrono::high_resolution_clock::now();
+	for (int it = 0; it < iterations; it++)
+	{
+		for (int y = 0; y < height; y++)
+		{
+			double worldY = (wallSize / 2) - (pixelSizeY * y);
+			for (int x = 0; x < width; x++)
+			{
+				double worldX = -(wallSize / 2) + (pixelSizeX * x);
+				Tuple wallPoint = RayTracer::point(worldX, worldY, wallZ);
+				Tuple dir = (wallPoint - origin);
+				dir.normalize();
+				Ray ray(origin, dir);
+				IntersectionList hits = ray.getIntersection(s);
+				if (hits.count() > 0)
+				{
+					Intersection hit = hits.hit();
+					Tuple hitPos = ray.getPosition(hit.i);
+					Tuple normal = s.getNormal(hitPos);
+					Tuple eyeDir = -ray.direction;
+					Color pixelColor = getLighting(hit.object.material, light, hitPos, eyeDir, normal);
+					int16_t colorR = pixelColor.red * 255;
+					if (colorR > 255)
+					{
+						colorR = 255;
+					}
+
+					int16_t colorG = pixelColor.green * 255;
+					if (colorG > 255)
+					{
+						colorG = 255;
+					}
+
+					int16_t colorB = pixelColor.blue * 255;
+					if (colorB > 255)
+					{
+						colorB = 255;
+					}
+					canvas.writePixel(x, y, pixelColor);
+				}
+			}
+		}
+	}
+	auto timeEnd = std::chrono::high_resolution_clock::now();
+	auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(timeEnd - timeStart);
+
+
+	return duration.count();
 }
 
 class Projectile
@@ -171,14 +356,27 @@ public:
 			RayTracer::Tuple(-0.0, 0.0, 0.0, 0.0),
 			RayTracer::Tuple(0.0, -0.4, 0.0, 0.0));
 
-		drawClock(this);
+		//drawClock(this);
+		//drawCirclebByRay(this);
 
-		Sphere sphere;
-		Intersection i1(1, &sphere);
-		Intersection i2(2, &sphere);
-		IntersectionList list(i1, i2);
-		Intersection iHit = list.hit();
-		std::cout << iHit.i << std::endl;
+		//auto timeStart = std::chrono::high_resolution_clock::now();
+		//drawSpherebByRay(this);
+		//auto timeEnd = std::chrono::high_resolution_clock::now();
+		//auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(timeEnd - timeStart);
+
+		//long long duration = benchmarkDrawSphere(10);
+		//std::cout << "Time elapsed: " << duration << std::endl;
+
+		World world = createDfaultWorld();
+		Ray ray(RayTracer::point(0, 0, -5), RayTracer::vector(0, 0, 1));
+		IntersectionList intersections = world.getIntersections(ray);
+		//intersections.sort();
+		std::cout << "Intersections: " << intersections.count() << std::endl;
+		for (auto& it : intersections.intersections)
+		{
+			std::cout << it.i << ", ";
+		}
+		std::cout << std::endl;
 		return true;
 	}
 
@@ -217,7 +415,7 @@ Game::Game()
 int main()
 {
 	Game game;
-	if (game.Construct(680, 400, 1, 1))
+	if (game.Construct(680, 680, 1, 1))
 	{
 		game.Start();
 	}

@@ -8,18 +8,19 @@
 #include "../the_tray_tracer_challenge/intersection.h"
 #include "../the_tray_tracer_challenge/intersection_list.h"
 
-#include <vector>
-
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 using RayTracer::Ray;
 using RayTracer::Tuple;
 using RayTracer::point;
 using RayTracer::vector;
+using RayTracer::Matrix;
 using RayTracer::Sphere;
 using RayTracer::Intersection;
 using RayTracer::IntersectionList;
 using DoubleHelpers::isEqualDouble;
+using RayTracer::translation;
+using RayTracer::scaling;
 
 namespace RayTracerTest5
 {
@@ -103,22 +104,22 @@ namespace RayTracerTest5
 		{
 			Logger::WriteMessage("Testing createIntersection");
 			Sphere sphere;
-			Intersection intersection(3.5, &sphere);
+			Intersection intersection(3.5, sphere);
 			Assert::IsTrue(isEqualDouble(intersection.i, 3.5));
-			Assert::IsTrue(&sphere == intersection.object);
+			Assert::IsTrue(sphere == intersection.object);
 		}
 
 		TEST_METHOD(TestCreateIntersectionList)
 		{
 			Logger::WriteMessage("Testing createIntersectionList");
 			Sphere sphere;
-			Intersection intersection1(1, &sphere);
-			Intersection intersection2(2, &sphere);
+			Intersection intersection1(1, sphere);
+			Intersection intersection2(2, sphere);
 
 			IntersectionList intersections(intersection1, intersection2);
 			Assert::IsTrue(intersections.count() == 2);
-			Assert::IsTrue(&sphere == intersections[0].object);
-			Assert::IsTrue(&sphere == intersections[1].object);
+			Assert::IsTrue(sphere == intersections[0].object);
+			Assert::IsTrue(sphere == intersections[1].object);
 			Assert::IsTrue(isEqualDouble(1, intersections[0].i));
 			Assert::IsTrue(isEqualDouble(2, intersections[1].i));
 		}
@@ -129,17 +130,17 @@ namespace RayTracerTest5
 			Ray ray(point(0, 0, -5), vector(0, 0, 1));
 			Sphere sphere;
 
-			IntersectionList intersections = ray.getIntersection(&sphere);
-			Assert::IsTrue((intersections[0].object == &sphere));
-			Assert::IsTrue((intersections[1].object == &sphere));
+			IntersectionList intersections = ray.getIntersection(sphere);
+			Assert::IsTrue((intersections[0].object == sphere));
+			Assert::IsTrue((intersections[1].object == sphere));
 		}
 
 		TEST_METHOD(TestGetHit)
 		{
 			Logger::WriteMessage("Testing getHit");
 			Sphere sphere;
-			Intersection i1(1, &sphere);
-			Intersection i2(2, &sphere);
+			Intersection i1(1, sphere);
+			Intersection i2(2, sphere);
 			IntersectionList list(i1, i2);
 			Intersection iHit = list.hit();
 			Assert::IsTrue(iHit == i1);
@@ -149,8 +150,8 @@ namespace RayTracerTest5
 		{
 			Logger::WriteMessage("Testing getHitOneInvalid");
 			Sphere sphere;
-			Intersection i1(-1, &sphere);
-			Intersection i2(2, &sphere);
+			Intersection i1(-1, sphere);
+			Intersection i2(2, sphere);
 			IntersectionList list(i1, i2);
 			Intersection iHit = list.hit();
 			Assert::IsTrue(iHit == i2);
@@ -160,8 +161,8 @@ namespace RayTracerTest5
 		{
 			Logger::WriteMessage("Testing getHitAllInvalid");
 			Sphere sphere;
-			Intersection i1(-1, &sphere);
-			Intersection i2(-2, &sphere);
+			Intersection i1(-1, sphere);
+			Intersection i2(-2, sphere);
 			IntersectionList list(i1, i2);
 			Intersection iHit = list.hit();
 			Assert::IsTrue(iHit == Intersection::empty);
@@ -171,15 +172,79 @@ namespace RayTracerTest5
 		{
 			Logger::WriteMessage("Testing getHitFourIntersects");
 			Sphere sphere;
-			Intersection i1(5, &sphere);
-			Intersection i2(7, &sphere);
-			Intersection i3(-3, &sphere);
-			Intersection i4(2, &sphere);
+			Intersection i1(5, sphere);
+			Intersection i2(7, sphere);
+			Intersection i3(-3, sphere);
+			Intersection i4(2, sphere);
 			IntersectionList list(i1, i2);
 			list.add(i3);
 			list.add(i4);
 			Intersection iHit = list.hit();
 			Assert::IsTrue(iHit == i4);
+		}
+
+		TEST_METHOD(TestTransformRay)
+		{
+			Logger::WriteMessage("Testing TransformRay");
+			Ray ray(point(1, 2, 3), vector(0, 1, 0));
+
+			Matrix m = translation(3, 4, 5);
+			Ray ray2 = ray.transform(m);
+
+			Assert::IsTrue(ray2.origin == point(4, 6, 8));
+			Assert::IsTrue(ray2.direction == vector(0, 1, 0));
+		}
+
+		TEST_METHOD(TestScaleRay)
+		{
+			Logger::WriteMessage("Testing scaleRay");
+			Ray ray(point(1, 2, 3), vector(0, 1, 0));
+
+			Matrix m = scaling(2, 3, 4);
+			Ray ray2 = ray.transform(m);
+
+			Assert::IsTrue(ray2.origin == point(2, 6, 12));
+			Assert::IsTrue(ray2.direction == vector(0, 3, 0));
+		}
+
+		TEST_METHOD(TestSphereNoTransform)
+		{
+			Logger::WriteMessage("Testing sphereNoTransform");
+			Sphere sphere;
+			Assert::IsTrue(sphere.transform == Matrix::identityMatrix);
+		}
+
+		TEST_METHOD(TestSphereSetTransform)
+		{
+			Logger::WriteMessage("Testing sphereSetTransform");
+			Sphere sphere;
+			Matrix m = translation(2, 3, 4);
+			sphere.setTransform(m);
+			Assert::IsTrue(sphere.transform == m);
+		}
+
+		TEST_METHOD(TestSphereIntersectTransformedScaled)
+		{
+			Logger::WriteMessage("Testing sphereIntersectTransformedScaled");
+			Ray ray(point(0, 0, -5), vector(0, 0, 1));
+			Sphere sphere;
+			Matrix m = scaling(2, 2, 2);
+			sphere.setTransform(m);
+			IntersectionList intersects = ray.getIntersection(sphere);
+			Assert::IsTrue(intersects.count() == 2);
+			Assert::IsTrue(isEqualDouble(intersects[0].i, 3));
+			Assert::IsTrue(isEqualDouble(intersects[1].i, 7));
+		}
+
+		TEST_METHOD(TestSphereIntersectTransformedTranslated)
+		{
+			Logger::WriteMessage("Testing sphereIntersectTransformedTranslated");
+			Ray ray(point(0, 0, -5), vector(0, 0, 1));
+			Sphere sphere;
+			Matrix m = translation(5, 0, 0);
+			sphere.setTransform(m);
+			IntersectionList intersects = ray.getIntersection(sphere);
+			Assert::IsTrue(intersects.count() == 0);
 		}
 	};
 }

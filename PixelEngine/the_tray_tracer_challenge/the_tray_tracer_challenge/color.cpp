@@ -48,9 +48,19 @@ namespace RayTracer
 		return Color(red * n, green * n, blue * n);
 	}
 
+	Color operator*(Color const& c1, double n)
+	{
+		return Color(c1.red * n, c1.green * n, c1.blue * n);
+	}
+
 	Color RayTracer::Color::operator*(Color color)
 	{
 		return Color(red * color.red, green * color.green, blue * color.blue);
+	}
+
+	Color RayTracer::operator*(Color const& c1, Color const& c2)
+	{
+		return Color(c1.red * c2.red, c1.green * c2.green, c1.blue * c2.blue);
 	}
 
 	void Color::print()

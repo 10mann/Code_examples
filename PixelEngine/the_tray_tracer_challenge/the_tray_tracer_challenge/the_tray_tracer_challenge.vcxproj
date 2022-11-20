@@ -44,6 +44,7 @@
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
+    <EnableASAN>true</EnableASAN>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
@@ -134,10 +135,13 @@
     <ClCompile Include="intersection.cpp" />
     <ClCompile Include="intersection_list.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="material.cpp" />
     <ClCompile Include="matrix.cpp" />
+    <ClCompile Include="point_light.cpp" />
     <ClCompile Include="ray.cpp" />
     <ClCompile Include="sphere.cpp" />
     <ClCompile Include="tuple.cpp" />
+    <ClCompile Include="world.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="canvas.h" />
@@ -145,13 +149,16 @@
     <ClInclude Include="class_header_template.h" />
     <ClInclude Include="intersection.h" />
     <ClInclude Include="intersection_list.h" />
+    <ClInclude Include="material.h" />
     <ClInclude Include="matrix.h" />
     <ClInclude Include="olcPixelGameEngine.h" />
+    <ClInclude Include="point_light.h" />
     <ClInclude Include="ray.h" />
     <ClInclude Include="shape.h" />
     <ClInclude Include="sphere.h" />
     <ClInclude Include="tuple.h" />
     <ClInclude Include="DoubleHelpers.h" />
+    <ClInclude Include="world.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

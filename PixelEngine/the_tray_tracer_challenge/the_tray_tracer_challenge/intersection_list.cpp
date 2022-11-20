@@ -1,5 +1,7 @@
 #include "intersection_list.h"
 
+#include <algorithm>
+
 namespace RayTracer
 {
 	// ========================= Constructors ==========================
@@ -43,9 +45,22 @@ namespace RayTracer
 		return ret;
 	}
 
-	void IntersectionList::add(Intersection intersect)
+	void IntersectionList::add(Intersection& intersect)
 	{
 		intersections.push_back(intersect);
+	}
+
+	void IntersectionList::addList(IntersectionList& intersect)
+	{
+		for (auto& in : intersect.intersections)
+		{
+			add(in);
+		}
+	}
+
+	void IntersectionList::sort(void)
+	{
+		std::sort(intersections.begin(), intersections.end(), [](const Intersection& i1, const Intersection& i2) -> bool { return (i1.i < i2.i); });
 	}
 
 

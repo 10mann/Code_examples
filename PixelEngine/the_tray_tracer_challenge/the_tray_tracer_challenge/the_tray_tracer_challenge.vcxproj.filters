@@ -45,10 +45,19 @@
     <ClCompile Include="sphere.cpp">
       <Filter>Resource Files</Filter>
     </ClCompile>
-    <ClCompile Include="intersection.cpp">
+    <ClCompile Include="intersection_list.cpp">
       <Filter>Resource Files</Filter>
     </ClCompile>
-    <ClCompile Include="intersection_list.cpp">
+    <ClCompile Include="point_light.cpp">
+      <Filter>Resource Files</Filter>
+    </ClCompile>
+    <ClCompile Include="material.cpp">
+      <Filter>Resource Files</Filter>
+    </ClCompile>
+    <ClCompile Include="world.cpp">
+      <Filter>Resource Files</Filter>
+    </ClCompile>
+    <ClCompile Include="intersection.cpp">
       <Filter>Resource Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -81,6 +90,15 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="shape.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="point_light.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="material.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="world.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="intersection.h">

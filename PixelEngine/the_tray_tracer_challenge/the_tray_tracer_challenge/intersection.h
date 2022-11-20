@@ -1,6 +1,7 @@
 #pragma once
 
 #include "shape.h"
+#include "sphere.h"
 
 
 namespace RayTracer
@@ -10,18 +11,18 @@ namespace RayTracer
 	public:
 		// Variables
 		double i;
-		const Shape* object;
+		Sphere object;
 
 		static const Intersection empty;
 
 		// Constructors
 		Intersection();
-		Intersection(double i, const Shape* object);
+		Intersection(double i, const Sphere object);
 
 		// Methods
 
-
 		// Operators
 		bool operator==(const Intersection& intersect);
+		Intersection operator=(Intersection intersect);
 	};
 }

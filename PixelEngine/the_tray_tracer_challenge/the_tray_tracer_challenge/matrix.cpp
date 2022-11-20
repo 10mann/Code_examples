@@ -94,6 +94,13 @@ namespace RayTracer
 		}
 	}
 
+	Matrix Matrix::getTranspose(void)
+	{
+		Matrix m = *this;
+		m.transpose();
+		return m;
+	}
+
 	double Matrix::getDeterminant(void)
 	{
 		double det = 0;
@@ -194,14 +201,14 @@ namespace RayTracer
 		return ret;
 	}
 
-	bool Matrix::operator==(Matrix const& matrix)
+	bool operator==(Matrix const& m1, Matrix const& m2)
 	{
 		bool ret = true;
-		for (int i = 0; i < rows; i++)
+		for (int i = 0; i < m1.rows; i++)
 		{
-			for (int j = 0; j < cols; j++)
+			for (int j = 0; j < m1.cols; j++)
 			{
-				ret = isEqualDouble(m[i][j], matrix.m[i][j]);
+				ret = isEqualDouble(m1.m[i][j], m2.m[i][j]);
 				if (false == ret)
 				{
 					break;
@@ -211,18 +218,54 @@ namespace RayTracer
 		return ret;
 	}
 
-	Matrix Matrix::operator*(Matrix const& matrix)
+	//Matrix Matrix::operator*(Matrix const& matrix)
+	//{
+	//	Matrix prodMatrix;
+	//	for (int i = 0; i < rows; i++)
+	//	{
+	//		for (int j = 0; j < cols; j++)
+	//		{
+	//			prodMatrix[i][j] =
+	//				m[i][0] * matrix.m[0][j] +
+	//				m[i][1] * matrix.m[1][j] +
+	//				m[i][2] * matrix.m[2][j] +
+	//				m[i][3] * matrix.m[3][j];
+	//		}
+	//	}
+
+	//	return prodMatrix;
+	//}
+
+	//Matrix operator*(const Matrix& m1, const Matrix& m2)
+	//{
+	//	Matrix prodMatrix;
+	//	for (int i = 0; i < m1.rows; i++)
+	//	{
+	//		for (int j = 0; j < m1.cols; j++)
+	//		{
+	//			prodMatrix[i][j] =
+	//				m1.m[i][0] * m2.m[0][j] +
+	//				m1.m[i][1] * m2.m[1][j] +
+	//				m1.m[i][2] * m2.m[2][j] +
+	//				m1.m[i][3] * m2.m[3][j];
+	//		}
+	//	}
+
+	//	return prodMatrix;
+	//}
+
+	Matrix operator*(Matrix m1, Matrix m2)
 	{
 		Matrix prodMatrix;
-		for (int i = 0; i < rows; i++)
+		for (int i = 0; i < m1.rows; i++)
 		{
-			for (int j = 0; j < cols; j++)
+			for (int j = 0; j < m1.cols; j++)
 			{
 				prodMatrix[i][j] =
-					m[i][0] * matrix.m[0][j] +
-					m[i][1] * matrix.m[1][j] +
-					m[i][2] * matrix.m[2][j] +
-					m[i][3] * matrix.m[3][j];
+					m1.m[i][0] * m2.m[0][j] +
+					m1.m[i][1] * m2.m[1][j] +
+					m1.m[i][2] * m2.m[2][j] +
+					m1.m[i][3] * m2.m[3][j];
 			}
 		}
 
@@ -257,6 +300,37 @@ namespace RayTracer
 
 		return Tuple(x, y, z, w);
 	}
+
+	Tuple operator*(Matrix const& m, Tuple const& tuple)
+	{
+		double x =
+			m.m[0][0] * tuple.x +
+			m.m[0][1] * tuple.y +
+			m.m[0][2] * tuple.z +
+			m.m[0][3] * tuple.w;
+
+		double y =
+			m.m[1][0] * tuple.x +
+			m.m[1][1] * tuple.y +
+			m.m[1][2] * tuple.z +
+			m.m[1][3] * tuple.w;
+
+		double z =
+			m.m[2][0] * tuple.x +
+			m.m[2][1] * tuple.y +
+			m.m[2][2] * tuple.z +
+			m.m[2][3] * tuple.w;
+
+		double w =
+			m.m[3][0] * tuple.x +
+			m.m[3][1] * tuple.y +
+			m.m[3][2] * tuple.z +
+			m.m[3][3] * tuple.w;
+
+		return Tuple(x, y, z, w);
+	}
+
+
 
 	Matrix translation(double x, double y, double z)
 	{

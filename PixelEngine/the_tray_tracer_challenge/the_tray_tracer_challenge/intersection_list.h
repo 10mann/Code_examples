@@ -1,9 +1,8 @@
 #pragma once
 
-#include "intersection.h"
-
 #include <vector>
 
+#include "intersection.h"
 
 namespace RayTracer
 {
@@ -12,8 +11,9 @@ namespace RayTracer
 	public:
 
 		// Variables
-		std::vector<Intersection> intersections;
+		//std::vector<Intersection> intersections;
 
+		std::vector<Intersection> intersections;
 		// Constructors
 		IntersectionList();
 		IntersectionList(Intersection intersection);
@@ -21,7 +21,9 @@ namespace RayTracer
 		// Methods
 		size_t count(void);
 		Intersection hit(void);
-		void add(Intersection intersect);
+		void add(Intersection& intersect);
+		void addList(IntersectionList& intersect);
+		void sort(void);
 
 		// Operators
 		const Intersection& operator[](int n);
