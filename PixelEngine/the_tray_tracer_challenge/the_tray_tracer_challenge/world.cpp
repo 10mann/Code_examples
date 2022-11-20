@@ -49,6 +49,37 @@ namespace RayTracer
 		return list;
 	}
 
+	Color World::getHitColor(ComputeValues& computeValues)
+	{
+		Color color;
+		for (auto& light : lights)
+		{
+			color = color + getLighting(computeValues.object.material, light, computeValues.point, computeValues.eyeDir, computeValues.normal);
+		}
+
+		return color;
+	}
+
+	Color RayTracer::World::getColor(Ray& ray)
+	{
+		Color color;
+		IntersectionList list;
+		for (auto& obj : objects)
+		{
+			IntersectionList hits = ray.getIntersection(obj);
+			list.addList(hits);
+		}
+
+		Intersection hit = list.hit();
+		if (hit.i > 0)
+		{
+			ComputeValues computeValues = ray.getComputeValues(hit);
+			color = getHitColor(computeValues);
+		}
+		
+		return color;
+	}
+
 	// =========================== Operators ===========================
 
 

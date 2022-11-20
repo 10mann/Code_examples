@@ -29,6 +29,7 @@ using RayTracer::Material;
 using RayTracer::Color;
 using RayTracer::PointLight;
 using RayTracer::Canvas;
+using RayTracer::ComputeValues;
 
 using RayTracer::rotationX;
 using RayTracer::rotationY;
@@ -367,16 +368,32 @@ public:
 		//long long duration = benchmarkDrawSphere(10);
 		//std::cout << "Time elapsed: " << duration << std::endl;
 
+		//World world = createDfaultWorld();
+		//Ray ray(RayTracer::point(0, 0, -5), RayTracer::vector(0, 0, 1));
+		//IntersectionList intersections = world.getIntersections(ray);
+		////intersections.sort();
+		//std::cout << "Intersections: " << intersections.count() << std::endl;
+		//for (auto& it : intersections.intersections)
+		//{
+		//	std::cout << it.i << ", ";
+		//}
+		//std::cout << std::endl;
+
+		//World world = createDfaultWorld();
+		//Ray ray(RayTracer::point(0, 0, -5), RayTracer::vector(0, 0, 1));
+		//Sphere s = world.objects[0];
+		//Intersection intersection(4, s);
+		//ComputeValues computeValues = ray.getComputeValues(intersection);
+		//Color color = world.getHitColor(computeValues);
+		//color.print();
+
+
 		World world = createDfaultWorld();
-		Ray ray(RayTracer::point(0, 0, -5), RayTracer::vector(0, 0, 1));
-		IntersectionList intersections = world.getIntersections(ray);
-		//intersections.sort();
-		std::cout << "Intersections: " << intersections.count() << std::endl;
-		for (auto& it : intersections.intersections)
-		{
-			std::cout << it.i << ", ";
-		}
-		std::cout << std::endl;
+		Ray ray(RayTracer::point(0, 0, -5), RayTracer::vector(0, 1, 0));
+
+		Color color = world.getColor(ray);
+		color.print();
+
 		return true;
 	}
 

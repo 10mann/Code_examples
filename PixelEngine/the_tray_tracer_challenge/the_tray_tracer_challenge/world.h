@@ -25,9 +25,11 @@ namespace RayTracer
 		bool containsObject(const Sphere& s);
 		bool containsLight(const PointLight& s);
 		IntersectionList getIntersections(Ray& ray);
+		Color getHitColor(ComputeValues& computeValues);
+		Color getColor(Ray& ray);
 
 		// Operators
-
+		
 	};
 
 	World createDfaultWorld();

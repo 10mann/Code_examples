@@ -139,7 +139,50 @@ namespace RayTracerTest6
 		TEST_METHOD(TestGetHitColor)
 		{
 			Logger::WriteMessage("Testing getHitColor");
+			World world = createDfaultWorld();
+			Ray ray(point(0, 0, -5), vector(0, 0, 1));
+			Sphere s = world.objects[0];
+			Intersection intersection(4, s);
+			ComputeValues computeValues = ray.getComputeValues(intersection);
+			Color color = world.getHitColor(computeValues);
 
+			Assert::IsTrue(color == Color(0.38066, 0.47583, 0.2855));
+		}
+
+		TEST_METHOD(TestGetHitColorInside)
+		{
+			Logger::WriteMessage("Testing getHitColorInside");
+			World world = createDfaultWorld();
+			world.lights[0] = PointLight(Color(1, 1, 1), point(0, 0.25, 0));
+			Ray ray(point(0, 0, 0), vector(0, 0, 1));
+			Sphere s = world.objects[1];
+			Intersection intersection(0.5, s);
+			ComputeValues computeValues = ray.getComputeValues(intersection);
+			Color color = world.getHitColor(computeValues);
+
+			Assert::IsTrue(color == Color(0.90498, 0.90498, 0.90498));
+		}
+
+		TEST_METHOD(TestGetColorWorldMiss)
+		{
+			Logger::WriteMessage("Testing getColorWorldMiss");
+			World world = createDfaultWorld();
+			Ray ray(point(0, 0, -5), vector(0, 1, 0));
+
+			Color color = world.getColor(ray);
+
+			Assert::IsTrue(color == Color(0, 0, 0));
+		}
+
+		TEST_METHOD(TestGetColorWorldHit)
+		{
+			Logger::WriteMessage("Testing getColorWorldHit");
+			World world = createDfaultWorld();
+			Ray ray(point(0, 0, -5), vector(0, 0, 1));
+
+			Color color = world.getColor(ray);
+
+			Assert::IsTrue(color == Color(0.38066, 0.47583, 0.2855));
 		}
 	};
 }
