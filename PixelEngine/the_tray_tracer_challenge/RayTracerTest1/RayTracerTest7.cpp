@@ -16,27 +16,28 @@
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 using RayTracer::Ray;
 using RayTracer::Tuple;
-using RayTracer::point;
-using RayTracer::vector;
 using RayTracer::Color;
 using RayTracer::Material;
 using RayTracer::Matrix;
 using RayTracer::Sphere;
 using RayTracer::Intersection;
 using RayTracer::IntersectionList;
-using DoubleHelpers::isEqualDouble;
 using DoubleHelpers::MATH_PI;
+using RayTracer::PointLight;
+using RayTracer::World;
+using RayTracer::ComputeValues;
+using RayTracer::point;
+using RayTracer::vector;
+using RayTracer::createDfaultWorld;
+using RayTracer::getLighting;
 using RayTracer::translation;
 using RayTracer::scaling;
 using RayTracer::rotationX;
 using RayTracer::rotationY;
 using RayTracer::rotationZ;
 using RayTracer::getReflection;
-using RayTracer::PointLight;
-using RayTracer::getLighting;
-using RayTracer::World;
-using RayTracer::createDfaultWorld;
-using RayTracer::ComputeValues;
+using DoubleHelpers::isEqualDouble;
+using RayTracer::viewTransform;
 
 namespace RayTracerTest6
 {
@@ -183,6 +184,77 @@ namespace RayTracerTest6
 			Color color = world.getColor(ray);
 
 			Assert::IsTrue(color == Color(0.38066, 0.47583, 0.2855));
+		}
+
+		TEST_METHOD(TestGetColorWorldHitInnerSphere)
+		{
+			Logger::WriteMessage("Testing getColorWorldHitInnerSphere");
+			World world = createDfaultWorld();
+			Ray ray(point(0, 0, 0.75), vector(0, 0, -1));
+			Sphere sOuter = world.objects[0];
+			world.objects[0].material.ambient = 1;
+			Sphere sInner = world.objects[1];
+			world.objects[1].material.ambient = 1;
+
+			Color color = world.getColor(ray);
+
+			Assert::IsTrue(color == sInner.material.color);
+		}
+
+		TEST_METHOD(TestGetViewTransformDefault)
+		{
+			Logger::WriteMessage("Testing getViewTransformDefault");
+			Tuple from = point(0, 0, 0);
+			Tuple to = point(0, 0, -1);
+			Tuple up = vector(0, 1, 0);
+
+			Matrix view = viewTransform(from, to, up);
+
+			Assert::IsTrue(view == Matrix::identityMatrix);
+		}
+
+		TEST_METHOD(TestGetViewTransformFlip)
+		{
+			Logger::WriteMessage("Testing getViewTransformFlip");
+			Tuple from = point(0, 0, 0);
+			Tuple to = point(0, 0, 1);
+			Tuple up = vector(0, 1, 0);
+
+			Matrix view = viewTransform(from, to, up);
+
+			Assert::IsTrue(view == scaling(-1, 1, -1));
+		}
+
+		TEST_METHOD(TestGetViewTransformMove8Back)
+		{
+			Logger::WriteMessage("Testing getViewTransformMove8Back");
+			Tuple from = point(0, 0, 8);
+			Tuple to = point(0, 0, 0);
+			Tuple up = vector(0, 1, 0);
+
+			Matrix view = viewTransform(from, to, up);
+
+			Assert::IsTrue(view == translation(0, 0, -8));
+		}
+
+		TEST_METHOD(TestGetViewTransformMoveArbitrary)
+		{
+			Logger::WriteMessage("Testing getViewTransformMoveArbitrary");
+			Tuple from = point(1 ,3, 2);
+			Tuple to = point(4, -2, 8);
+			Tuple up = vector(1, 1, 0);
+
+			Matrix view = viewTransform(from, to, up);
+
+			double values[] =
+			{
+				-0.50709, 0.50709, 0.67612, -2.36643,
+				0.76772, 0.60609, 0.12122, -2.82843,
+				-0.35857, 0.59761, -0.71714, 0.00000,
+				0.00000, 0.00000, 0.00000, 1.00000
+			};
+			Matrix t(4, 4, values);
+			Assert::IsTrue(view == t);
 		}
 	};
 }

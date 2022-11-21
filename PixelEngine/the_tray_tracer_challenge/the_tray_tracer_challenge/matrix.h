@@ -50,4 +50,5 @@ namespace RayTracer
 	Matrix rotationY(double rotation);
 	Matrix rotationZ(double rotation);
 	Matrix shearing(double xY, double xZ, double yX, double yZ, double zX, double zY);
+	Matrix viewTransform(Tuple from, Tuple to, Tuple up);
 }

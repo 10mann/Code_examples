@@ -393,4 +393,22 @@ namespace RayTracer
 		shearingMatrix[2][1] = zY;
 		return shearingMatrix;
 	}
+
+	Matrix viewTransform(Tuple from, Tuple to, Tuple up)
+	{
+		Tuple forward = (to - from).getNormalized();
+		Tuple left = forward.crossProduct(up.getNormalized());
+		Tuple trueUp = forward.crossProduct(left);
+		double values[] =
+		{
+			left.x, left.y, left.z, 0,
+			trueUp.x, trueUp.y, trueUp.z, 0,
+			-forward.x, -forward.y, -forward.z, 0,
+			0, 0, 0, 1
+		};
+
+		Matrix viewMatrix = Matrix(4, 4, values) * translation(-from.x, -from.y, -from.z);
+
+		return viewMatrix;
+	}
 }

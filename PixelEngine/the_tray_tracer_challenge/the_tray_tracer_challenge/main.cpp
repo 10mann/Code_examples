@@ -388,11 +388,29 @@ public:
 		//color.print();
 
 
-		World world = createDfaultWorld();
-		Ray ray(RayTracer::point(0, 0, -5), RayTracer::vector(0, 1, 0));
+		//World world = createDfaultWorld();
+		//Ray ray(RayTracer::point(0, 0, -5), RayTracer::vector(0, 1, 0));
 
-		Color color = world.getColor(ray);
-		color.print();
+		//Color color = world.getColor(ray);
+		//color.print();
+
+		//World world = createDfaultWorld();
+		//Ray ray(RayTracer::point(0, 0, 0.75), RayTracer::vector(0, 0, -1));
+		//Sphere sOuter = world.objects[0];
+		//world.objects[0].material.ambient = 1;
+		//Sphere sInner = world.objects[1];
+		//world.objects[1].material.ambient = 1;
+
+		//Color color = world.getColor(ray);
+		//color.print();
+		//sInner.material.color.print();
+
+		Tuple from = RayTracer::point(0, 0, 8);
+		Tuple to = RayTracer::point(0, 0, 0);
+		Tuple up = RayTracer::vector(0, 1, 0);
+
+		Matrix view = viewTransform(from, to, up);
+		view.print();
 
 		return true;
 	}
