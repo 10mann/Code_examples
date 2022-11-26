@@ -2,6 +2,7 @@
 
 #include "matrix.h"
 #include "material.h"
+#include "ray.h"
 
 namespace RayTracer
 {
@@ -16,7 +17,7 @@ namespace RayTracer
 
 		// Constructors
 		Shape()
-			: transform(Matrix::identityMatrix), invTransform(Matrix::identityMatrix)
+			: transform(Matrix::identityMatrix), invTransform(Matrix::identityMatrix), material(Material())
 		{
 
 		}
@@ -28,7 +29,20 @@ namespace RayTracer
 			invTransform = m.getInverse();
 		}
 
-		// Operators
+		virtual Tuple getNormal(Tuple point)
+		{
+			return point;
+		}
 
+		virtual std::vector<double> getIntersectTime(Ray& ray)
+		{
+			return std::vector<double>();
+		}
+
+		// Operators
+		virtual bool operator==(Shape s)
+		{
+			return true;
+		}
 	};
 }

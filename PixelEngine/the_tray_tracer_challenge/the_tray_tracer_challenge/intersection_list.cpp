@@ -1,6 +1,7 @@
 #include "intersection_list.h"
 
 #include <algorithm>
+#include <vector>
 
 namespace RayTracer
 {
@@ -55,6 +56,16 @@ namespace RayTracer
 		for (auto& in : intersect.intersections)
 		{
 			add(in);
+		}
+	}
+
+	void IntersectionList::addIntersections(Ray& ray, Shape* shape)
+	{
+		std::vector<double> intersectTimes = shape->getIntersectTime(ray);
+
+		for (auto& it : intersectTimes)
+		{
+			add(Intersection(it, shape));
 		}
 	}
 

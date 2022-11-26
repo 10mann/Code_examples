@@ -1,8 +1,7 @@
 #pragma once
 
 #include "tuple.h"
-#include "sphere.h"
-#include "intersection_list.h"
+#include "material.h"
 #include "matrix.h"
 #include "point_light.h"
 
@@ -10,18 +9,6 @@
 
 namespace RayTracer
 {
-	struct ComputeValues
-	{
-		double i;
-		Sphere object;
-		Tuple point;
-		Tuple eyeDir;
-		Tuple normal;
-		Tuple overPoint;
-		bool inside;
-	};
-
-
 	class Ray
 	{
 	public:
@@ -36,11 +23,7 @@ namespace RayTracer
 
 		// Method
 		Tuple getPosition(double time);
-		IntersectionList getIntersection(Sphere sphere);
-		double getDiscriminant(Sphere const& sphere);
 		Ray transform(Matrix const& m);
-		ComputeValues getComputeValues(Intersection& intersect);
-
 
 	};
 

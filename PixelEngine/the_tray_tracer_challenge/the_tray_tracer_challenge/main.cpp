@@ -145,7 +145,8 @@ public:
 		
 		Canvas image(ScreenWidth(), ScreenHeight());
 		auto timeStart = std::chrono::steady_clock::now();
-		drawDefaultScene(image);
+		//drawDefaultScene(image);
+		drawDefaultScene2(image);
 		auto timeEnd = std::chrono::steady_clock::now();
 		auto drawDuration = std::chrono::duration_cast<std::chrono::milliseconds>(timeEnd - timeStart);
 		std::cout << "Time to draw: " << drawDuration.count() << std::endl;
@@ -153,9 +154,9 @@ public:
 		drawCanvasToScreen(image);
 
 		//World world = createDfaultWorld();
-		//Ray ray(RayTracer::point(0, 0, -5), RayTracer::vector(0, 0, 1));
-		//Sphere s = world.objects[0];
-		//Intersection intersection(4, s);
+		//world.lights[0] = PointLight(Color(1, 1, 1), RayTracer::point(0, 0.25, 0));
+		//Ray ray(RayTracer::point(0, 0, 0), RayTracer::vector(0, 0, 1));
+		//Intersection intersection(0.5, world.objects[1]);
 		//ComputeValues computeValues = ray.getComputeValues(intersection);
 		//Color color = world.getHitColor(computeValues);
 		//color.print();

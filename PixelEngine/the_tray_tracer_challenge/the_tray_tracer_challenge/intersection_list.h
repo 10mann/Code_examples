@@ -3,6 +3,8 @@
 #include <vector>
 
 #include "intersection.h"
+#include "ray.h"
+#include "shape.h"
 
 namespace RayTracer
 {
@@ -11,7 +13,6 @@ namespace RayTracer
 	public:
 
 		// Variables
-		//std::vector<Intersection> intersections;
 
 		std::vector<Intersection> intersections;
 		// Constructors
@@ -23,6 +24,7 @@ namespace RayTracer
 		Intersection hit(void);
 		void add(Intersection intersect);
 		void addList(IntersectionList intersect);
+		void addIntersections(Ray& ray, Shape* shape);
 		void sort(void);
 
 		// Operators

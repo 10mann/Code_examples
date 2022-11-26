@@ -1,25 +1,36 @@
 #pragma once
 
 #include "shape.h"
-#include "sphere.h"
-
+#include "ray.h"
 
 namespace RayTracer
 {
+	struct ComputeValues
+	{
+		double i;
+		Shape* object;
+		Tuple point;
+		Tuple eyeDir;
+		Tuple normal;
+		Tuple overPoint;
+		bool inside;
+	};
+
 	class Intersection
 	{
 	public:
 		// Variables
 		double i;
-		Sphere object;
+		Shape* object;
 
 		static const Intersection empty;
 
 		// Constructors
 		Intersection();
-		Intersection(double i, const Sphere object);
+		Intersection(double i, Shape* object);
 
 		// Methods
+		ComputeValues getComputeValues(Ray& ray);
 
 		// Operators
 		bool operator==(const Intersection& intersect);

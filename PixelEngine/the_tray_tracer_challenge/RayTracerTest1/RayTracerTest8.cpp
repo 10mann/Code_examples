@@ -116,20 +116,21 @@ namespace RayTracerTest8
 			world.lights.push_back(PointLight(Color(1, 1, 1), point(0, 0, -10)));
 
 			Sphere s1;
-			world.objects.push_back(s1);
+			world.objects.push_back(&s1);
 
 			Sphere s2;
 			s2.transform = translation(0, 0, 10);
-			world.objects.push_back(s2);
+			world.objects.push_back(&s2);
 
 			Ray ray(point(0, 0, 5), vector(0, 0, 1));
 			world.calculateInverseTransforms();
 
-			Intersection intersect(4, s2);
+			Intersection intersect(4, &s2);
 
-			ComputeValues compValues = ray.getComputeValues(intersect);
+			//ComputeValues compValues = ray.getComputeValues(intersect);
+			ComputeValues computeValues = intersect.getComputeValues(ray);
 
-			Color color = world.getHitColor(compValues);
+			Color color = world.getHitColor(computeValues);
 
 			Assert::IsTrue(color == Color(0.1, 0.1, 0.1));
 		}
@@ -141,8 +142,9 @@ namespace RayTracerTest8
 			Ray ray(point(0, 0, -5), vector(0, 0, 1));
 			Sphere s1;
 			s1.setTransform(translation(0, 0, 1));
-			Intersection i(5, s1);
-			ComputeValues compValues = ray.getComputeValues(i);
+			Intersection i(5, &s1);
+			//ComputeValues compValues = ray.getComputeValues(i);
+			ComputeValues compValues = i.getComputeValues(ray);
 
 			Assert::IsTrue(compValues.overPoint.z < -(DoubleHelpers::EPSILON) / 2);
 			Assert::IsTrue(compValues.overPoint.z < compValues.point.z);

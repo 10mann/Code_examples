@@ -7,6 +7,7 @@
 #include "DoubleHelpers.h"
 #include "ray.h"
 #include "sphere.h"
+#include "plane.h"
 #include "intersection.h"
 #include "intersection_list.h"
 #include "material.h"
@@ -24,6 +25,7 @@ using RayTracer::Color;
 using RayTracer::Canvas;
 using RayTracer::Camera;
 using RayTracer::PointLight;
+using RayTracer::Plane;
 
 using RayTracer::rotationX;
 using RayTracer::rotationY;
@@ -180,7 +182,7 @@ namespace RayTracer
 		s1.material.color = Color(0.25, 0.74, 0.96);
 
 		Sphere s2;
-		s2.transform = translation(-0.5, 2.9, -2) * scaling(0.3, 0.3, 0.3);
+		s2.transform = translation(-0.5, 2.9, -2) * scaling(0.35, 0.35, 0.35);
 		s2.material.color = Color(0.34, 0.96, 0.26);
 
 		Sphere s3;
@@ -190,15 +192,61 @@ namespace RayTracer
 		World world;
 		//world.lights.push_back(PointLight(Color(0.4, 0.4, 0.4), point(10, 10, -10)));
 		world.lights.push_back(PointLight(Color(1, 1, 1), point(-7, 5, -10)));
-		world.objects.push_back(floor);
-		world.objects.push_back(leftWall);
-		world.objects.push_back(rightWall);
-		world.objects.push_back(s1);
-		world.objects.push_back(s2);
-		world.objects.push_back(s3);
+		world.objects.push_back(&floor);
+		world.objects.push_back(&leftWall);
+		world.objects.push_back(&rightWall);
+		world.objects.push_back(&s1);
+		world.objects.push_back(&s2);
+		world.objects.push_back(&s3);
 
-		Camera camera(image.width, image.height, MATH_PI / 2.2);
-		camera.transform = viewTransform(point(0, 2, -5), point(0, 1, 5), vector(0, 1, 0));
+		Camera camera(image.width, image.height, MATH_PI / 2);
+		camera.transform = viewTransform(point(-0.5, 1.5, -5), point(0, 1.5, 5), vector(0, 1, 0));
+
+		image = camera.render(world);
+	}
+
+	void drawDefaultScene2(Canvas& image)
+	{
+		Plane floor;
+		floor.material.specular = 0;
+		floor.material.diffuse = 1;
+		floor.material.specular = 1;
+		floor.material.color = Color(1, 1, 1);
+
+		//Plane leftWall;
+		//leftWall.transform = translation(0, 0, 8) *
+		//	rotationY(-MATH_PI / 4.0) * rotationX(MATH_PI / 2.0) * scaling(20, 0.1, 20);
+		//leftWall.material = floor.material;
+
+		//Sphere rightWall;
+		//rightWall.transform = translation(0, 0, 8) *
+		//	rotationY(MATH_PI / 4.0) * rotationX(MATH_PI / 2.0) * scaling(20, 0.1, 20);
+		//rightWall.material = floor.material;
+
+		Sphere s1;
+		s1.transform = translation(2, 1.6, 1) * scaling(1.5, 1.5, 1.5);
+		s1.material.color = Color(0.25, 0.74, 0.96);
+
+		Sphere s2;
+		s2.transform = translation(-0.5, 2.9, -2) * scaling(0.35, 0.35, 0.35);
+		s2.material.color = Color(0.34, 0.96, 0.26);
+
+		Sphere s3;
+		s3.transform = translation(-2.5, 1.15, 0) * scaling(1.1, 1.1, 1.1);
+		s3.material.color = Color(0.96, 0.59, 0.26);
+
+		World world;
+		//world.lights.push_back(PointLight(Color(0.4, 0.4, 0.4), point(10, 10, -10)));
+		world.lights.push_back(PointLight(Color(1, 1, 1), point(-7, 5, -10)));
+		world.objects.push_back(&floor);
+		//world.objects.push_back(&leftWall);
+		//world.objects.push_back(&rightWall);
+		world.objects.push_back(&s1);
+		world.objects.push_back(&s2);
+		world.objects.push_back(&s3);
+
+		Camera camera(image.width, image.height, MATH_PI / 2);
+		camera.transform = viewTransform(point(-1, 2, -5), point(0, 1.5, 5), vector(0, 1, 0));
 
 		image = camera.render(world);
 	}

@@ -8,12 +8,12 @@ namespace RayTracer
 	}
 
 	// ============================ Methods ============================
-	bool World::containsObject(const Sphere& s)
+	bool World::containsObject(const Shape& s)
 	{
 		bool result = false;
-		for (const auto& sphere : objects)
+		for (const auto& shape : objects)
 		{
-			if (sphere == s)
+			if (*shape == s)
 			{
 				result = true;
 				break;
@@ -41,7 +41,8 @@ namespace RayTracer
 		IntersectionList list;
 		for (auto& s : objects)
 		{
-			list.addList(ray.getIntersection(s));
+			//list.addList(ray.getIntersection(s));
+			list.addIntersections(ray, s);
 		}
 		
 		list.sort();
@@ -53,7 +54,7 @@ namespace RayTracer
 		Color color;
 		for (auto& light : lights)
 		{
-			color = color + getLighting(computeValues.object.material, light, computeValues.point, computeValues.eyeDir, computeValues.normal, isInShadow(computeValues.overPoint, light));
+			color = color + getLighting(computeValues.object->material, light, computeValues.point, computeValues.eyeDir, computeValues.normal, isInShadow(computeValues.overPoint, light));
 		}
 
 		return color;
@@ -66,13 +67,15 @@ namespace RayTracer
 
 		for (auto& obj : objects)
 		{
-			list.addList(ray.getIntersection(obj));
+			//list.addList(ray.getIntersection(obj));
+			list.addIntersections(ray, obj);
 		}
 
 		Intersection hit = list.hit();
 		if (hit.i > 0)
 		{
-			color = getHitColor(ray.getComputeValues(hit));
+			//color = getHitColor(ray.getComputeValues(hit));
+			color = getHitColor(hit.getComputeValues(ray));
 		}
 		
 		return color;
@@ -91,7 +94,7 @@ namespace RayTracer
 	{
 		for (auto& obj : objects)
 		{
-			obj.invTransform = obj.transform.getInverse();
+			obj->invTransform = obj->transform.getInverse();
 		}
 	}
 
@@ -103,17 +106,17 @@ namespace RayTracer
 	{
 		World world;
 		world.lights.push_back(PointLight(Color(1, 1, 1), point(-10, 10, -10)));
-		Sphere s1;
+		static Sphere s1;
 		Material m;
 		m.color = Color(0.8, 1, 0.6);
 		m.diffuse = 0.7;
 		m.specular = 0.2;
 		s1.material = m;
 		
-		Sphere s2;
+		static Sphere s2;
 		s2.transform = scaling(0.5, 0.5, 0.5);
-		world.objects.push_back(s1);
-		world.objects.push_back(s2);
+		world.objects.push_back(&s1);
+		world.objects.push_back(&s2);
 		return world;
 	}
 }

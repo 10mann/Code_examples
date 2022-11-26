@@ -104,22 +104,22 @@ namespace RayTracerTest5
 		{
 			Logger::WriteMessage("Testing createIntersection");
 			Sphere sphere;
-			Intersection intersection(3.5, sphere);
+			Intersection intersection(3.5, &sphere);
 			Assert::IsTrue(isEqualDouble(intersection.i, 3.5));
-			Assert::IsTrue(sphere == intersection.object);
+			Assert::IsTrue(sphere == *intersection.object);
 		}
 
 		TEST_METHOD(TestCreateIntersectionList)
 		{
 			Logger::WriteMessage("Testing createIntersectionList");
 			Sphere sphere;
-			Intersection intersection1(1, sphere);
-			Intersection intersection2(2, sphere);
+			Intersection intersection1(1, &sphere);
+			Intersection intersection2(2, &sphere);
 
 			IntersectionList intersections(intersection1, intersection2);
 			Assert::IsTrue(intersections.count() == 2);
-			Assert::IsTrue(sphere == intersections[0].object);
-			Assert::IsTrue(sphere == intersections[1].object);
+			Assert::IsTrue(sphere == *intersections[0].object);
+			Assert::IsTrue(sphere == *intersections[1].object);
 			Assert::IsTrue(isEqualDouble(1, intersections[0].i));
 			Assert::IsTrue(isEqualDouble(2, intersections[1].i));
 		}
@@ -130,17 +130,19 @@ namespace RayTracerTest5
 			Ray ray(point(0, 0, -5), vector(0, 0, 1));
 			Sphere sphere;
 
-			IntersectionList intersections = ray.getIntersection(sphere);
-			Assert::IsTrue((intersections[0].object == sphere));
-			Assert::IsTrue((intersections[1].object == sphere));
+			//IntersectionList intersections = ray.getIntersection(&sphere);
+			IntersectionList intersections;
+			intersections.addIntersections(ray, &sphere);
+			Assert::IsTrue((*intersections[0].object == sphere));
+			Assert::IsTrue((*intersections[1].object == sphere));
 		}
 
 		TEST_METHOD(TestGetHit)
 		{
 			Logger::WriteMessage("Testing getHit");
 			Sphere sphere;
-			Intersection i1(1, sphere);
-			Intersection i2(2, sphere);
+			Intersection i1(1, &sphere);
+			Intersection i2(2, &sphere);
 			IntersectionList list(i1, i2);
 			Intersection iHit = list.hit();
 			Assert::IsTrue(iHit == i1);
@@ -150,8 +152,8 @@ namespace RayTracerTest5
 		{
 			Logger::WriteMessage("Testing getHitOneInvalid");
 			Sphere sphere;
-			Intersection i1(-1, sphere);
-			Intersection i2(2, sphere);
+			Intersection i1(-1, &sphere);
+			Intersection i2(2, &sphere);
 			IntersectionList list(i1, i2);
 			Intersection iHit = list.hit();
 			Assert::IsTrue(iHit == i2);
@@ -161,8 +163,8 @@ namespace RayTracerTest5
 		{
 			Logger::WriteMessage("Testing getHitAllInvalid");
 			Sphere sphere;
-			Intersection i1(-1, sphere);
-			Intersection i2(-2, sphere);
+			Intersection i1(-1, &sphere);
+			Intersection i2(-2, &sphere);
 			IntersectionList list(i1, i2);
 			Intersection iHit = list.hit();
 			Assert::IsTrue(iHit == Intersection::empty);
@@ -172,10 +174,10 @@ namespace RayTracerTest5
 		{
 			Logger::WriteMessage("Testing getHitFourIntersects");
 			Sphere sphere;
-			Intersection i1(5, sphere);
-			Intersection i2(7, sphere);
-			Intersection i3(-3, sphere);
-			Intersection i4(2, sphere);
+			Intersection i1(5, &sphere);
+			Intersection i2(7, &sphere);
+			Intersection i3(-3, &sphere);
+			Intersection i4(2, &sphere);
 			IntersectionList list(i1, i2);
 			list.add(i3);
 			list.add(i4);
@@ -232,7 +234,9 @@ namespace RayTracerTest5
 			Matrix m = scaling(2, 2, 2);
 			sphere.setTransform(m);
 			sphere.invTransform = sphere.transform.getInverse();
-			IntersectionList intersects = ray.getIntersection(sphere);
+			//IntersectionList intersects = ray.getIntersection(&sphere);
+			IntersectionList intersects;
+			intersects.addIntersections(ray, &sphere);
 			Assert::IsTrue(intersects.count() == 2);
 			Assert::IsTrue(isEqualDouble(intersects[0].i, 3));
 			Assert::IsTrue(isEqualDouble(intersects[1].i, 7));
@@ -246,7 +250,9 @@ namespace RayTracerTest5
 			Matrix m = translation(5, 0, 0);
 			sphere.setTransform(m);
 			sphere.invTransform = sphere.transform.getInverse();
-			IntersectionList intersects = ray.getIntersection(sphere);
+			//IntersectionList intersects = ray.getIntersection(&sphere);
+			IntersectionList intersects;
+			intersects.addIntersections(ray, &sphere);
 			Assert::IsTrue(intersects.count() == 0);
 		}
 	};

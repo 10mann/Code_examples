@@ -1,4 +1,8 @@
 #include "sphere.h"
+#include "DoubleHelpers.h"
+
+#include <cmath>
+
 namespace RayTracer
 {
 	// ========================= Constructors ==========================
@@ -10,11 +14,6 @@ namespace RayTracer
 
 
 	// ============================ Methods ============================
-	//void Sphere::setTransform(Matrix m)
-	//{
-	//	transform = m;
-	//	invTransform = m.getInverse();
-	//}
 
 	Tuple Sphere::getNormal(Tuple point)
 	{
@@ -22,6 +21,23 @@ namespace RayTracer
 		worldNorm.w = 0;
 
 		return worldNorm.getNormalized();
+	}
+
+	std::vector<double> RayTracer::Sphere::getIntersectTime(Ray& ray)
+	{
+		std::vector<double> intersectTimes;
+		Ray transRay = ray.transform(invTransform);
+		Tuple sphereVector = transRay.origin - (point(0, 0, 0));
+		double a = 2 * transRay.direction.dotProduct(transRay.direction);
+		double b = 2 * transRay.direction.dotProduct(sphereVector);
+		double discriminant = (b * b) - (2 * a * (sphereVector.dotProduct(sphereVector) - 1.0));
+
+		if (discriminant > (-DoubleHelpers::EPSILON))
+		{
+			intersectTimes.push_back((-1 * (b + std::sqrt(discriminant))) / (a));
+			intersectTimes.push_back((std::sqrt(discriminant) - b) / (a));
+		}
+		return intersectTimes;
 	}
 
 	// =========================== Operators ===========================

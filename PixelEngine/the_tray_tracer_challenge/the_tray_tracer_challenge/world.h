@@ -14,7 +14,7 @@ namespace RayTracer
 	public:
 
 		// Variables
-		std::vector<Sphere> objects;
+		std::vector<Shape*> objects;
 		//PointLight lighSource;
 		std::vector<PointLight> lights;
 
@@ -22,7 +22,7 @@ namespace RayTracer
 		World();
 
 		// Methods
-		bool containsObject(const Sphere& s);
+		bool containsObject(const Shape& s);
 		bool containsLight(const PointLight& s);
 		IntersectionList getIntersections(Ray& ray);
 		Color getHitColor(ComputeValues computeValues);
