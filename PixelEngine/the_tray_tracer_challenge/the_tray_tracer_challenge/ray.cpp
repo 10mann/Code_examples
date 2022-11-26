@@ -33,13 +33,12 @@ namespace RayTracer
 		double b = 2 * ray.direction.dotProduct(sphereVector);
 		double c = sphereVector.dotProduct(sphereVector) - 1.0;
 		double discriminant = (b * b) - (4 * a * c);
-		double t0 = 0;
-		double t1 = 0;
+
 		if (discriminant > (-DoubleHelpers::EPSILON))
 		{
-			t0 = (-b - std::sqrt(discriminant)) / (2.0 * a);
-			t1 = (-b + std::sqrt(discriminant)) / (2.0 * a);
-			intersections = IntersectionList(Intersection(t0, sphere), Intersection(t1, sphere));
+			intersections = IntersectionList(
+				Intersection((-b - std::sqrt(discriminant)) / (2.0 * a), sphere),
+				Intersection((-b + std::sqrt(discriminant)) / (2.0 * a), sphere));
 		}
 
 		return intersections;
@@ -72,6 +71,7 @@ namespace RayTracer
 		{
 			computeValues.normal = -computeValues.normal;
 		}
+		computeValues.overPoint = computeValues.point + computeValues.normal * DoubleHelpers::EPSILON;
 		return computeValues;
 	}
 
@@ -84,27 +84,30 @@ namespace RayTracer
 		return in - normal * 2 * in.dotProduct(normal);
 	}
 
-	Color getLighting(Material m, PointLight light, Tuple position, Tuple eyeDirection, Tuple normal)
+	Color getLighting(Material m, PointLight light, Tuple position, Tuple eyeDirection, Tuple normal, bool inShadow)
 	{
 		Color effective_color = m.color * light.intensity;
-		Tuple lightDir = (light.position - position).getNormalized();
-		Color ambient = effective_color * m.ambient;
 		Color diffuse(0, 0, 0);
 		Color specular(0, 0, 0);
-		double lightDotNormal = lightDir.dotProduct(normal);
-		if (lightDotNormal > 0)
+		if (false == inShadow)
 		{
-			diffuse = effective_color * m.diffuse * lightDotNormal;
-			Tuple reflectDir = getReflection(-lightDir, normal);
-			double reflectDotEye = reflectDir.dotProduct(eyeDirection);
-
-			if (reflectDotEye > 0)
+			Tuple lightDir = (light.position - position).getNormalized();
+			double lightDotNormal = lightDir.dotProduct(normal);
+			if (lightDotNormal > 0)
 			{
-				double factor = std::pow(reflectDotEye, m.shininess);
-				specular = light.intensity * m.specular * factor;
+				diffuse = effective_color * m.diffuse * lightDotNormal;
+				Tuple reflectDir = getReflection(-lightDir, normal);
+				double reflectDotEye = reflectDir.dotProduct(eyeDirection);
+
+				if (reflectDotEye > 0)
+				{
+					double factor = std::pow(reflectDotEye, m.shininess);
+					specular = light.intensity * m.specular * factor;
+				}
 			}
 		}
-		return ambient + specular + diffuse;
+
+		return (effective_color * m.ambient) + specular + diffuse;
 	}
 }
 

@@ -25,8 +25,9 @@ namespace RayTracer
 		bool containsObject(const Sphere& s);
 		bool containsLight(const PointLight& s);
 		IntersectionList getIntersections(Ray& ray);
-		Color getHitColor(ComputeValues& computeValues);
+		Color getHitColor(ComputeValues computeValues);
 		Color getColor(Ray& ray);
+		bool isInShadow(Tuple point, PointLight light);
 
 		// Operators
 		

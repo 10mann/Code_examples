@@ -23,6 +23,7 @@ namespace RayTracer
 
 		// Operators
 		bool operator==(const Intersection& intersect);
+		bool operator!= (const Intersection & intersect);
 		Intersection operator=(Intersection intersect);
 	};
 }

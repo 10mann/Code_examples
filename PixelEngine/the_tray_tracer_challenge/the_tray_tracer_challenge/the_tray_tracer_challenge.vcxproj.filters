@@ -125,5 +125,11 @@
     <ClInclude Include="benchmarks.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="raytracer_config.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="render_image.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

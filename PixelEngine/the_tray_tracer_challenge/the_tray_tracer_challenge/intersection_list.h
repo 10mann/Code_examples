@@ -21,8 +21,8 @@ namespace RayTracer
 		// Methods
 		size_t count(void);
 		Intersection hit(void);
-		void add(Intersection& intersect);
-		void addList(IntersectionList& intersect);
+		void add(Intersection intersect);
+		void addList(IntersectionList intersect);
 		void sort(void);
 
 		// Operators

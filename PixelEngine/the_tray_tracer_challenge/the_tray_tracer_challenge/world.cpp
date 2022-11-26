@@ -36,25 +36,24 @@ namespace RayTracer
 		return result;
 	}
 
-	IntersectionList RayTracer::World::getIntersections(Ray& ray)
+	IntersectionList World::getIntersections(Ray& ray)
 	{
 		IntersectionList list;
 		for (auto& s : objects)
 		{
-			IntersectionList hits = ray.getIntersection(s);
-			list.addList(hits);
+			list.addList(ray.getIntersection(s));
 		}
 		
 		list.sort();
 		return list;
 	}
 
-	Color World::getHitColor(ComputeValues& computeValues)
+	Color World::getHitColor(ComputeValues computeValues)
 	{
 		Color color;
 		for (auto& light : lights)
 		{
-			color = color + getLighting(computeValues.object.material, light, computeValues.point, computeValues.eyeDir, computeValues.normal);
+			color = color + getLighting(computeValues.object.material, light, computeValues.point, computeValues.eyeDir, computeValues.normal, isInShadow(computeValues.overPoint, light));
 		}
 
 		return color;
@@ -66,18 +65,25 @@ namespace RayTracer
 		IntersectionList list;
 		for (auto& obj : objects)
 		{
-			IntersectionList hits = ray.getIntersection(obj);
-			list.addList(hits);
+			list.addList(ray.getIntersection(obj));
 		}
 
 		Intersection hit = list.hit();
 		if (hit.i > 0)
 		{
-			ComputeValues computeValues = ray.getComputeValues(hit);
-			color = getHitColor(computeValues);
+			color = getHitColor(ray.getComputeValues(hit));
 		}
 		
 		return color;
+	}
+
+	bool World::isInShadow(Tuple point, PointLight light)
+	{
+		Tuple vec = (lights[0].position - point);
+		double distSquared = vec.getMagnitudeSquared();
+		Ray ray(point, vec.getNormalized());
+		Intersection hit = getIntersections(ray).hit();
+		return ((hit != Intersection::empty) && ((hit.i * hit.i) < distSquared));
 	}
 
 	// =========================== Operators ===========================

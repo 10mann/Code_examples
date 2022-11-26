@@ -26,6 +26,11 @@ namespace RayTracer
 		return ((i == intersect.i) && (object == intersect.object));
 	}
 
+	bool Intersection::operator!=(const Intersection& intersect)
+	{
+		return !((i == intersect.i) && (object == intersect.object));
+	}
+
 	Intersection Intersection::operator=(Intersection intersect)
 	{
 		i = intersect.i;

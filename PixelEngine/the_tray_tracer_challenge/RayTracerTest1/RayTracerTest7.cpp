@@ -11,6 +11,8 @@
 #include "../the_tray_tracer_challenge/point_light.h"	
 #include "../the_tray_tracer_challenge/material.h"	
 #include "../the_tray_tracer_challenge/world.h"	
+#include "../the_tray_tracer_challenge/camera.h"
+#include "../the_tray_tracer_challenge/canvas.h"
 
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
@@ -26,6 +28,8 @@ using DoubleHelpers::MATH_PI;
 using RayTracer::PointLight;
 using RayTracer::World;
 using RayTracer::ComputeValues;
+using RayTracer::Camera;
+using RayTracer::Canvas;
 using RayTracer::point;
 using RayTracer::vector;
 using RayTracer::createDfaultWorld;
@@ -255,6 +259,79 @@ namespace RayTracerTest6
 			};
 			Matrix t(4, 4, values);
 			Assert::IsTrue(view == t);
+		}
+
+		TEST_METHOD(TestCreateCameraDefaultTranform)
+		{
+			Logger::WriteMessage("Testing createCameraDefault");
+			int width = 160;
+			int height = 120;
+			double fieldOfView = MATH_PI / 2.0;
+			Camera camera(width, height, fieldOfView);
+
+			Assert::AreEqual(width, camera.width);
+			Assert::AreEqual(height, camera.height);
+			Assert::IsTrue(isEqualDouble(fieldOfView, camera.fieldOfView));
+			Assert::IsTrue(Matrix::identityMatrix == camera.transform);
+		}
+
+		TEST_METHOD(TestCameraPixelSizeH)
+		{
+			Logger::WriteMessage("Testing cameraPixelSize");
+			Camera camera(200, 125, MATH_PI / 2.0);
+			Assert::IsTrue(isEqualDouble(0.01, camera.pixelSize));
+		}
+
+		TEST_METHOD(TestCameraPixelSizeV)
+		{
+			Camera camera(125, 200, MATH_PI / 2.0);
+			Assert::IsTrue(isEqualDouble(0.01, camera.pixelSize));
+		}
+
+		TEST_METHOD(TestCameraGetRay1)
+		{
+			Logger::WriteMessage("Testing getRay1");
+			Camera camera(201, 101, MATH_PI / 2.0);
+			Ray ray = camera.getRay(100, 50);
+
+			Assert::IsTrue(point(0, 0, 0) == ray.origin);
+			Assert::IsTrue(vector(0, 0, -1) == ray.direction);
+		}
+
+		TEST_METHOD(TestCameraGetRay2)
+		{
+			Logger::WriteMessage("Testing getRay2");
+			Camera camera(201, 101, MATH_PI / 2.0);
+			Ray ray = camera.getRay(0, 0);
+
+			Assert::IsTrue(point(0, 0, 0) == ray.origin);
+			Assert::IsTrue(vector(0.66519, 0.33259, -0.66851) == ray.direction);
+		}
+
+		TEST_METHOD(TestCameraGetRay3)
+		{
+			Logger::WriteMessage("Testing getRay3");
+			Camera camera(201, 101, MATH_PI / 2.0);
+			camera.transform = rotationY(MATH_PI / 4.0) * translation(0, -2, 5);
+			Ray ray = camera.getRay(100, 50);
+
+			Assert::IsTrue(point(0, 2, -5) == ray.origin);
+			Assert::IsTrue(vector(std::sqrt(2) / 2.0, 0, -std::sqrt(2) / 2.0) == ray.direction);
+		}
+
+		TEST_METHOD(TestRenderImage)
+		{
+			Logger::WriteMessage("Testing renderImage");
+
+			World world = createDfaultWorld();
+			Camera camera(11, 11, MATH_PI / 2.0);
+			Tuple from = point(0, 0, -5);
+			Tuple to = point(0, 0, 0);
+			Tuple up = vector(0, 1, 0);
+			camera.transform = viewTransform(from, to, up);
+			Canvas image = camera.render(world);
+
+			Assert::IsTrue(Color(0.38066, 0.47583, 0.2855) == image.getPixel(5, 5));
 		}
 	};
 }

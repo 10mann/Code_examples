@@ -27,13 +27,13 @@ namespace RayTracer
 
 	Tuple Sphere::getNormal(Tuple point)
 	{
-		Tuple worldPoint = transform.getInverse() * (point);
+		//Tuple worldPoint = transform.getInverse() * (point);
 		//Tuple objNorm = ;
-		Tuple worldNorm = transform.getInverse().getTranspose() * (worldPoint - center);
+		Tuple worldNorm = transform.getInverse().getTranspose() * ((transform.getInverse() * (point)) - center);
 		worldNorm.w = 0;
-		worldNorm.normalize();
+		//worldNorm.normalize();
 
-		return worldNorm;
+		return worldNorm.getNormalized();
 	}
 
 	// =========================== Operators ===========================

@@ -102,7 +102,7 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <AdditionalLibraryDirectories>$(VCInstallDir)UnitTest\lib;C:\Users\Thailand\Documents\VSCode\Prosjekter\PixelEngine\the_tray_tracer_challenge\the_tray_tracer_challenge\x64\Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>tuple.obj;DoubleHelpers.obj;color.obj;canvas.obj;matrix.obj;ray.obj;sphere.obj;intersection.obj;intersection_list.obj;point_light.obj;material.obj;world.obj;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>tuple.obj;DoubleHelpers.obj;color.obj;canvas.obj;matrix.obj;ray.obj;sphere.obj;intersection.obj;intersection_list.obj;point_light.obj;material.obj;world.obj;camera.obj;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -172,6 +172,7 @@
     <ClCompile Include="RayTracerTest5.cpp" />
     <ClCompile Include="RayTracerTest6.cpp" />
     <ClCompile Include="RayTracerTest7.cpp" />
+    <ClCompile Include="RayTracerTest8.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />

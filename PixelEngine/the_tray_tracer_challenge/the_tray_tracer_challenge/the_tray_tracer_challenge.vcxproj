@@ -119,6 +119,8 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -159,6 +161,8 @@
     <ClInclude Include="olcPixelGameEngine.h" />
     <ClInclude Include="point_light.h" />
     <ClInclude Include="ray.h" />
+    <ClInclude Include="raytracer_config.h" />
+    <ClInclude Include="render_image.h" />
     <ClInclude Include="scenes.h" />
     <ClInclude Include="shape.h" />
     <ClInclude Include="sphere.h" />

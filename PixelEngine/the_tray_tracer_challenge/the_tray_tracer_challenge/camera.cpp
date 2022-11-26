@@ -1,7 +1,11 @@
 #include "camera.h"
 #include "DoubleHelpers.h"
+#include "raytracer_config.h"
 
 #include <cmath>
+#include <thread>
+#include <iostream>
+#include <chrono>
 
 
 using DoubleHelpers::EPSILON;
@@ -37,13 +41,10 @@ namespace RayTracer
 	// ============================ Methods ============================
 	Ray Camera::getRay(double x, double y)
 	{
-		double xOffset = (x + 0.5) * pixelSize;
-		double yOffset = (y + 0.5) * pixelSize;
+		Tuple pixel = transform.getInverse() * point(
+			(halfViewX - ((x + 0.5) * pixelSize)),
+			(halfViewY - ((y + 0.5) * pixelSize)), -1);
 
-		double worldX = halfViewX - xOffset;
-		double worldY = halfViewY - yOffset;
-
-		Tuple pixel = transform.getInverse() * point(worldX, worldY, -1);
 		Tuple origin = transform.getInverse() * point(0, 0, 0);
 		Tuple direction = (pixel - origin).getNormalized();
 
@@ -54,15 +55,36 @@ namespace RayTracer
 	{
 		Canvas image(width, height);
 
-		for (int y = 0; y < height; y++)
+		int subWidth = width / MAX_RENDER_THREADS;
+		int startX = 0;
+		int startY = 0;
+
+		std::thread threads[MAX_RENDER_THREADS];
+		for (int i = 0; i < (MAX_RENDER_THREADS - 1); i++)
 		{
-			for (int x = 0; x < width; x++)
-			{
-				Ray ray = getRay(x, y);
-				Color color = world.getColor(ray);
-				image.writePixel(x, y, color);
-			}
+			threads[i] = std::thread(&Camera::renderPartScreen, this,
+				std::ref(world),
+				std::ref(image),
+				startX + subWidth * i, 
+				startY, 
+				subWidth, 
+				height);
 		}
+
+		threads[MAX_RENDER_THREADS - 1] = std::thread(&Camera::renderPartScreen, this,
+			std::ref(world),
+			std::ref(image),
+			startX + subWidth * (MAX_RENDER_THREADS - 1),
+			startY,
+			width - (startX + subWidth * (MAX_RENDER_THREADS - 1)),
+			height);
+
+
+		for (int i = 0; i < MAX_RENDER_THREADS; i++)
+		{
+			threads[i].join();
+		}
+
 		return image;
 	}
 
@@ -71,4 +93,20 @@ namespace RayTracer
 	
 
 	// ============================ Helpers =============================
+
+	void Camera::renderPartScreen(World& world, Canvas& canvas, int startX, int startY, int width, int height)
+	{
+		for (int y = startY; y < height; y++)
+		{
+			for (int x = startX; x < (startX + width); x++)
+			{
+				RayTracer::Ray ray = getRay(x, y);
+				canvas.writePixel(x, y, world.getColor(ray));
+			}
+		}
+	}
+
+
 }
+
+

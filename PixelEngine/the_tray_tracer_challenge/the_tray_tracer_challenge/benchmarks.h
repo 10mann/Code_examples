@@ -19,5 +19,13 @@
 #include <fstream>
 
 
-void benchmarkMatrixMult(void);
-long long benchmarkDrawSphere(int iterations);
+namespace RayTracer
+{
+	void benchmarkMatrixMult(void);
+	long long benchmarkDrawSphere(int iterations);
+	long long benchmarkMatrixMult(int iterations);
+	long long benchmarkGetDistance(int iterations);
+	long long benchmarkIsInShadow(int iterations);
+	long long benchmarkGetInverse(int iterations);
+	long long benchmarkGetSubMatrix(int iterations);
+}

@@ -5,5 +5,5 @@
 namespace RayTracer
 {
 	//void drawSpherebByRay(Canvas& canvas);
-	int drawDefaultScene(Canvas& image);
+	void drawDefaultScene(Canvas& image);
 }

@@ -59,7 +59,7 @@ namespace RayTracer
 
 	Tuple Tuple::getNormalized()
 	{
-		return (*this) / this->getMagnitude();
+		return (*this) / (std::sqrt((x * x) + (y * y) + (z * z) + (w * w)));
 	}
 
 	void Tuple::normalize()

@@ -36,11 +36,8 @@ namespace RayTracer
 		// Operators
 		double* operator[](int index);
 		friend bool operator== (Matrix const& m1, Matrix const& m2);
-		//bool operator==(Matrix& matrix);
-		//Matrix operator*(Matrix const& matrix);
-		//friend Matrix operator* (const Matrix& m1, const Matrix& m2);
 		friend Matrix operator* (Matrix m1, Matrix m2);
-		Tuple operator*(Tuple const& tuple);
+		//Tuple operator*(Tuple const& tuple);
 		friend Tuple operator* (Matrix const& m, Tuple const& tuple);
 	};
 

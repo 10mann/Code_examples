@@ -15,11 +15,12 @@
 #include "world.h"
 #include "camera.h"
 #include "scenes.h"
-//#include "benchmarks.h"
+#include "benchmarks.h"
 
 #include <iostream>
 #include <chrono>
 #include <fstream>
+#include <thread>
 
 using RayTracer::Matrix;
 using RayTracer::Tuple;
@@ -42,8 +43,23 @@ using RayTracer::translation;
 using RayTracer::scaling;
 using RayTracer::getLighting;
 using RayTracer::createDfaultWorld;
+using RayTracer::benchmarkMatrixMult;
+using RayTracer::benchmarkGetDistance;
+using RayTracer::benchmarkIsInShadow;
+using RayTracer::benchmarkGetSubMatrix;
+using RayTracer::benchmarkGetInverse;
 
 using DoubleHelpers::MATH_PI;
+
+void testFunc(void)
+{
+	std::cout << "Hello" << std::endl;
+}
+
+void testFunc2(int x, int y, int z, int w, int a, int b, int c)
+{
+	std::cout << "Hello, " << x << std::endl;
+}
 
 
 class Projectile
@@ -103,17 +119,78 @@ public:
 			RayTracer::Tuple(-0.0, 0.0, 0.0, 0.0),
 			RayTracer::Tuple(0.0, -0.4, 0.0, 0.0));
 
+		//double values[] =
+		//{
+		//	1, 3, 5, 9,
+		//	1, 3, 1, 7,
+		//	4, 3, 9, 7,
+		//	5, 2, 0, 9
+		//};
+		//Matrix m(4, 4, values);
+		//m.getSubMatrix(0, 0);
+
+		//double values[] =
+		//{
+		//	4, 2, 3, 
+		//	4, 5, 6,
+		//	7, 8, 9
+		//};
+		//Matrix m(3, 3, values);
+
+		//double det = m.getDeterminant();
+		//std::cout << "Det: " << det << std::endl;
 
 		Canvas image(ScreenWidth(), ScreenHeight());
-
 		auto timeStart = std::chrono::high_resolution_clock::now();
 		drawDefaultScene(image);
 		auto timeEnd = std::chrono::high_resolution_clock::now();
 		auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(timeEnd - timeStart);
-
 		std::cout << "Time to draw: " << duration.count() << std::endl;
-
 		drawCanvasToScreen(image);
+
+		//long long duration = benchmarkMatrixMult(100000000);
+		//std::cout << "Multiplication time: " << duration << std::endl;
+
+		//long long duration = benchmarkGetSubMatrix(100000000);
+		//std::cout << "GetSubMatrix time: " << duration << std::endl;
+
+		//long long duration = benchmarkGetInverse(1000000);
+		//std::cout << "GetSubMatrix time: " << duration << std::endl;
+
+		//long long duration = benchmarkGetDistance(100000000);
+		//std::cout << "Multiplication time: " << duration << std::endl;
+
+		//long long duration = benchmarkIsInShadow(1000000);
+		//std::cout << "Multiplication time: " << duration << std::endl;
+
+		//Ray ray(RayTracer::point(0, 0, -5), RayTracer::vector(0, 0, 1));
+		//Sphere s1;
+		//s1.transform = translation(0, 0, 1);
+		//Intersection i(5, s1);
+		//ComputeValues compValues = ray.getComputeValues(i);
+		//std::cout << "OverPoint: " << compValues.overPoint.z << std::endl;
+		//std::cout << "Point: " << compValues.point.z << std::endl;
+
+		//std::thread thread(&testFunc2, 1, 2, 3, 4, 5, 6, 7);
+		//thread.join();
+
+		//World world = createDfaultWorld();
+		//Camera camera;
+		//Canvas canvas(10, 10);
+
+		//std::thread t(&renderPartScreen, camera, world, std::ref(canvas), 0, 0, 10, 10);
+		//t.join();
+
+		//std::vector<int> ints;
+
+		//auto timeStart = std::chrono::high_resolution_clock::now();
+		//for (int i = 0; i < 1000000; i++)
+		//{
+		//	ints.push_back(i);
+		//}
+		//auto timeEnd = std::chrono::high_resolution_clock::now();
+		//auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(timeEnd - timeStart);
+		//std::cout << "Time to push back: " << duration.count() << std::endl;
 
 		return true;
 	}
@@ -161,6 +238,8 @@ int main()
 	{
 		game.Start();
 	}
+
+	//benchmarkGetInverse(1000000);
 
 	return 0;
 }

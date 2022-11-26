@@ -45,12 +45,12 @@ namespace RayTracer
 		return ret;
 	}
 
-	void IntersectionList::add(Intersection& intersect)
+	void IntersectionList::add(Intersection intersect)
 	{
 		intersections.push_back(intersect);
 	}
 
-	void IntersectionList::addList(IntersectionList& intersect)
+	void IntersectionList::addList(IntersectionList intersect)
 	{
 		for (auto& in : intersect.intersections)
 		{

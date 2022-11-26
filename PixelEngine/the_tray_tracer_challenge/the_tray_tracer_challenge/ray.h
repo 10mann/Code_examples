@@ -17,6 +17,7 @@ namespace RayTracer
 		Tuple point;
 		Tuple eyeDir;
 		Tuple normal;
+		Tuple overPoint;
 		bool inside;
 	};
 
@@ -44,5 +45,5 @@ namespace RayTracer
 	};
 
 	Tuple getReflection(Tuple in, Tuple normal);
-	Color getLighting(Material m, PointLight light, Tuple position, Tuple eyeDirection, Tuple normal);
+	Color getLighting(Material m, PointLight light, Tuple position, Tuple eyeDirection, Tuple normal, bool inShadow);
 }

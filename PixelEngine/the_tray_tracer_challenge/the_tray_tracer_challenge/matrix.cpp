@@ -105,16 +105,39 @@ namespace RayTracer
 	{
 		double det = 0;
 
-		if (rows > 2)
+		switch (rows)
+		{
+		case 2:
+		{
+			det = (m[0][0] * m[1][1]) - (m[1][0] * m[0][1]);
+			break;
+		}
+
+		case 3:
+		{
+			det = (m[0][0] * ((m[1][1] * m[2][2]) - (m[2][1] * m[1][2]))) -
+				(m[0][1] * ((m[1][0] * m[2][2]) - (m[2][0] * m[1][2]))) + 
+				(m[0][2] * ((m[1][0] * m[2][1]) - (m[2][0] * m[1][1])));
+			break;
+		}
+
+		case 4:
+		{
+			det = (m[0][0] * getSubMatrix(0, 0).getDeterminant()) -
+				(m[0][1] * getSubMatrix(0, 1).getDeterminant()) +
+				(m[0][2] * getSubMatrix(0, 2).getDeterminant()) -
+				(m[0][3] * getSubMatrix(0, 3).getDeterminant());
+			break;
+		}
+
+		default:
 		{
 			for (int i = 0; i < rows; i++)
 			{
 				det += m[0][i] * this->getCofactor(0, i);
 			}
+			break;
 		}
-		else
-		{
-			det = (m[0][0] * m[1][1]) - (m[1][0] * m[0][1]);
 		}
 
 		return det;
@@ -122,27 +145,24 @@ namespace RayTracer
 
 	Matrix Matrix::getSubMatrix(int row, int col)
 	{
-		Matrix matrix;
+		Matrix matrix = *this;
 		matrix.rows = rows - 1;
 		matrix.cols = cols - 1;
-		int rowIndex = 0;
-		int colIndex = 0;
 
-		for (int y = 0; y < rows; y++)
+		for (int i = row; i < matrix.rows; i++)
 		{
-			if (y != row)
-			{
-				colIndex = 0;
-				for (int x = 0; x < cols; x++)
-				{
-					if ((x != col))
-					{
-						matrix[rowIndex][colIndex] = m[y][x];
-						colIndex++;
-					}
-				}
-				rowIndex++;
-			}
+			matrix.m[i][0] = matrix.m[i + 1][0];
+			matrix.m[i][1] = matrix.m[i + 1][1];
+			matrix.m[i][2] = matrix.m[i + 1][2];
+			matrix.m[i][3] = matrix.m[i + 1][3];
+		}
+
+		for (int i = col; i < matrix.cols; i++)
+		{
+			matrix.m[0][i] = matrix.m[0][i + 1];
+			matrix.m[1][i] = matrix.m[1][i + 1];
+			matrix.m[2][i] = matrix.m[2][i + 1];
+			matrix.m[3][i] = matrix.m[3][i + 1];
 		}
 
 		return matrix;
@@ -155,13 +175,7 @@ namespace RayTracer
 
 	double Matrix::getCofactor(int row, int col)
 	{
-		double minor = this->getMinor(row, col);
-		if (((row + col) % 2) != 0)
-		{
-			minor *= -1;
-		}
-
-		return minor;
+		return this->getMinor(row, col) * (((row + col) % 2) ? -1 : 1);
 	}
 
 	bool Matrix::isInvertable(void)
@@ -169,20 +183,17 @@ namespace RayTracer
 		return !isEqualDouble(0, this->getDeterminant());
 	}
 
-	Matrix RayTracer::Matrix::getInverse(void)
+	Matrix Matrix::getInverse(void)
 	{
 		Matrix coMatrix;
 
-		if (this->isInvertable())
-		{
-			double determinant = this->getDeterminant();
+		double determinant = this->getDeterminant();
 
-			for (int row = 0; row < rows; row++)
+		for (int row = 0; row < rows; row++)
+		{
+			for (int col = 0; col < cols; col++)
 			{
-				for (int col = 0; col < cols; col++)
-				{
-					coMatrix[col][row] = this->getCofactor(row, col) / determinant;
-				}
+				coMatrix[col][row] = this->getCofactor(row, col) / determinant;
 			}
 		}
 
@@ -218,90 +229,69 @@ namespace RayTracer
 		return ret;
 	}
 
-	//Matrix Matrix::operator*(Matrix const& matrix)
-	//{
-	//	Matrix prodMatrix;
-	//	for (int i = 0; i < rows; i++)
-	//	{
-	//		for (int j = 0; j < cols; j++)
-	//		{
-	//			prodMatrix[i][j] =
-	//				m[i][0] * matrix.m[0][j] +
-	//				m[i][1] * matrix.m[1][j] +
-	//				m[i][2] * matrix.m[2][j] +
-	//				m[i][3] * matrix.m[3][j];
-	//		}
-	//	}
-
-	//	return prodMatrix;
-	//}
-
-	//Matrix operator*(const Matrix& m1, const Matrix& m2)
-	//{
-	//	Matrix prodMatrix;
-	//	for (int i = 0; i < m1.rows; i++)
-	//	{
-	//		for (int j = 0; j < m1.cols; j++)
-	//		{
-	//			prodMatrix[i][j] =
-	//				m1.m[i][0] * m2.m[0][j] +
-	//				m1.m[i][1] * m2.m[1][j] +
-	//				m1.m[i][2] * m2.m[2][j] +
-	//				m1.m[i][3] * m2.m[3][j];
-	//		}
-	//	}
-
-	//	return prodMatrix;
-	//}
-
 	Matrix operator*(Matrix m1, Matrix m2)
 	{
 		Matrix prodMatrix;
 		for (int i = 0; i < m1.rows; i++)
 		{
-			for (int j = 0; j < m1.cols; j++)
-			{
-				prodMatrix[i][j] =
-					m1.m[i][0] * m2.m[0][j] +
-					m1.m[i][1] * m2.m[1][j] +
-					m1.m[i][2] * m2.m[2][j] +
-					m1.m[i][3] * m2.m[3][j];
-			}
+			prodMatrix[i][0] =
+				m1.m[i][0] * m2.m[0][0] +
+				m1.m[i][1] * m2.m[1][0] +
+				m1.m[i][2] * m2.m[2][0] +
+				m1.m[i][3] * m2.m[3][0];
+
+			prodMatrix[i][1] =
+				m1.m[i][0] * m2.m[0][1] +
+				m1.m[i][1] * m2.m[1][1] +
+				m1.m[i][2] * m2.m[2][1] +
+				m1.m[i][3] * m2.m[3][1];
+
+			prodMatrix[i][2] =
+				m1.m[i][0] * m2.m[0][2] +
+				m1.m[i][1] * m2.m[1][2] +
+				m1.m[i][2] * m2.m[2][2] +
+				m1.m[i][3] * m2.m[3][2];
+
+			prodMatrix[i][3] =
+				m1.m[i][0] * m2.m[0][3] +
+				m1.m[i][1] * m2.m[1][3] +
+				m1.m[i][2] * m2.m[2][3] +
+				m1.m[i][3] * m2.m[3][3];
 		}
 
 		return prodMatrix;
 	}
 
-	Tuple Matrix::operator*(Tuple const& tuple)
+	Tuple operator*(Matrix const& m, Tuple const& tuple)
 	{
 		double x =
-			m[0][0] * tuple.x +
-			m[0][1] * tuple.y +
-			m[0][2] * tuple.z +
-			m[0][3] * tuple.w;
+			m.m[0][0] * tuple.x +
+			m.m[0][1] * tuple.y +
+			m.m[0][2] * tuple.z +
+			m.m[0][3] * tuple.w;
 
 		double y =
-			m[1][0] * tuple.x +
-			m[1][1] * tuple.y +
-			m[1][2] * tuple.z +
-			m[1][3] * tuple.w;
+			m.m[1][0] * tuple.x +
+			m.m[1][1] * tuple.y +
+			m.m[1][2] * tuple.z +
+			m.m[1][3] * tuple.w;
 
 		double z =
-			m[2][0] * tuple.x +
-			m[2][1] * tuple.y +
-			m[2][2] * tuple.z +
-			m[2][3] * tuple.w;
+			m.m[2][0] * tuple.x +
+			m.m[2][1] * tuple.y +
+			m.m[2][2] * tuple.z +
+			m.m[2][3] * tuple.w;
 
 		double w =
-			m[3][0] * tuple.x +
-			m[3][1] * tuple.y +
-			m[3][2] * tuple.z +
-			m[3][3] * tuple.w;
+			m.m[3][0] * tuple.x +
+			m.m[3][1] * tuple.y +
+			m.m[3][2] * tuple.z +
+			m.m[3][3] * tuple.w;
 
 		return Tuple(x, y, z, w);
 	}
 
-	Tuple operator*(Matrix const& m, Tuple const& tuple)
+	Tuple operator*(Matrix m, Tuple& tuple)
 	{
 		double x =
 			m.m[0][0] * tuple.x +

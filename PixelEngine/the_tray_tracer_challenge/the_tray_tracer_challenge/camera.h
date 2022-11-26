@@ -31,5 +31,10 @@ namespace RayTracer
 
 		// Operators
 
+		// Helpers
+		void renderPartScreen(World& world, Canvas& canvas, int startX, int startY, int width, int height);
+
 	};
 }
+
+
