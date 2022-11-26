@@ -140,13 +140,25 @@ public:
 		//double det = m.getDeterminant();
 		//std::cout << "Det: " << det << std::endl;
 
+		//long long duration = benchmarkGetInverse(1000000);
+		//std::cout << "GetSubMatrix time: " << duration << std::endl;
+		
 		Canvas image(ScreenWidth(), ScreenHeight());
-		auto timeStart = std::chrono::high_resolution_clock::now();
+		auto timeStart = std::chrono::steady_clock::now();
 		drawDefaultScene(image);
-		auto timeEnd = std::chrono::high_resolution_clock::now();
-		auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(timeEnd - timeStart);
-		std::cout << "Time to draw: " << duration.count() << std::endl;
+		auto timeEnd = std::chrono::steady_clock::now();
+		auto drawDuration = std::chrono::duration_cast<std::chrono::milliseconds>(timeEnd - timeStart);
+		std::cout << "Time to draw: " << drawDuration.count() << std::endl;
+		
 		drawCanvasToScreen(image);
+
+		//World world = createDfaultWorld();
+		//Ray ray(RayTracer::point(0, 0, -5), RayTracer::vector(0, 0, 1));
+		//Sphere s = world.objects[0];
+		//Intersection intersection(4, s);
+		//ComputeValues computeValues = ray.getComputeValues(intersection);
+		//Color color = world.getHitColor(computeValues);
+		//color.print();
 
 		//long long duration = benchmarkMatrixMult(100000000);
 		//std::cout << "Multiplication time: " << duration << std::endl;

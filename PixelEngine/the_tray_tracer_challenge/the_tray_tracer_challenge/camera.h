@@ -16,6 +16,7 @@ namespace RayTracer
 		int height;
 		double fieldOfView;
 		Matrix transform;
+		Matrix invTransform;
 		double pixelSize;
 		double halfViewX;
 		double halfViewY;
@@ -26,6 +27,7 @@ namespace RayTracer
 		Camera(int width, int height, double fieldOfView);
 
 		// Methods
+		void calculateInverseTransform(void);
 		Ray getRay(double x, double y);
 		Canvas render(World& world);
 

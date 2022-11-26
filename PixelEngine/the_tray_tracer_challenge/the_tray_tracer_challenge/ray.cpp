@@ -26,19 +26,25 @@ namespace RayTracer
 
 	IntersectionList Ray::getIntersection(Sphere sphere)
 	{
-		Ray ray = transform((sphere.transform).getInverse());
+		//Ray ray = transform((sphere.transform).getInverse());
+		Ray ray = transform((sphere.invTransform));
 		IntersectionList intersections;
 		Tuple sphereVector = ray.origin - sphere.center;
-		double a = ray.direction.dotProduct(ray.direction);
+		//double a = ray.direction.dotProduct(ray.direction);
+		double a = 2 * ray.direction.dotProduct(ray.direction);
 		double b = 2 * ray.direction.dotProduct(sphereVector);
-		double c = sphereVector.dotProduct(sphereVector) - 1.0;
-		double discriminant = (b * b) - (4 * a * c);
+		//double c = sphereVector.dotProduct(sphereVector) - 1.0;
+		//double discriminant = (b * b) - (2 * a * c);
+		double discriminant = (b * b) - (2 * a * (sphereVector.dotProduct(sphereVector) - 1.0));
+		//double sqrtDisc = std::sqrt(discriminant);
 
 		if (discriminant > (-DoubleHelpers::EPSILON))
 		{
 			intersections = IntersectionList(
-				Intersection((-b - std::sqrt(discriminant)) / (2.0 * a), sphere),
-				Intersection((-b + std::sqrt(discriminant)) / (2.0 * a), sphere));
+				//Intersection((-b - std::sqrt(discriminant)) / (a), sphere),
+				//Intersection((std::sqrt(discriminant) - b) / (a), sphere));
+				Intersection((-1 * (b + std::sqrt(discriminant))) / (a), sphere),
+				Intersection((std::sqrt(discriminant) - b) / (a), sphere));
 		}
 
 		return intersections;

@@ -220,6 +220,7 @@ namespace RayTracerTest5
 			Sphere sphere;
 			Matrix m = translation(2, 3, 4);
 			sphere.setTransform(m);
+			sphere.invTransform = sphere.transform.getInverse();
 			Assert::IsTrue(sphere.transform == m);
 		}
 
@@ -230,6 +231,7 @@ namespace RayTracerTest5
 			Sphere sphere;
 			Matrix m = scaling(2, 2, 2);
 			sphere.setTransform(m);
+			sphere.invTransform = sphere.transform.getInverse();
 			IntersectionList intersects = ray.getIntersection(sphere);
 			Assert::IsTrue(intersects.count() == 2);
 			Assert::IsTrue(isEqualDouble(intersects[0].i, 3));
@@ -243,6 +245,7 @@ namespace RayTracerTest5
 			Sphere sphere;
 			Matrix m = translation(5, 0, 0);
 			sphere.setTransform(m);
+			sphere.invTransform = sphere.transform.getInverse();
 			IntersectionList intersects = ray.getIntersection(sphere);
 			Assert::IsTrue(intersects.count() == 0);
 		}

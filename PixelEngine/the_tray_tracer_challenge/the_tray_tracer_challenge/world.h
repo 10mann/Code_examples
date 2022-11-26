@@ -28,6 +28,7 @@ namespace RayTracer
 		Color getHitColor(ComputeValues computeValues);
 		Color getColor(Ray& ray);
 		bool isInShadow(Tuple point, PointLight light);
+		void calculateInverseTransforms(void);
 
 		// Operators
 		

@@ -166,6 +166,7 @@
     <ClInclude Include="scenes.h" />
     <ClInclude Include="shape.h" />
     <ClInclude Include="sphere.h" />
+    <ClInclude Include="test_shape.h" />
     <ClInclude Include="tuple.h" />
     <ClInclude Include="DoubleHelpers.h" />
     <ClInclude Include="world.h" />

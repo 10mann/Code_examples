@@ -79,6 +79,7 @@ namespace RayTracerTest8
 			Logger::WriteMessage("Testing pointInShadowTrue1");
 
 			World world = createDfaultWorld();
+			world.calculateInverseTransforms();
 			Tuple p = point(10, -10, 10);
 			bool isInShadow = world.isInShadow(p, world.lights[0]);
 
@@ -122,6 +123,7 @@ namespace RayTracerTest8
 			world.objects.push_back(s2);
 
 			Ray ray(point(0, 0, 5), vector(0, 0, 1));
+			world.calculateInverseTransforms();
 
 			Intersection intersect(4, s2);
 
@@ -138,7 +140,7 @@ namespace RayTracerTest8
 
 			Ray ray(point(0, 0, -5), vector(0, 0, 1));
 			Sphere s1;
-			s1.transform = translation(0, 0, 1);
+			s1.setTransform(translation(0, 0, 1));
 			Intersection i(5, s1);
 			ComputeValues compValues = ray.getComputeValues(i);
 

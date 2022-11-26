@@ -36,16 +36,31 @@ namespace RayTracer
 		}
 		
 		pixelSize = (halfViewX * 2) / width;
+
+		invTransform = transform.getInverse();
 	}
 
 	// ============================ Methods ============================
+
+	void Camera::calculateInverseTransform(void)
+	{
+		invTransform = transform.getInverse();
+	}
+
 	Ray Camera::getRay(double x, double y)
 	{
-		Tuple pixel = transform.getInverse() * point(
+		//Tuple pixel = transform.getInverse() * point(
+		//	(halfViewX - ((x + 0.5) * pixelSize)),
+		//	(halfViewY - ((y + 0.5) * pixelSize)), -1);
+
+		//Tuple origin = transform.getInverse() * point(0, 0, 0);
+		//Tuple direction = (pixel - origin).getNormalized();
+
+		Tuple pixel = invTransform * point(
 			(halfViewX - ((x + 0.5) * pixelSize)),
 			(halfViewY - ((y + 0.5) * pixelSize)), -1);
 
-		Tuple origin = transform.getInverse() * point(0, 0, 0);
+		Tuple origin = invTransform * point(0, 0, 0);
 		Tuple direction = (pixel - origin).getNormalized();
 
 		return Ray(origin, direction);
@@ -58,6 +73,9 @@ namespace RayTracer
 		int subWidth = width / MAX_RENDER_THREADS;
 		int startX = 0;
 		int startY = 0;
+
+		world.calculateInverseTransforms();
+		calculateInverseTransform();
 
 		std::thread threads[MAX_RENDER_THREADS];
 		for (int i = 0; i < (MAX_RENDER_THREADS - 1); i++)

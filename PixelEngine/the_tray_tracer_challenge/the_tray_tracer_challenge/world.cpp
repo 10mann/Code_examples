@@ -63,6 +63,7 @@ namespace RayTracer
 	{
 		Color color;
 		IntersectionList list;
+
 		for (auto& obj : objects)
 		{
 			list.addList(ray.getIntersection(obj));
@@ -84,6 +85,14 @@ namespace RayTracer
 		Ray ray(point, vec.getNormalized());
 		Intersection hit = getIntersections(ray).hit();
 		return ((hit != Intersection::empty) && ((hit.i * hit.i) < distSquared));
+	}
+
+	void World::calculateInverseTransforms(void)
+	{
+		for (auto& obj : objects)
+		{
+			obj.invTransform = obj.transform.getInverse();
+		}
 	}
 
 	// =========================== Operators ===========================

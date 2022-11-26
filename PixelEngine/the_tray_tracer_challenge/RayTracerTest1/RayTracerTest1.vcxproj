@@ -173,6 +173,7 @@
     <ClCompile Include="RayTracerTest6.cpp" />
     <ClCompile Include="RayTracerTest7.cpp" />
     <ClCompile Include="RayTracerTest8.cpp" />
+    <ClCompile Include="RayTracerTest9.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />

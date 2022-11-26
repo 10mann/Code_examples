@@ -3,35 +3,23 @@ namespace RayTracer
 {
 	// ========================= Constructors ==========================
 	Sphere::Sphere()
-		: center(point(0, 0, 0)), radius(0.0), transform(Matrix::identityMatrix)
+		: center(point(0, 0, 0)), radius(0.0)
 	{
+
 	}
 
 
 	// ============================ Methods ============================
-	void Sphere::setTransform(Matrix m)
-	{
-		transform = m;
-	}
-
-	//Tuple Sphere::getNormal(Tuple point)
+	//void Sphere::setTransform(Matrix m)
 	//{
-	//	Tuple worldPoint = transform.getInverse() * point;
-	//	Tuple objNorm = worldPoint - center;
-	//	Tuple worldNorm = transform.getInverse().getTranspose() * objNorm;
-	//	worldNorm.w = 0;
-	//	worldNorm.normalize();
-
-	//	return worldNorm;
+	//	transform = m;
+	//	invTransform = m.getInverse();
 	//}
 
 	Tuple Sphere::getNormal(Tuple point)
 	{
-		//Tuple worldPoint = transform.getInverse() * (point);
-		//Tuple objNorm = ;
-		Tuple worldNorm = transform.getInverse().getTranspose() * ((transform.getInverse() * (point)) - center);
+		Tuple worldNorm = invTransform.getTranspose() * ((invTransform * (point)) - center);
 		worldNorm.w = 0;
-		//worldNorm.normalize();
 
 		return worldNorm.getNormalized();
 	}

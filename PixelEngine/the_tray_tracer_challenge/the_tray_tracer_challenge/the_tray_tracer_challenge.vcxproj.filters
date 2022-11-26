@@ -131,5 +131,8 @@
     <ClInclude Include="render_image.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="test_shape.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
