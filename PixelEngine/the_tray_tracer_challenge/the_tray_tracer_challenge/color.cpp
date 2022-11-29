@@ -8,6 +8,9 @@ namespace RayTracer
 {
 	using DoubleHelpers::isEqualDouble;
 
+	Color const Color::White(1, 1, 1);
+	Color const Color::Black(0, 0, 0);
+
 	// ============================ Constructors ============================
 	Color::Color()
 		:red(0.0), green(0.0), blue(0.0), alpha(0.0)
@@ -63,7 +66,7 @@ namespace RayTracer
 		return Color(c1.red * c2.red, c1.green * c2.green, c1.blue * c2.blue);
 	}
 
-	void Color::print()
+	void Color::print() const
 	{
 		std::cout << "(" << red << ", " << green << ", " << blue << ")";
 	}

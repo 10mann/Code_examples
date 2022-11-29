@@ -15,7 +15,6 @@ namespace RayTracer
 
 		// Variables
 		std::vector<Shape*> objects;
-		//PointLight lighSource;
 		std::vector<PointLight> lights;
 
 		// Constructors
@@ -34,5 +33,6 @@ namespace RayTracer
 		
 	};
 
+	Color getLighting(Shape* s, PointLight light, Tuple position, Tuple eyeDirection, Tuple normal, bool inShadow);
 	World createDfaultWorld();
 }

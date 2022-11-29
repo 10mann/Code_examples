@@ -11,6 +11,8 @@ namespace RayTracer
 		double blue;
 		double alpha;
 
+		static Color const Black, White;
+
 		// Constructors
 		Color();
 		Color(double r, double g, double b, double a=0.0);
@@ -25,6 +27,6 @@ namespace RayTracer
 		friend Color operator* (Color const& c1, double n);
 		Color operator*(Color color);
 		friend Color operator* (Color const& c1, Color const& c2);
-		void print();
+		void print() const;
 	};
 }

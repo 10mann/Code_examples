@@ -28,6 +28,16 @@ namespace RayTracer
 		return intersectTimes;
 	}
 
+	const Color& Plane::colorAt(Tuple point)
+	{
+		return (material.pattern == nullptr) ? material.color : material.pattern->colorAt(point);
+	}
+
+	bool Plane::operator==(Shape const& s1)
+	{
+		return false;
+	}
+
 	// =========================== Operators ===========================
 
 

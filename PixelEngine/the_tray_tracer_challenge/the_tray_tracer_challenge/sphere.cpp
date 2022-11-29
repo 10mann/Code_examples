@@ -40,6 +40,12 @@ namespace RayTracer
 		return intersectTimes;
 	}
 
+	const Color& Sphere::colorAt(Tuple point)
+	{
+		return (material.pattern == nullptr) ? material.color : 
+			material.pattern->colorAt(invTransform * point);
+	}
+
 	// =========================== Operators ===========================
 	bool operator==(Sphere const& s1, Sphere const& s2)
 	{
@@ -47,5 +53,10 @@ namespace RayTracer
 			(s1.radius == s2.radius) && 
 			(s1.transform == s2.transform) &&
 			(s1.material == s2.material));
+	}
+
+	bool Sphere::operator==(Shape const& s1)
+	{
+		return false;
 	}
 }

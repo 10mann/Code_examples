@@ -72,6 +72,9 @@
     <ClCompile Include="plane.cpp">
       <Filter>Resource Files</Filter>
     </ClCompile>
+    <ClCompile Include="stripe_pattern.cpp">
+      <Filter>Resource Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="tuple.h">
@@ -138,6 +141,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="plane.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="pattern.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="stripe_pattern.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

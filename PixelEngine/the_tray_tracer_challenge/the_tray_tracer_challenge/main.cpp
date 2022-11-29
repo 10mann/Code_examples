@@ -14,6 +14,8 @@
 #include "point_light.h"
 #include "world.h"
 #include "camera.h"
+#include "stripe_pattern.h"
+
 #include "scenes.h"
 #include "benchmarks.h"
 
@@ -35,6 +37,7 @@ using RayTracer::PointLight;
 using RayTracer::Canvas;
 using RayTracer::ComputeValues;
 using RayTracer::Camera;
+using RayTracer::StripePattern;
 
 using RayTracer::rotationX;
 using RayTracer::rotationY;
@@ -146,64 +149,12 @@ public:
 		Canvas image(ScreenWidth(), ScreenHeight());
 		auto timeStart = std::chrono::steady_clock::now();
 		//drawDefaultScene(image);
-		drawDefaultScene2(image);
+		drawDefaultScene3(image);
 		auto timeEnd = std::chrono::steady_clock::now();
 		auto drawDuration = std::chrono::duration_cast<std::chrono::milliseconds>(timeEnd - timeStart);
 		std::cout << "Time to draw: " << drawDuration.count() << std::endl;
 		
 		drawCanvasToScreen(image);
-
-		//World world = createDfaultWorld();
-		//world.lights[0] = PointLight(Color(1, 1, 1), RayTracer::point(0, 0.25, 0));
-		//Ray ray(RayTracer::point(0, 0, 0), RayTracer::vector(0, 0, 1));
-		//Intersection intersection(0.5, world.objects[1]);
-		//ComputeValues computeValues = ray.getComputeValues(intersection);
-		//Color color = world.getHitColor(computeValues);
-		//color.print();
-
-		//long long duration = benchmarkMatrixMult(100000000);
-		//std::cout << "Multiplication time: " << duration << std::endl;
-
-		//long long duration = benchmarkGetSubMatrix(100000000);
-		//std::cout << "GetSubMatrix time: " << duration << std::endl;
-
-		//long long duration = benchmarkGetInverse(1000000);
-		//std::cout << "GetSubMatrix time: " << duration << std::endl;
-
-		//long long duration = benchmarkGetDistance(100000000);
-		//std::cout << "Multiplication time: " << duration << std::endl;
-
-		//long long duration = benchmarkIsInShadow(1000000);
-		//std::cout << "Multiplication time: " << duration << std::endl;
-
-		//Ray ray(RayTracer::point(0, 0, -5), RayTracer::vector(0, 0, 1));
-		//Sphere s1;
-		//s1.transform = translation(0, 0, 1);
-		//Intersection i(5, s1);
-		//ComputeValues compValues = ray.getComputeValues(i);
-		//std::cout << "OverPoint: " << compValues.overPoint.z << std::endl;
-		//std::cout << "Point: " << compValues.point.z << std::endl;
-
-		//std::thread thread(&testFunc2, 1, 2, 3, 4, 5, 6, 7);
-		//thread.join();
-
-		//World world = createDfaultWorld();
-		//Camera camera;
-		//Canvas canvas(10, 10);
-
-		//std::thread t(&renderPartScreen, camera, world, std::ref(canvas), 0, 0, 10, 10);
-		//t.join();
-
-		//std::vector<int> ints;
-
-		//auto timeStart = std::chrono::high_resolution_clock::now();
-		//for (int i = 0; i < 1000000; i++)
-		//{
-		//	ints.push_back(i);
-		//}
-		//auto timeEnd = std::chrono::high_resolution_clock::now();
-		//auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(timeEnd - timeStart);
-		//std::cout << "Time to push back: " << duration.count() << std::endl;
 
 		return true;
 	}

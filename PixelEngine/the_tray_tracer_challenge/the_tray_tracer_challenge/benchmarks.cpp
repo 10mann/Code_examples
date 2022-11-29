@@ -124,7 +124,7 @@ namespace RayTracer
 						Intersection hit = hits.hit();
 						//ComputeValues compValues = ray.getComputeValues(hit);
 						ComputeValues compValues = hit.getComputeValues(ray);
-						Color pixelColor = getLighting(compValues.object->material, light, compValues.point, compValues.eyeDir, compValues.normal, false);
+						Color pixelColor = getLighting(compValues.object, light, compValues.point, compValues.eyeDir, compValues.normal, false);
 						//Tuple hitPos = ray.getPosition(hit.i);
 						//Tuple normal = s.getNormal(hitPos);
 						//Tuple eyeDir = -ray.direction;

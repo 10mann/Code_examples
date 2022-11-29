@@ -141,6 +141,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="material.cpp" />
     <ClCompile Include="matrix.cpp" />
+    <ClCompile Include="stripe_pattern.cpp" />
     <ClCompile Include="plane.cpp" />
     <ClCompile Include="point_light.cpp" />
     <ClCompile Include="ray.cpp" />
@@ -160,6 +161,7 @@
     <ClInclude Include="material.h" />
     <ClInclude Include="matrix.h" />
     <ClInclude Include="olcPixelGameEngine.h" />
+    <ClInclude Include="pattern.h" />
     <ClInclude Include="plane.h" />
     <ClInclude Include="point_light.h" />
     <ClInclude Include="ray.h" />
@@ -168,6 +170,7 @@
     <ClInclude Include="scenes.h" />
     <ClInclude Include="shape.h" />
     <ClInclude Include="sphere.h" />
+    <ClInclude Include="stripe_pattern.h" />
     <ClInclude Include="test_shape.h" />
     <ClInclude Include="tuple.h" />
     <ClInclude Include="DoubleHelpers.h" />

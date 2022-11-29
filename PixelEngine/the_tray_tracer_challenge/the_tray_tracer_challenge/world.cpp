@@ -1,5 +1,7 @@
 #include "world.h"
 
+#include <cmath>
+
 namespace RayTracer
 {
 	// ========================= Constructors ==========================
@@ -13,7 +15,7 @@ namespace RayTracer
 		bool result = false;
 		for (const auto& shape : objects)
 		{
-			if (*shape == s)
+			if ((*shape) == s)
 			{
 				result = true;
 				break;
@@ -54,7 +56,7 @@ namespace RayTracer
 		Color color;
 		for (auto& light : lights)
 		{
-			color = color + getLighting(computeValues.object->material, light, computeValues.point, computeValues.eyeDir, computeValues.normal, isInShadow(computeValues.overPoint, light));
+			color = color + getLighting(computeValues.object, light, computeValues.point, computeValues.eyeDir, computeValues.normal, isInShadow(computeValues.overPoint, light));
 		}
 
 		return color;
@@ -118,5 +120,31 @@ namespace RayTracer
 		world.objects.push_back(&s1);
 		world.objects.push_back(&s2);
 		return world;
+	}
+
+	Color getLighting(Shape* s, PointLight light, Tuple position, Tuple eyeDirection, Tuple normal, bool inShadow)
+	{
+		Color effectiveColor = s->material.getColor(position) * light.intensity;
+		Color diffuse(0, 0, 0);
+		Color specular(0, 0, 0);
+		if (false == inShadow)
+		{
+			Tuple lightDir = (light.position - position).getNormalized();
+			double lightDotNormal = lightDir.dotProduct(normal);
+			if (lightDotNormal > 0)
+			{
+				diffuse = effectiveColor * s->material.diffuse * lightDotNormal;
+				Tuple reflectDir = getReflection(-lightDir, normal);
+				double reflectDotEye = reflectDir.dotProduct(eyeDirection);
+
+				if (reflectDotEye > 0)
+				{
+					double factor = std::pow(reflectDotEye, s->material.shininess);
+					specular = light.intensity * s->material.specular * factor;
+				}
+			}
+		}
+
+		return (effectiveColor * s->material.ambient) + specular + diffuse;
 	}
 }

@@ -38,30 +38,5 @@ namespace RayTracer
 		return in - normal * 2 * in.dotProduct(normal);
 	}
 
-	Color getLighting(Material m, PointLight light, Tuple position, Tuple eyeDirection, Tuple normal, bool inShadow)
-	{
-		Color effective_color = m.color * light.intensity;
-		Color diffuse(0, 0, 0);
-		Color specular(0, 0, 0);
-		if (false == inShadow)
-		{
-			Tuple lightDir = (light.position - position).getNormalized();
-			double lightDotNormal = lightDir.dotProduct(normal);
-			if (lightDotNormal > 0)
-			{
-				diffuse = effective_color * m.diffuse * lightDotNormal;
-				Tuple reflectDir = getReflection(-lightDir, normal);
-				double reflectDotEye = reflectDir.dotProduct(eyeDirection);
-
-				if (reflectDotEye > 0)
-				{
-					double factor = std::pow(reflectDotEye, m.shininess);
-					specular = light.intensity * m.specular * factor;
-				}
-			}
-		}
-
-		return (effective_color * m.ambient) + specular + diffuse;
-	}
 }
 

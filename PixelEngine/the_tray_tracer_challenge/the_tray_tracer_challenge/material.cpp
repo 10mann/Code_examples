@@ -8,8 +8,18 @@ namespace RayTracer
 {
 	// ========================= Constructors ==========================
 	Material::Material()
-		: color(Color(1, 1, 1)), ambient(0.1), diffuse(0.9), specular(0.9), shininess(200)
+		: color(Color(1, 1, 1)), 
+		ambient(0.1), 
+		diffuse(0.9), 
+		specular(0.9), 
+		shininess(200),
+		pattern(nullptr)
 	{
+	}
+
+	const Color& Material::getColor(Tuple point)
+	{
+		return (pattern == nullptr) ? color : pattern->colorAt(point);
 	}
 
 	// ============================ Methods ============================
