@@ -106,7 +106,7 @@ namespace RayTracerTest5
 			Sphere sphere;
 			Intersection intersection(3.5, &sphere);
 			Assert::IsTrue(isEqualDouble(intersection.i, 3.5));
-			Assert::IsTrue(sphere == *intersection.object);
+			Assert::IsTrue(&sphere == intersection.object);
 		}
 
 		TEST_METHOD(TestCreateIntersectionList)
@@ -118,8 +118,8 @@ namespace RayTracerTest5
 
 			IntersectionList intersections(intersection1, intersection2);
 			Assert::IsTrue(intersections.count() == 2);
-			Assert::IsTrue(sphere == *intersections[0].object);
-			Assert::IsTrue(sphere == *intersections[1].object);
+			Assert::IsTrue(&sphere == intersections[0].object);
+			Assert::IsTrue(&sphere == intersections[1].object);
 			Assert::IsTrue(isEqualDouble(1, intersections[0].i));
 			Assert::IsTrue(isEqualDouble(2, intersections[1].i));
 		}
@@ -133,8 +133,8 @@ namespace RayTracerTest5
 			//IntersectionList intersections = ray.getIntersection(&sphere);
 			IntersectionList intersections;
 			intersections.addIntersections(ray, &sphere);
-			Assert::IsTrue((*intersections[0].object == sphere));
-			Assert::IsTrue((*intersections[1].object == sphere));
+			Assert::IsTrue((intersections[0].object == &sphere));
+			Assert::IsTrue((intersections[1].object == &sphere));
 		}
 
 		TEST_METHOD(TestGetHit)

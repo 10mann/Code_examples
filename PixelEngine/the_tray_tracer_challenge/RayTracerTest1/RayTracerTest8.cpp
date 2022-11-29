@@ -58,7 +58,9 @@ namespace RayTracerTest8
 			Tuple eyeDir = vector(0, 0, -1);
 			Tuple normal = vector(0, 0, -1);
 			PointLight light = PointLight(Color(1, 1, 1), point(0, 0, -10));
-			Color lighting = getLighting(m, light, position, eyeDir, normal, true);
+			Sphere s;
+			s.material = m;
+			Color lighting = getLighting(&s, light, position, eyeDir, normal, true);
 
 			Assert::IsTrue(lighting == Color(0.1, 0.1, 0.1));
 		}

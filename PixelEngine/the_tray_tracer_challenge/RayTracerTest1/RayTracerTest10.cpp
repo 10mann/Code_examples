@@ -6,9 +6,10 @@
 #include "../the_tray_tracer_challenge/color.h"	
 #include "../the_tray_tracer_challenge/stripe_pattern.h"	
 #include "../the_tray_tracer_challenge/material.h"	
-#include "../the_tray_tracer_challenge/point_light.h"	
-#include "../the_tray_tracer_challenge/ray.h"	
-#include "../the_tray_tracer_challenge/sphere.h"	
+#include "../the_tray_tracer_challenge/point_light.h"
+#include "../the_tray_tracer_challenge/ray.h"
+#include "../the_tray_tracer_challenge/sphere.h"
+#include "../the_tray_tracer_challenge/world.h"
 
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
@@ -92,9 +93,11 @@ namespace RayTracerTest10
 			PointLight light(Color(1, 1, 1), point(0, 0, -10));
 			StripePattern pattern(Color::White, Color::Black);
 			m.pattern = &pattern;
+			Sphere s;
+			s.material = m;
 			
-			Color c1 = getLighting(m, light, point(0.9, 0, 0), eyeDir, norm, false);
-			Color c2 = getLighting(m, light, point(1.1, 0, 0), eyeDir, norm, false);
+			Color c1 = getLighting(&s, light, point(0.9, 0, 0), eyeDir, norm, false);
+			Color c2 = getLighting(&s, light, point(1.1, 0, 0), eyeDir, norm, false);
 
 			Assert::IsTrue(c1 == Color::White);
 			Assert::IsTrue(c2 == Color::Black);

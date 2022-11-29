@@ -47,16 +47,13 @@ namespace RayTracer
 	}
 
 	// =========================== Operators ===========================
-	bool operator==(Sphere const& s1, Sphere const& s2)
-	{
-		return ((s1.center == s2.center) && 
-			(s1.radius == s2.radius) && 
-			(s1.transform == s2.transform) &&
-			(s1.material == s2.material));
-	}
 
 	bool Sphere::operator==(Shape const& s1)
 	{
-		return false;
+		Sphere* s2 = (Sphere*)(&s1);
+		return ((center == s2->center) &&
+			(radius == s2->radius) &&
+			(transform == s2->transform) &&
+			(material == s2->material));
 	}
 }

@@ -146,15 +146,31 @@ public:
 		//long long duration = benchmarkGetInverse(1000000);
 		//std::cout << "GetSubMatrix time: " << duration << std::endl;
 		
-		Canvas image(ScreenWidth(), ScreenHeight());
-		auto timeStart = std::chrono::steady_clock::now();
-		//drawDefaultScene(image);
-		drawDefaultScene3(image);
-		auto timeEnd = std::chrono::steady_clock::now();
-		auto drawDuration = std::chrono::duration_cast<std::chrono::milliseconds>(timeEnd - timeStart);
-		std::cout << "Time to draw: " << drawDuration.count() << std::endl;
-		
-		drawCanvasToScreen(image);
+		//Canvas image(ScreenWidth(), ScreenHeight());
+		//auto timeStart = std::chrono::steady_clock::now();
+		////drawDefaultScene(image);
+		//drawDefaultScene3(image);
+		//auto timeEnd = std::chrono::steady_clock::now();
+		//auto drawDuration = std::chrono::duration_cast<std::chrono::milliseconds>(timeEnd - timeStart);
+		//std::cout << "Time to draw: " << drawDuration.count() << std::endl;
+		//
+		//drawCanvasToScreen(image);
+
+		World world = createDfaultWorld();
+
+		PointLight light(Color(1, 1, 1), RayTracer::point(-10, 10, -10));
+
+		Sphere s1;
+		Material m;
+		m.color = Color(0.8, 1, 0.6);
+		m.diffuse = 0.7;
+		m.specular = 0.2;
+		s1.material = m;
+
+		Sphere s2;
+		s2.transform = scaling(0.5, 0.5, 0.5);
+
+		std::cout << "World contains s2: " << world.containsObject(s2) << std::endl;
 
 		return true;
 	}
