@@ -10,6 +10,9 @@
 #include "../the_tray_tracer_challenge/ray.h"
 #include "../the_tray_tracer_challenge/sphere.h"
 #include "../the_tray_tracer_challenge/world.h"
+#include "../the_tray_tracer_challenge/matrix.h"
+#include "../the_tray_tracer_challenge/gradient_pattern.h"
+#include "../the_tray_tracer_challenge/ring_pattern.h"
 
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
@@ -19,6 +22,9 @@ using RayTracer::StripePattern;
 using RayTracer::Material;
 using RayTracer::PointLight;
 using RayTracer::Sphere;
+using RayTracer::Matrix;
+using RayTracer::GradientPattern;
+using RayTracer::RingPattern;
 using DoubleHelpers::MATH_PI;
 using RayTracer::point;
 using RayTracer::vector;
@@ -34,7 +40,7 @@ namespace RayTracerTest10
 	{
 	public:
 
-		TEST_METHOD(TestCreateStriepPattern)
+		TEST_METHOD(TestCreateStripePattern)
 		{
 			Logger::WriteMessage("Testing createStripePattern");
 
@@ -110,6 +116,7 @@ namespace RayTracerTest10
 			Sphere s;
 			s.setTransform(scaling(2, 2, 2));
 			StripePattern pattern(Color::White, Color::Black);
+			s.material.pattern = &pattern;
 			Color c = s.colorAt(point(1.5, 0, 0));
 
 			Assert::IsTrue(c == Color::White);
@@ -122,6 +129,7 @@ namespace RayTracerTest10
 			Sphere s;
 			s.setTransform(scaling(2, 2, 2));
 			StripePattern pattern(Color::White, Color::Black);
+			s.material.pattern = &pattern;
 			Color c = s.colorAt(point(1.5, 0, 0));
 
 			Assert::IsTrue(c == Color::White);
@@ -135,9 +143,52 @@ namespace RayTracerTest10
 			s.setTransform(scaling(2, 2, 2));
 			StripePattern pattern(Color::White, Color::Black);
 			pattern.setTransform(translation(0.5, 0, 0));
+			s.material.pattern = &pattern;
 			Color c = s.colorAt(point(2.5, 0, 0));
 
 			Assert::IsTrue(c == Color::White);
+		}
+
+		TEST_METHOD(TestPatternDefaultTransform)
+		{
+			Logger::WriteMessage("Testing patternDefaultTransform");
+
+			StripePattern pattern(Color::White, Color::Black);
+
+			Assert::IsTrue(Matrix::identityMatrix == pattern.transform);
+		}
+
+		TEST_METHOD(TestPatternSetTransform)
+		{
+			Logger::WriteMessage("Testing patternSetTransform");
+
+			StripePattern pattern(Color::White, Color::Black);
+			pattern.setTransform(translation(1, 2, 3));
+
+			Assert::IsTrue(translation(1, 2, 3) == pattern.transform);
+		}
+
+		TEST_METHOD(TestGradientPattern)
+		{
+			Logger::WriteMessage("Testing gradientPattern");
+
+			GradientPattern pattern(Color::White, Color::Black);
+
+			Assert::IsTrue(pattern.colorAt(point(0, 0, 0)) == Color::White);
+			Assert::IsTrue(pattern.colorAt(point(0.25, 0, 0)) == Color(0.75, 0.75, 0.75));
+			Assert::IsTrue(pattern.colorAt(point(0.5, 0, 0)) == Color(0.5, 0.5, 0.5));
+			Assert::IsTrue(pattern.colorAt(point(0.75, 0, 0)) == Color(0.25, 0.25, 0.25));
+		}
+
+		TEST_METHOD(TestRingtPattern)
+		{
+			Logger::WriteMessage("Testing ringPattern");
+
+			RingPattern pattern(Color::White, Color::Black);
+
+			Assert::IsTrue(pattern.colorAt(point(0, 0, 0)) == Color::White);
+			Assert::IsTrue(pattern.colorAt(point(1, 0, 0)) == Color::Black);
+			Assert::IsTrue(pattern.colorAt(point(0, 0, 1)) == Color::Black);
 		}
 	};
 }

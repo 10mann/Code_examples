@@ -15,6 +15,7 @@
 #include "world.h"
 #include "camera.h"
 #include "stripe_pattern.h"
+#include "gradient_pattern.h"
 
 #include "scenes.h"
 #include "benchmarks.h"
@@ -38,6 +39,7 @@ using RayTracer::Canvas;
 using RayTracer::ComputeValues;
 using RayTracer::Camera;
 using RayTracer::StripePattern;
+using RayTracer::GradientPattern;
 
 using RayTracer::rotationX;
 using RayTracer::rotationY;
@@ -122,55 +124,16 @@ public:
 			RayTracer::Tuple(-0.0, 0.0, 0.0, 0.0),
 			RayTracer::Tuple(0.0, -0.4, 0.0, 0.0));
 
-		//double values[] =
-		//{
-		//	1, 3, 5, 9,
-		//	1, 3, 1, 7,
-		//	4, 3, 9, 7,
-		//	5, 2, 0, 9
-		//};
-		//Matrix m(4, 4, values);
-		//m.getSubMatrix(0, 0);
-
-		//double values[] =
-		//{
-		//	4, 2, 3, 
-		//	4, 5, 6,
-		//	7, 8, 9
-		//};
-		//Matrix m(3, 3, values);
-
-		//double det = m.getDeterminant();
-		//std::cout << "Det: " << det << std::endl;
-
-		//long long duration = benchmarkGetInverse(1000000);
-		//std::cout << "GetSubMatrix time: " << duration << std::endl;
 		
-		//Canvas image(ScreenWidth(), ScreenHeight());
-		//auto timeStart = std::chrono::steady_clock::now();
-		////drawDefaultScene(image);
-		//drawDefaultScene3(image);
-		//auto timeEnd = std::chrono::steady_clock::now();
-		//auto drawDuration = std::chrono::duration_cast<std::chrono::milliseconds>(timeEnd - timeStart);
-		//std::cout << "Time to draw: " << drawDuration.count() << std::endl;
-		//
-		//drawCanvasToScreen(image);
-
-		World world = createDfaultWorld();
-
-		PointLight light(Color(1, 1, 1), RayTracer::point(-10, 10, -10));
-
-		Sphere s1;
-		Material m;
-		m.color = Color(0.8, 1, 0.6);
-		m.diffuse = 0.7;
-		m.specular = 0.2;
-		s1.material = m;
-
-		Sphere s2;
-		s2.transform = scaling(0.5, 0.5, 0.5);
-
-		std::cout << "World contains s2: " << world.containsObject(s2) << std::endl;
+		Canvas image(ScreenWidth(), ScreenHeight());
+		auto timeStart = std::chrono::steady_clock::now();
+		//drawDefaultScene(image);
+		drawDefaultScene3(image);
+		auto timeEnd = std::chrono::steady_clock::now();
+		auto drawDuration = std::chrono::duration_cast<std::chrono::milliseconds>(timeEnd - timeStart);
+		std::cout << "Time to draw: " << drawDuration.count() << std::endl;
+		
+		drawCanvasToScreen(image);
 
 		return true;
 	}

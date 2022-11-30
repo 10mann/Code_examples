@@ -143,10 +143,10 @@ namespace RayTracerTest7
 			ComputeValues computeValues = intersection.getComputeValues(ray);
 
 			Assert::IsTrue((computeValues.inside == true));
-			//Assert::IsTrue(computeValues.object == intersection.object);
-			//Assert::IsTrue(computeValues.point == point(0, 0, 1));
-			//Assert::IsTrue(computeValues.eyeDir == vector(0, 0, -1));
-			//Assert::IsTrue(computeValues.normal == vector(0, 0, -1));
+			Assert::IsTrue(computeValues.object == intersection.object);
+			Assert::IsTrue(computeValues.point == point(0, 0, 1));
+			Assert::IsTrue(computeValues.eyeDir == vector(0, 0, -1));
+			Assert::IsTrue(computeValues.normal == vector(0, 0, -1));
 		}
 
 		TEST_METHOD(TestGetHitColor)
@@ -174,13 +174,8 @@ namespace RayTracerTest7
 		//	world.lights[0] = PointLight(Color(1, 1, 1), point(0, 0.25, 0));
 		//	Ray ray(point(0, 0, 0), vector(0, 0, 1));
 		//	Intersection intersection(0.5, world.objects[1]);
-		//	//ComputeValues computeValues = ray.getComputeValues(intersection);
 		//	ComputeValues computeValues = intersection.getComputeValues(ray);
 		//	Color color = world.getHitColor(computeValues);
-
-		//	char outBuffer[50] = { 0 };
-		//	std::snprintf(outBuffer, 50, "Color: (%0.4f, %0.4f, %0.4f)", color.red, color.green, color.blue);
-		//	Logger::WriteMessage(outBuffer);
 
 		//	Assert::IsTrue(color == Color(0.90498, 0.90498, 0.90498));
 		//}

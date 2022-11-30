@@ -4,7 +4,7 @@
 
 namespace RayTracer
 {
-	class StripePattern : public Pattern
+	class RingPattern : public Pattern
 	{
 	public:
 
@@ -12,8 +12,8 @@ namespace RayTracer
 
 
 		// Constructors
-		StripePattern();
-		StripePattern(Color c1, Color c2);
+		RingPattern();
+		RingPattern(Color c1, Color c2);
 
 		// Methods
 		const Color colorAt(Tuple point) override;

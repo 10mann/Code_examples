@@ -15,6 +15,8 @@
 #include "world.h"
 #include "camera.h"
 #include "stripe_pattern.h"
+#include "gradient_pattern.h"
+#include "ring_pattern.h"
 
 using RayTracer::Matrix;
 using RayTracer::Tuple;
@@ -28,6 +30,8 @@ using RayTracer::Camera;
 using RayTracer::PointLight;
 using RayTracer::Plane;
 using RayTracer::StripePattern;
+using RayTracer::GradientPattern;
+using RayTracer::RingPattern;
 
 using RayTracer::rotationX;
 using RayTracer::rotationY;
@@ -243,26 +247,40 @@ namespace RayTracer
 
 	void drawDefaultScene3(Canvas& image)
 	{
+		StripePattern pattern1(Color(0.25, 0.74, 0.96), Color(0.55, 0.84, 0.96));
+		pattern1.setTransform(scaling(0.3, 0.3, 0.3) * rotationZ(DoubleHelpers::MATH_PI / 4));
+
+		GradientPattern pattern2(Color(1.000, 0.600, 0.000), Color(1.000, 0.000, 0.000));
+		pattern2.setTransform(scaling(0.4, 0.4, 0.4) * translation(1.5, 0, 0));
+
+		RingPattern pattern3(Color(1.000, 0.600, 0.000), Color(1.000, 0.000, 0.000));
+		pattern3.setTransform(rotationZ(DoubleHelpers::MATH_PI / 2.0) * scaling(0.2, 0.2, 0.2));
+
+
 		Plane floor;
 		floor.material.specular = 0;
 		floor.material.diffuse = 1;
 		floor.material.specular = 1;
 		floor.material.color = Color(1, 1, 1);
+		floor.material.pattern = &pattern3;
 
 		Sphere s1;
 		s1.transform = translation(2, 1.6, 1) * scaling(1.5, 1.5, 1.5);
 		s1.material.color = Color(0.25, 0.74, 0.96);
-		StripePattern pattern1(Color(0.25, 0.74, 0.96), Color(0.55, 0.84, 0.96));
-		pattern1.setTransform(scaling(0.3, 0.3, 0.3) * rotationZ(DoubleHelpers::MATH_PI / 4));
+		
 		s1.material.pattern = &pattern1;
 
 		Sphere s2;
 		s2.transform = translation(-0.5, 2.9, -2) * scaling(0.35, 0.35, 0.35);
 		s2.material.color = Color(0.34, 0.96, 0.26);
+		s2.material.pattern = &pattern2;
+
 
 		Sphere s3;
 		s3.transform = translation(-2.5, 1.15, 0) * scaling(1.1, 1.1, 1.1);
-		s3.material.color = Color(0.96, 0.59, 0.26);
+		s3.material.color = Color(0.867, 0.000, 1.000);
+		s3.material.pattern = &pattern3;
+
 
 		World world;
 		world.lights.push_back(PointLight(Color(1, 1, 1), point(-7, 5, -10)));
@@ -272,7 +290,7 @@ namespace RayTracer
 		world.objects.push_back(&s3);
 
 		Camera camera(image.width, image.height, MATH_PI / 3);
-		camera.transform = viewTransform(point(-1, 2, -7), point(0, 1.5, 5), vector(0, 1, 0));
+		camera.transform = viewTransform(point(-2, 2, -7), point(1, 1.5, 5), vector(0, 1, 0));
 
 		image = camera.render(world);
 	}

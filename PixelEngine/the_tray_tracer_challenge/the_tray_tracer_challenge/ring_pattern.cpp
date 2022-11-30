@@ -1,17 +1,15 @@
-#include "stripe_pattern.h"
+#include "ring_pattern.h"
 
 #include <cmath>
 
 namespace RayTracer
 {
 	// ========================= Constructors ==========================
-
-
-	StripePattern::StripePattern()
+	RingPattern::RingPattern()
 	{
 	}
 
-	StripePattern::StripePattern(Color c1, Color c2)
+	RingPattern::RingPattern(Color c1, Color c2)
 	{
 		a = c1;
 		b = c2;
@@ -20,12 +18,14 @@ namespace RayTracer
 	}
 
 	// ============================ Methods ============================
-	const Color StripePattern::colorAt(Tuple point)
+	const Color RingPattern::colorAt(Tuple point)
 	{
-		return ((int)(std::floor((invTransform * point).x)) % 2) ? b : a;
+		Tuple localPoint = invTransform * point;
+		double n = std::sqrt((localPoint.x * localPoint.x) + (localPoint.z * localPoint.z));
+		return (((int)std::floor(n) % 2) == 0 ? a : b);
 	}
 
-	void StripePattern::setTransform(Matrix m)
+	void RingPattern::setTransform(Matrix m)
 	{
 		transform = m;
 		invTransform = m.getInverse();

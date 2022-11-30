@@ -1,17 +1,15 @@
-#include "stripe_pattern.h"
+#include "gradient_pattern.h"
 
 #include <cmath>
 
 namespace RayTracer
 {
 	// ========================= Constructors ==========================
-
-
-	StripePattern::StripePattern()
+	GradientPattern::GradientPattern()
 	{
 	}
 
-	StripePattern::StripePattern(Color c1, Color c2)
+	GradientPattern::GradientPattern(Color c1, Color c2)
 	{
 		a = c1;
 		b = c2;
@@ -20,12 +18,15 @@ namespace RayTracer
 	}
 
 	// ============================ Methods ============================
-	const Color StripePattern::colorAt(Tuple point)
+	const Color GradientPattern::colorAt(Tuple point)
 	{
-		return ((int)(std::floor((invTransform * point).x)) % 2) ? b : a;
+		Tuple localPoint = invTransform * point;
+		double frac = localPoint.x - std::floor(localPoint.x);
+		Color dist = b - a;
+		return a + dist * frac;
 	}
 
-	void StripePattern::setTransform(Matrix m)
+	void GradientPattern::setTransform(Matrix m)
 	{
 		transform = m;
 		invTransform = m.getInverse();

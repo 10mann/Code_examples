@@ -136,11 +136,13 @@
     <ClCompile Include="class_source_template.cpp" />
     <ClCompile Include="color.cpp" />
     <ClCompile Include="DoubleHelpers.cpp" />
+    <ClCompile Include="gradient_pattern.cpp" />
     <ClCompile Include="intersection.cpp" />
     <ClCompile Include="intersection_list.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="material.cpp" />
     <ClCompile Include="matrix.cpp" />
+    <ClCompile Include="ring_pattern.cpp" />
     <ClCompile Include="stripe_pattern.cpp" />
     <ClCompile Include="plane.cpp" />
     <ClCompile Include="point_light.cpp" />
@@ -156,6 +158,7 @@
     <ClInclude Include="canvas.h" />
     <ClInclude Include="color.h" />
     <ClInclude Include="class_header_template.h" />
+    <ClInclude Include="gradient_pattern.h" />
     <ClInclude Include="intersection.h" />
     <ClInclude Include="intersection_list.h" />
     <ClInclude Include="material.h" />
@@ -167,6 +170,7 @@
     <ClInclude Include="ray.h" />
     <ClInclude Include="raytracer_config.h" />
     <ClInclude Include="render_image.h" />
+    <ClInclude Include="ring_pattern.h" />
     <ClInclude Include="scenes.h" />
     <ClInclude Include="shape.h" />
     <ClInclude Include="sphere.h" />
