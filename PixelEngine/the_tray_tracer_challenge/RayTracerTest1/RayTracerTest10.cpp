@@ -13,6 +13,7 @@
 #include "../the_tray_tracer_challenge/matrix.h"
 #include "../the_tray_tracer_challenge/gradient_pattern.h"
 #include "../the_tray_tracer_challenge/ring_pattern.h"
+#include "../the_tray_tracer_challenge/checker_pattern.h"
 
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
@@ -25,6 +26,7 @@ using RayTracer::Sphere;
 using RayTracer::Matrix;
 using RayTracer::GradientPattern;
 using RayTracer::RingPattern;
+using RayTracer::CheckerPattern;
 using DoubleHelpers::MATH_PI;
 using RayTracer::point;
 using RayTracer::vector;
@@ -189,6 +191,39 @@ namespace RayTracerTest10
 			Assert::IsTrue(pattern.colorAt(point(0, 0, 0)) == Color::White);
 			Assert::IsTrue(pattern.colorAt(point(1, 0, 0)) == Color::Black);
 			Assert::IsTrue(pattern.colorAt(point(0, 0, 1)) == Color::Black);
+		}
+
+		TEST_METHOD(TestCheckerPattern1)
+		{
+			Logger::WriteMessage("Testing checkerPattern1");
+
+			CheckerPattern pattern(Color::White, Color::Black);
+
+			Assert::IsTrue(pattern.colorAt(point(0, 0, 0)) == Color::White);
+			Assert::IsTrue(pattern.colorAt(point(0.99, 0, 0)) == Color::White);
+			Assert::IsTrue(pattern.colorAt(point(1.01, 0, 0)) == Color::Black);
+		}
+
+		TEST_METHOD(TestCheckerPattern2)
+		{
+			Logger::WriteMessage("Testing checkerPattern2");
+
+			CheckerPattern pattern(Color::White, Color::Black);
+
+			Assert::IsTrue(pattern.colorAt(point(0, 0, 0)) == Color::White);
+			Assert::IsTrue(pattern.colorAt(point(0, 0.99, 0)) == Color::White);
+			Assert::IsTrue(pattern.colorAt(point(0, 1.01, 0)) == Color::Black);
+		}
+
+		TEST_METHOD(TestCheckerPattern3)
+		{
+			Logger::WriteMessage("Testing checkerPattern3");
+
+			CheckerPattern pattern(Color::White, Color::Black);
+
+			Assert::IsTrue(pattern.colorAt(point(0, 0, 0)) == Color::White);
+			Assert::IsTrue(pattern.colorAt(point(0, 0, 0.99)) == Color::White);
+			Assert::IsTrue(pattern.colorAt(point(0, 0, 1.01)) == Color::Black);
 		}
 	};
 }

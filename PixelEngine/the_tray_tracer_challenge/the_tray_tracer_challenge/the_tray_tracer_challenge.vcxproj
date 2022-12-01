@@ -133,6 +133,7 @@
     <ClCompile Include="benchmarks.cpp" />
     <ClCompile Include="camera.cpp" />
     <ClCompile Include="canvas.cpp" />
+    <ClCompile Include="checker_pattern.cpp" />
     <ClCompile Include="class_source_template.cpp" />
     <ClCompile Include="color.cpp" />
     <ClCompile Include="DoubleHelpers.cpp" />
@@ -156,6 +157,7 @@
     <ClInclude Include="benchmarks.h" />
     <ClInclude Include="camera.h" />
     <ClInclude Include="canvas.h" />
+    <ClInclude Include="checker_pattern.h" />
     <ClInclude Include="color.h" />
     <ClInclude Include="class_header_template.h" />
     <ClInclude Include="gradient_pattern.h" />

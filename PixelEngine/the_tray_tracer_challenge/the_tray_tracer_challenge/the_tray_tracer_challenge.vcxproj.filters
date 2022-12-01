@@ -81,6 +81,9 @@
     <ClCompile Include="ring_pattern.cpp">
       <Filter>Resource Files</Filter>
     </ClCompile>
+    <ClCompile Include="checker_pattern.cpp">
+      <Filter>Resource Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="tuple.h">
@@ -159,6 +162,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="ring_pattern.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="checker_pattern.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
