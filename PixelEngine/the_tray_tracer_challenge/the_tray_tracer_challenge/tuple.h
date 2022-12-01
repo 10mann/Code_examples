@@ -34,7 +34,7 @@ namespace RayTracer
 		Tuple operator+(Tuple const& tuple);
 		Tuple operator-(Tuple const& tuple);
 		friend Tuple operator- (Tuple const& t1, Tuple const& t2);
-		friend bool operator== (Tuple const& t1, Tuple const& t2);
+		friend bool operator== (Tuple const t1, Tuple const t2);
 		Tuple operator-();
 		//Tuple operator*(double n);
 		friend Tuple operator* (Tuple const& t1, double n);

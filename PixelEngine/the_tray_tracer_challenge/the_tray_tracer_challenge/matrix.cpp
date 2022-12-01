@@ -212,7 +212,7 @@ namespace RayTracer
 		return ret;
 	}
 
-	bool operator==(Matrix const& m1, Matrix const& m2)
+	bool operator==(Matrix const m1, Matrix const m2)
 	{
 		bool ret = true;
 		for (int i = 0; i < m1.rows; i++)

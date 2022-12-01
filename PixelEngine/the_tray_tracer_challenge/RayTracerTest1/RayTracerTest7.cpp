@@ -81,8 +81,8 @@ namespace RayTracerTest7
 
 			Assert::IsTrue(world.objects.size() == 2);
 			Assert::IsTrue(world.lights.size() == 1);
-			Assert::IsTrue(world.containsObject(s1));
-			Assert::IsTrue(world.containsObject(s2));
+			Assert::IsTrue(world.containsObject(&s1));
+			Assert::IsTrue(world.containsObject(&s2));
 			Assert::IsTrue(world.containsLight(light));
 		}
 

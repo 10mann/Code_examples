@@ -168,6 +168,7 @@
     </ClCompile>
     <ClCompile Include="RayTracerTest1.cpp" />
     <ClCompile Include="RayTracerTest10.cpp" />
+    <ClCompile Include="RayTracerTest11.cpp" />
     <ClCompile Include="RayTracerTest2.cpp" />
     <ClCompile Include="RayTracerTest3.cpp" />
     <ClCompile Include="RayTracerTest4.cpp" />

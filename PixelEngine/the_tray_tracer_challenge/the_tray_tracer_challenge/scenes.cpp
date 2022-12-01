@@ -17,6 +17,7 @@
 #include "stripe_pattern.h"
 #include "gradient_pattern.h"
 #include "ring_pattern.h"
+#include "checker_pattern.h"
 
 using RayTracer::Matrix;
 using RayTracer::Tuple;
@@ -32,6 +33,7 @@ using RayTracer::Plane;
 using RayTracer::StripePattern;
 using RayTracer::GradientPattern;
 using RayTracer::RingPattern;
+using RayTracer::CheckerPattern;
 
 using RayTracer::rotationX;
 using RayTracer::rotationY;
@@ -254,7 +256,10 @@ namespace RayTracer
 		pattern2.setTransform(scaling(0.4, 0.4, 0.4) * translation(1.5, 0, 0));
 
 		RingPattern pattern3(Color(1.000, 0.600, 0.000), Color(1.000, 0.000, 0.000));
-		pattern3.setTransform(rotationZ(DoubleHelpers::MATH_PI / 2.0) * scaling(0.2, 0.2, 0.2));
+		pattern3.setTransform(/*rotationX(DoubleHelpers::MATH_PI / 2.0) * */scaling(0.2, 0.2, 0.2));
+
+		CheckerPattern pattern4(Color(0.4, 0.4, 0.4), Color(1, 1, 1));
+		//pattern4.setTransform(rotationX(DoubleHelpers::MATH_PI / 2));
 
 
 		Plane floor;
@@ -262,7 +267,8 @@ namespace RayTracer
 		floor.material.diffuse = 1;
 		floor.material.specular = 1;
 		floor.material.color = Color(1, 1, 1);
-		floor.material.pattern = &pattern3;
+		floor.material.reflective = 0.3;
+		floor.material.pattern = &pattern4;
 
 		Sphere s1;
 		s1.transform = translation(2, 1.6, 1) * scaling(1.5, 1.5, 1.5);

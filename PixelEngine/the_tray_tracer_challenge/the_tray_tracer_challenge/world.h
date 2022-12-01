@@ -21,13 +21,14 @@ namespace RayTracer
 		World();
 
 		// Methods
-		bool containsObject(const Shape& s);
+		bool containsObject(const Shape* s);
 		bool containsLight(const PointLight& s);
 		IntersectionList getIntersections(Ray& ray);
 		Color getHitColor(ComputeValues computeValues);
 		Color getColor(Ray& ray);
 		bool isInShadow(Tuple point, PointLight light);
 		void calculateInverseTransforms(void);
+		Color getReflectedColor(ComputeValues comp);
 
 		// Operators
 		

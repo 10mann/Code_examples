@@ -16,6 +16,7 @@
 #include "camera.h"
 #include "stripe_pattern.h"
 #include "gradient_pattern.h"
+#include "plane.h"
 
 #include "scenes.h"
 #include "benchmarks.h"
@@ -40,6 +41,7 @@ using RayTracer::ComputeValues;
 using RayTracer::Camera;
 using RayTracer::StripePattern;
 using RayTracer::GradientPattern;
+using RayTracer::Plane;
 
 using RayTracer::rotationX;
 using RayTracer::rotationY;
@@ -134,6 +136,17 @@ public:
 		std::cout << "Time to draw: " << drawDuration.count() << std::endl;
 		
 		drawCanvasToScreen(image);
+
+		//World world = createDfaultWorld();
+		//Plane plane;
+		//plane.material.reflective = 0.5;
+		//plane.setTransform(translation(0, -1, 0));
+		//world.objects.push_back(&plane);
+		//Ray ray(RayTracer::point(0, 0, -3), RayTracer::vector(0, -std::sqrt(2) / 2.0, std::sqrt(2) / 2.0));
+		//Intersection i(std::sqrt(2), &plane);
+		//ComputeValues comp = i.getComputeValues(ray);
+		//Color c = world.getReflectedColor(comp);
+		//c.print();
 
 		return true;
 	}

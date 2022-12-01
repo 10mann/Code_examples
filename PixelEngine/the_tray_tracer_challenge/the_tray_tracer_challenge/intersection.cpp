@@ -4,7 +4,6 @@
 
 namespace RayTracer
 {
-	//Intersection const Intersection::empty = Intersection(-1, nullptr);
 	Intersection const Intersection::empty = Intersection(-1, nullptr);
 
 	// ========================= Constructors ==========================
@@ -33,6 +32,7 @@ namespace RayTracer
 		{
 			computeValues.normal = -computeValues.normal;
 		}
+		computeValues.reflectVector = getReflection(ray.direction, computeValues.normal);
 		computeValues.overPoint = computeValues.point + computeValues.normal * DoubleHelpers::EPSILON;
 		return computeValues;
 	}

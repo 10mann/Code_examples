@@ -9,7 +9,9 @@ namespace RayTracer
 	Sphere::Sphere()
 		: center(point(0, 0, 0)), radius(0.0)
 	{
-
+		transform = Matrix::identityMatrix;
+		invTransform = Matrix::identityMatrix;
+		material = Material();
 	}
 
 
@@ -26,10 +28,9 @@ namespace RayTracer
 	std::vector<double> RayTracer::Sphere::getIntersectTime(Ray& ray)
 	{
 		std::vector<double> intersectTimes;
-		Ray transRay = ray.transform(invTransform);
-		Tuple sphereVector = transRay.origin - (point(0, 0, 0));
-		double a = 2 * transRay.direction.dotProduct(transRay.direction);
-		double b = 2 * transRay.direction.dotProduct(sphereVector);
+		Tuple sphereVector = ray.origin - (point(0, 0, 0));
+		double a = 2 * ray.direction.dotProduct(ray.direction);
+		double b = 2 * ray.direction.dotProduct(sphereVector);
 		double discriminant = (b * b) - (2 * a * (sphereVector.dotProduct(sphereVector) - 1.0));
 
 		if (discriminant > (-DoubleHelpers::EPSILON))
@@ -51,9 +52,9 @@ namespace RayTracer
 	bool Sphere::operator==(Shape const& s1)
 	{
 		Sphere* s2 = (Sphere*)(&s1);
+
 		return ((center == s2->center) &&
-			(radius == s2->radius) &&
-			(transform == s2->transform) &&
-			(material == s2->material));
+			(DoubleHelpers::isEqualDouble(radius, s2->radius))
+			&& (transform == s2->transform));
 	}
 }

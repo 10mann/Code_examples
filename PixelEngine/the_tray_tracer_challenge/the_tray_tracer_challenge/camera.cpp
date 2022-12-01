@@ -49,13 +49,6 @@ namespace RayTracer
 
 	Ray Camera::getRay(double x, double y)
 	{
-		//Tuple pixel = transform.getInverse() * point(
-		//	(halfViewX - ((x + 0.5) * pixelSize)),
-		//	(halfViewY - ((y + 0.5) * pixelSize)), -1);
-
-		//Tuple origin = transform.getInverse() * point(0, 0, 0);
-		//Tuple direction = (pixel - origin).getNormalized();
-
 		Tuple pixel = invTransform * point(
 			(halfViewX - ((x + 0.5) * pixelSize)),
 			(halfViewY - ((y + 0.5) * pixelSize)), -1);

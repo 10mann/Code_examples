@@ -13,6 +13,7 @@ namespace RayTracer
 		diffuse(0.9), 
 		specular(0.9), 
 		shininess(200),
+		reflective(0),
 		pattern(nullptr)
 	{
 	}

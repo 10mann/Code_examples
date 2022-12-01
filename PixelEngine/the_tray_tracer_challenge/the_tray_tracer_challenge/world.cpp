@@ -1,4 +1,5 @@
 #include "world.h"
+#include "DoubleHelpers.h"
 
 #include <cmath>
 
@@ -10,12 +11,12 @@ namespace RayTracer
 	}
 
 	// ============================ Methods ============================
-	bool World::containsObject(const Shape& s)
+	bool World::containsObject(const Shape* s)
 	{
 		bool result = false;
 		for (const auto& shape : objects)
 		{
-			if ((*shape) == s)
+			if ((*shape) == *s)
 			{
 				result = true;
 				break;
@@ -43,7 +44,6 @@ namespace RayTracer
 		IntersectionList list;
 		for (auto& s : objects)
 		{
-			//list.addList(ray.getIntersection(s));
 			list.addIntersections(ray, s);
 		}
 		
@@ -59,6 +59,8 @@ namespace RayTracer
 			color = color + getLighting(computeValues.object, light, computeValues.point, computeValues.eyeDir, computeValues.normal, isInShadow(computeValues.overPoint, light));
 		}
 
+		color = color + getReflectedColor(computeValues);
+
 		return color;
 	}
 
@@ -69,14 +71,12 @@ namespace RayTracer
 
 		for (auto& obj : objects)
 		{
-			//list.addList(ray.getIntersection(obj));
 			list.addIntersections(ray, obj);
 		}
 
 		Intersection hit = list.hit();
 		if (hit.i > 0)
 		{
-			//color = getHitColor(ray.getComputeValues(hit));
 			color = getHitColor(hit.getComputeValues(ray));
 		}
 		
@@ -98,6 +98,18 @@ namespace RayTracer
 		{
 			obj->invTransform = obj->transform.getInverse();
 		}
+	}
+
+	Color World::getReflectedColor(ComputeValues comp)
+	{
+		Color c(0, 0, 0);
+		if (comp.object->material.reflective > DoubleHelpers::EPSILON)
+		{
+			Ray ray(comp.overPoint, comp.reflectVector);
+			c = getColor(ray) * comp.object->material.reflective;
+		}
+
+		return c;
 	}
 
 	// =========================== Operators ===========================

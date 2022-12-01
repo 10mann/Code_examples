@@ -15,6 +15,7 @@ namespace RayTracer
 		double diffuse;
 		double specular;
 		double shininess;
+		double reflective;
 		Pattern* pattern;
 
 		// Constructors

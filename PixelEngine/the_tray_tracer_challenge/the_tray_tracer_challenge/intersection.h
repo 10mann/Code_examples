@@ -13,6 +13,7 @@ namespace RayTracer
 		Tuple eyeDir;
 		Tuple normal;
 		Tuple overPoint;
+		Tuple reflectVector;
 		bool inside;
 	};
 
