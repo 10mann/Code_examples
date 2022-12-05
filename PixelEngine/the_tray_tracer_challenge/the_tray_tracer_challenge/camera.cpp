@@ -112,7 +112,7 @@ namespace RayTracer
 			for (int x = startX; x < (startX + width); x++)
 			{
 				RayTracer::Ray ray = getRay(x, y);
-				canvas.writePixel(x, y, world.getColor(ray));
+				canvas.writePixel(x, y, world.getColor(ray, 0));
 			}
 		}
 	}

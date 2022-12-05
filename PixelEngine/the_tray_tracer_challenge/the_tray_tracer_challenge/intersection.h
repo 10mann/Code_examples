@@ -13,7 +13,10 @@ namespace RayTracer
 		Tuple eyeDir;
 		Tuple normal;
 		Tuple overPoint;
+		Tuple underPoint;
 		Tuple reflectVector;
+		double n1;
+		double n2;
 		bool inside;
 	};
 
@@ -31,7 +34,7 @@ namespace RayTracer
 		Intersection(double i, Shape* object);
 
 		// Methods
-		ComputeValues getComputeValues(Ray& ray);
+		//ComputeValues getComputeValues(Ray& ray);
 
 		// Operators
 		bool operator==(const Intersection& intersect);

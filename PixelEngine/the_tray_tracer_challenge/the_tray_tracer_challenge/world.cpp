@@ -1,5 +1,6 @@
 #include "world.h"
 #include "DoubleHelpers.h"
+#include "raytracer_config.h"
 
 #include <cmath>
 
@@ -51,7 +52,7 @@ namespace RayTracer
 		return list;
 	}
 
-	Color World::getHitColor(ComputeValues computeValues)
+	Color World::getHitColor(ComputeValues computeValues, int bounces)
 	{
 		Color color;
 		for (auto& light : lights)
@@ -59,13 +60,14 @@ namespace RayTracer
 			color = color + getLighting(computeValues.object, light, computeValues.point, computeValues.eyeDir, computeValues.normal, isInShadow(computeValues.overPoint, light));
 		}
 
-		color = color + getReflectedColor(computeValues);
+		color = color + getReflectedColor(computeValues, bounces);
 
 		return color;
 	}
 
-	Color RayTracer::World::getColor(Ray& ray)
+	Color RayTracer::World::getColor(Ray& ray, int bounces)
 	{
+		// ================== Check later ==============================
 		Color color;
 		IntersectionList list;
 
@@ -77,7 +79,7 @@ namespace RayTracer
 		Intersection hit = list.hit();
 		if (hit.i > 0)
 		{
-			color = getHitColor(hit.getComputeValues(ray));
+			color = getHitColor(list.getComputeValues(hit, ray), bounces);
 		}
 		
 		return color;
@@ -100,13 +102,13 @@ namespace RayTracer
 		}
 	}
 
-	Color World::getReflectedColor(ComputeValues comp)
+	Color World::getReflectedColor(ComputeValues comp, int bounces)
 	{
 		Color c(0, 0, 0);
-		if (comp.object->material.reflective > DoubleHelpers::EPSILON)
+		if ((bounces < MAX_REFLECTIONS) &&  (comp.object->material.reflective > DoubleHelpers::EPSILON))
 		{
 			Ray ray(comp.overPoint, comp.reflectVector);
-			c = getColor(ray) * comp.object->material.reflective;
+			c = getColor(ray, ++bounces) * comp.object->material.reflective;
 		}
 
 		return c;

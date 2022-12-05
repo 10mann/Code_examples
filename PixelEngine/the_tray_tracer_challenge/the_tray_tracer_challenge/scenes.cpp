@@ -301,4 +301,64 @@ namespace RayTracer
 		image = camera.render(world);
 	}
 
+	void drawDefaultScene4(Canvas& image)
+	{
+		StripePattern pattern1(Color(0.4, 0.4, 0.4), Color(1, 1, 1));
+		//pattern1.setTransform(scaling(0.3, 0.3, 0.3) * rotationZ(DoubleHelpers::MATH_PI / 4));
+
+		GradientPattern pattern2(Color(1.000, 0.600, 0.000), Color(1.000, 0.000, 0.000));
+		pattern2.setTransform(scaling(0.4, 0.4, 0.4) * translation(1.5, 0, 0));
+
+		RingPattern pattern3(Color(1.000, 0.600, 0.000), Color(1.000, 0.000, 0.000));
+		pattern3.setTransform(/*rotationX(DoubleHelpers::MATH_PI / 2.0) * */scaling(0.2, 0.2, 0.2));
+
+		//CheckerPattern pattern4(Color(0.5, 0.5, 0.5), Color(1, 1, 1));
+		//pattern4.setTransform(rotationX(DoubleHelpers::MATH_PI / 4));
+
+
+		Plane floor;
+		floor.material.specular = 0.8;
+		floor.material.diffuse = 1;
+		floor.material.specular = 1;
+		floor.material.color = Color(1, 1, 1);
+		floor.material.reflective = 0.3;
+		floor.material.pattern = &pattern1;
+
+		Sphere s1;
+		s1.transform = translation(2, 1.6, 1) * scaling(1.5, 1.5, 1.5);
+		s1.material.color = Color(0.25, 0.74, 0.96);
+		s1.material.reflective = 0.7;
+		s1.material.diffuse = 0.6;
+
+		Sphere s2;
+		s2.transform = translation(-0.5, 2.9, -2) * scaling(0.35, 0.35, 0.35);
+		//s2.material.color = Color(0.34, 0.96, 0.26);
+		s2.material.color = Color(0.6, 0.1, 0.6);
+		s2.material.diffuse = 0.9;
+		s2.material.reflective = 1;
+		s2.material.shininess = 100;
+		s2.material.specular = 0.9;
+		//s2.material.pattern = &pattern2;
+
+
+		Sphere s3;
+		s3.transform = translation(-2.5, 1.15, 0) * scaling(1.1, 1.1, 1.1);
+		s3.material.color = Color(0.867, 0.000, 1.000);
+		s3.material.pattern = &pattern3;
+		s3.material.reflective = 0.4;
+
+
+		World world;
+		world.lights.push_back(PointLight(Color(1, 1, 1), point(-7, 5, -10)));
+		world.objects.push_back(&floor);
+		world.objects.push_back(&s1);
+		world.objects.push_back(&s2);
+		world.objects.push_back(&s3);
+
+		Camera camera(image.width, image.height, MATH_PI / 3);
+		camera.transform = viewTransform(point(-2, 2, -7), point(1, 1.5, 5), vector(0, 1, 0));
+
+		image = camera.render(world);
+	}
+
 }

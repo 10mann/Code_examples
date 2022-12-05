@@ -109,8 +109,9 @@ namespace RayTracerTest7
 			Ray ray(point(0, 0, -5), vector(0, 0, 1));
 			Sphere s;
 			Intersection intersection(4, &s);
+			IntersectionList list;
 			//ComputeValues computeValues = ray.getComputeValues(intersection);
-			ComputeValues computeValues = intersection.getComputeValues(ray);
+			ComputeValues computeValues = list.getComputeValues(intersection, ray);
 
 			Assert::IsTrue(isEqualDouble (computeValues.i, intersection.i));
 			Assert::IsTrue(computeValues.object == intersection.object);
@@ -126,8 +127,9 @@ namespace RayTracerTest7
 			Ray ray(point(0, 0, -5), vector(0, 0, 1));
 			Sphere s;
 			Intersection intersection(4, &s);
+			IntersectionList list;
 			//ComputeValues computeValues = ray.getComputeValues(intersection);
-			ComputeValues computeValues = intersection.getComputeValues(ray);
+			ComputeValues computeValues = list.getComputeValues(intersection, ray);
 
 			Assert::IsTrue((computeValues.inside == false));
 		}
@@ -139,8 +141,9 @@ namespace RayTracerTest7
 			Ray ray(point(0, 0, 0), vector(0, 0, 1));
 			Sphere s;
 			Intersection intersection(1, &s);
+			IntersectionList list;
 			//ComputeValues computeValues = ray.getComputeValues(intersection);
-			ComputeValues computeValues = intersection.getComputeValues(ray);
+			ComputeValues computeValues = list.getComputeValues(intersection, ray);
 
 			Assert::IsTrue((computeValues.inside == true));
 			Assert::IsTrue(computeValues.object == intersection.object);
@@ -155,9 +158,10 @@ namespace RayTracerTest7
 			World world = createDfaultWorld();
 			Ray ray(point(0, 0, -5), vector(0, 0, 1));
 			Intersection intersection(4, world.objects[0]);
+			IntersectionList list;
 			//ComputeValues computeValues = ray.getComputeValues(intersection);
-			ComputeValues computeValues = intersection.getComputeValues(ray);
-			Color color = world.getHitColor(computeValues);
+			ComputeValues computeValues = list.getComputeValues(intersection, ray);
+			Color color = world.getHitColor(computeValues, 0);
 
 			//std::cout << "Test!" << std::endl;
 
@@ -186,7 +190,7 @@ namespace RayTracerTest7
 			World world = createDfaultWorld();
 			Ray ray(point(0, 0, -5), vector(0, 1, 0));
 
-			Color color = world.getColor(ray);
+			Color color = world.getColor(ray, 0);
 
 			Assert::IsTrue(color == Color(0, 0, 0));
 		}
@@ -198,7 +202,7 @@ namespace RayTracerTest7
 			world.calculateInverseTransforms();
 			Ray ray(point(0, 0, -5), vector(0, 0, 1));
 
-			Color color = world.getColor(ray);
+			Color color = world.getColor(ray, 0);
 
 			Assert::IsTrue(color == Color(0.38066, 0.47583, 0.2855));
 		}
@@ -213,7 +217,7 @@ namespace RayTracerTest7
 			world.objects[1]->material.ambient = 1;
 			world.calculateInverseTransforms();
 
-			Color color = world.getColor(ray);
+			Color color = world.getColor(ray, 0);
 
 			Assert::IsTrue(color == sInner->material.color);
 		}

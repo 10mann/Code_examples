@@ -29,6 +29,7 @@ using RayTracer::Matrix;
 using RayTracer::Plane;
 using RayTracer::Ray;
 using RayTracer::Intersection;
+using RayTracer::IntersectionList;
 using RayTracer::ComputeValues;
 using RayTracer::World;
 using RayTracer::Shape;
@@ -41,6 +42,7 @@ using RayTracer::getLighting;
 using RayTracer::scaling;
 using RayTracer::translation;
 using RayTracer::createDfaultWorld;
+using RayTracer::glassSphere;
 
 
 namespace RayTracerTest11
@@ -61,7 +63,8 @@ namespace RayTracerTest11
 			Plane shape;
 			Ray ray(point(0, 1, -1), vector(0, -std::sqrt(2) / 2.0, std::sqrt(2) / 2.0));
 			Intersection i(std::sqrt(2), &shape);
-			ComputeValues comp = i.getComputeValues(ray);
+			IntersectionList list;
+			ComputeValues comp = list.getComputeValues(i, ray);
 
 			Assert::IsTrue(comp.reflectVector == vector(0, std::sqrt(2) / 2, std::sqrt(2) / 2));
 		}
@@ -75,8 +78,9 @@ namespace RayTracerTest11
 			Shape* shape = world.objects[1];
 			shape->material.ambient = 1;
 			Intersection i(1, shape);
-			ComputeValues comp = i.getComputeValues(ray);
-			Color c = world.getReflectedColor(comp);
+			IntersectionList list;
+			ComputeValues comp = list.getComputeValues(i, ray);
+			Color c = world.getReflectedColor(comp, 0);
 
 			Assert::IsTrue(c == Color(0, 0, 0));
 		}
@@ -92,10 +96,92 @@ namespace RayTracerTest11
 			world.objects.push_back(&plane);
 			Ray ray(point(0, 0, -3), vector(0, -std::sqrt(2) / 2.0, std::sqrt(2) / 2.0));
 			Intersection i(std::sqrt(2), &plane);
-			ComputeValues comp = i.getComputeValues(ray);
-			Color c = world.getHitColor(comp);
+			IntersectionList list;
+			ComputeValues comp = list.getComputeValues(i, ray);
+			Color c = world.getHitColor(comp, 0);
 
 			Assert::IsTrue(c == Color(0.87676, 0.92435, 0.82917));
+		}
+
+		TEST_METHOD(TestReflectiveMaterialInfiniteRecursion)
+		{
+			Logger::WriteMessage("Testing reflectiveMaterialInfiniteRecursion");
+
+			World world;
+			Plane floor;
+			floor.material.reflective = 1;
+			floor.setTransform(translation(0, -1, 0));
+			world.objects.push_back(&floor);
+
+			Plane roof;
+			roof.material.reflective = 1;
+			roof.setTransform(translation(0, 1, 0));
+			world.objects.push_back(&roof);
+			Ray ray(point(0, 0, 0), vector(0, 1, 0));
+
+			Color c = world.getColor(ray, 0);
+
+			Assert::IsTrue(true);
+		}
+
+		TEST_METHOD(TestTransparencyAndRefractiveIndex)
+		{
+			Logger::WriteMessage("Testing transparencyAndRefractiveIndex");
+
+			Material m;
+			
+			Assert::IsTrue(isEqualDouble(0, m.transparency));
+			Assert::IsTrue(isEqualDouble(1.00, m.refractiveIndex));
+		}
+
+		TEST_METHOD(TestGlassSphere)
+		{
+			Logger::WriteMessage("Testing glassSphere");
+
+			Sphere sphere = glassSphere();
+
+			Assert::IsTrue(isEqualDouble(1, sphere.material.transparency));
+			Assert::IsTrue(isEqualDouble(REFRACT_GLASS, sphere.material.refractiveIndex));
+		}
+
+		TEST_METHOD(TestN1N2Intersect)
+		{
+			Logger::WriteMessage("Testing findN1N2Intersect");
+			Sphere A = glassSphere();
+			A.setTransform(scaling(2, 2, 2));
+			A.material.refractiveIndex = 1.5;
+
+			Sphere B = glassSphere();
+			B.setTransform(translation(0, 0, -0.25));
+			B.material.refractiveIndex = 2.0;
+
+			Sphere C = glassSphere();
+			C.setTransform(translation(0, 0, 0.25));
+			C.material.refractiveIndex = 2.5;
+
+			Ray ray(point(0, 0, -4), vector(0, 0, 1));
+			IntersectionList hits;
+			hits.addIntersections(ray, &A);
+			hits.addIntersections(ray, &B);
+			hits.addIntersections(ray, &C);
+			hits.sort();
+
+			double n1List[] = 
+			{
+				1, 1.5, 2, 2.5, 2.5, 1.5
+			};
+
+			double n2List[] =
+			{
+				1.5, 2.0, 2.5, 2.5, 1.5, 1.0
+			};
+
+			for (int i = 0; i < hits.count(); i++)
+			{
+				Intersection hit = hits[i];
+				Assert::IsTrue(isEqualDouble(hits.getComputeValues(hit, ray).n1, n1List[i]));
+				Assert::IsTrue(isEqualDouble(hits.getComputeValues(hit, ray).n2, n2List[i]));
+			}
 		}
 	};
 }

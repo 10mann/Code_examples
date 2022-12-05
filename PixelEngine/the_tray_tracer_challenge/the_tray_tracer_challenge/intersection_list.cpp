@@ -1,7 +1,9 @@
 #include "intersection_list.h"
+#include "DoubleHelpers.h"
 
 #include <algorithm>
 #include <vector>
+#include <iostream>
 
 namespace RayTracer
 {
@@ -73,6 +75,70 @@ namespace RayTracer
 	void IntersectionList::sort(void)
 	{
 		std::sort(intersections.begin(), intersections.end(), [](const Intersection& i1, const Intersection& i2) -> bool { return (i1.i < i2.i); });
+	}
+
+	ComputeValues IntersectionList::getComputeValues(Intersection intersect, Ray& ray)
+	{
+		ComputeValues computeValues;
+		computeValues.i = intersect.i;
+		computeValues.object = intersect.object;
+		computeValues.point = ray.getPosition(computeValues.i);
+		computeValues.eyeDir = -ray.direction;
+		computeValues.normal = computeValues.object->getNormal(computeValues.point);
+		computeValues.inside = (computeValues.normal.dotProduct(computeValues.eyeDir) < 0);
+		if (true == computeValues.inside)
+		{
+			computeValues.normal = -computeValues.normal;
+		}
+		computeValues.reflectVector = getReflection(ray.direction, computeValues.normal);
+		computeValues.overPoint = computeValues.point + computeValues.normal * DoubleHelpers::EPSILON;
+		computeValues.underPoint = computeValues.point - computeValues.normal * DoubleHelpers::EPSILON;
+
+		Intersection hit = this->hit();
+		//std::vector<Shape*> containers;
+
+		if (intersect == hit)
+		{
+			if (containers.size() == 0)
+			{
+				computeValues.n1 = 1;
+			}
+			else
+			{
+				computeValues.n1 = containers[containers.size() - 1]->material.refractiveIndex;
+			}
+		}
+
+		bool exists = false;
+		for (int j = 0; j < containers.size(); j++)
+		{
+			if (intersect.object == containers[j])
+			{
+				//std::cout << "Object exists" << std::endl;
+				exists = true;
+				containers.erase(containers.begin() + j);
+				break;
+			}
+		}
+		if (false == exists)
+		{
+			containers.push_back(intersect.object);
+		}
+
+		if (intersect == hit)
+		{
+			if (containers.size() == 0)
+			{
+				computeValues.n2 = 1;
+			}
+			else
+			{
+				computeValues.n2 = containers[containers.size() - 1]->material.refractiveIndex;
+			}
+		}
+		
+
+		return computeValues;
 	}
 
 

@@ -28,4 +28,6 @@ namespace RayTracer
 		// Operators
 		bool operator== (Shape const& s1) override;
 	};
+
+	Sphere glassSphere();
 }

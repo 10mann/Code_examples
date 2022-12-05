@@ -57,4 +57,12 @@ namespace RayTracer
 			(DoubleHelpers::isEqualDouble(radius, s2->radius))
 			&& (transform == s2->transform));
 	}
+
+	Sphere glassSphere()
+	{
+		Sphere sphere;
+		sphere.material.refractiveIndex = REFRACT_GLASS;
+		sphere.material.transparency = 1;
+		return sphere;
+	}
 }

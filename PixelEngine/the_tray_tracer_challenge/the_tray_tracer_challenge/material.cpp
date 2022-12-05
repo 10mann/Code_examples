@@ -14,6 +14,8 @@ namespace RayTracer
 		specular(0.9), 
 		shininess(200),
 		reflective(0),
+		transparency(0),
+		refractiveIndex(1),
 		pattern(nullptr)
 	{
 	}

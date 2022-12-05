@@ -13,8 +13,9 @@ namespace RayTracer
 	public:
 
 		// Variables
-
 		std::vector<Intersection> intersections;
+		std::vector<Shape*> containers;
+
 		// Constructors
 		IntersectionList();
 		IntersectionList(Intersection intersection);
@@ -26,6 +27,8 @@ namespace RayTracer
 		void addList(IntersectionList intersect);
 		void addIntersections(Ray& ray, Shape* shape);
 		void sort(void);
+
+		ComputeValues getComputeValues(Intersection intersect, Ray& ray);
 
 		// Operators
 		const Intersection& operator[](int n);

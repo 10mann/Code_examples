@@ -19,23 +19,23 @@ namespace RayTracer
 
 	// ============================ Methods ============================
 
-	ComputeValues Intersection::getComputeValues(Ray& ray)
-	{
-		ComputeValues computeValues;
-		computeValues.i = i;
-		computeValues.object = object;
-		computeValues.point = ray.getPosition(computeValues.i);
-		computeValues.eyeDir = -ray.direction;
-		computeValues.normal = computeValues.object->getNormal(computeValues.point);
-		computeValues.inside = (computeValues.normal.dotProduct(computeValues.eyeDir) < 0);
-		if (true == computeValues.inside)
-		{
-			computeValues.normal = -computeValues.normal;
-		}
-		computeValues.reflectVector = getReflection(ray.direction, computeValues.normal);
-		computeValues.overPoint = computeValues.point + computeValues.normal * DoubleHelpers::EPSILON;
-		return computeValues;
-	}
+	//ComputeValues Intersection::getComputeValues(Ray& ray)
+	//{
+	//	ComputeValues computeValues;
+	//	computeValues.i = i;
+	//	computeValues.object = object;
+	//	computeValues.point = ray.getPosition(computeValues.i);
+	//	computeValues.eyeDir = -ray.direction;
+	//	computeValues.normal = computeValues.object->getNormal(computeValues.point);
+	//	computeValues.inside = (computeValues.normal.dotProduct(computeValues.eyeDir) < 0);
+	//	if (true == computeValues.inside)
+	//	{
+	//		computeValues.normal = -computeValues.normal;
+	//	}
+	//	computeValues.reflectVector = getReflection(ray.direction, computeValues.normal);
+	//	computeValues.overPoint = computeValues.point + computeValues.normal * DoubleHelpers::EPSILON;
+	//	return computeValues;
+	//}
 
 	// =========================== Operators ===========================
 	bool Intersection::operator==(const Intersection& intersect)

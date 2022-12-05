@@ -128,11 +128,11 @@ namespace RayTracerTest8
 			world.calculateInverseTransforms();
 
 			Intersection intersect(4, &s2);
-
+			IntersectionList list;
 			//ComputeValues compValues = ray.getComputeValues(intersect);
-			ComputeValues computeValues = intersect.getComputeValues(ray);
+			ComputeValues computeValues = list.getComputeValues(intersect, ray);
 
-			Color color = world.getHitColor(computeValues);
+			Color color = world.getHitColor(computeValues, 0);
 
 			Assert::IsTrue(color == Color(0.1, 0.1, 0.1));
 		}
@@ -145,8 +145,9 @@ namespace RayTracerTest8
 			Sphere s1;
 			s1.setTransform(translation(0, 0, 1));
 			Intersection i(5, &s1);
+			IntersectionList list;
 			//ComputeValues compValues = ray.getComputeValues(i);
-			ComputeValues compValues = i.getComputeValues(ray);
+			ComputeValues compValues = list.getComputeValues(i, ray);
 
 			Assert::IsTrue(compValues.overPoint.z < -(DoubleHelpers::EPSILON) / 2);
 			Assert::IsTrue(compValues.overPoint.z < compValues.point.z);

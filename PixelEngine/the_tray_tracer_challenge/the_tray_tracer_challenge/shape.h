@@ -4,6 +4,7 @@
 #include "material.h"
 #include "ray.h"
 #include "pattern.h"
+#include "raytracer_config.h"
 
 namespace RayTracer
 {

@@ -24,11 +24,11 @@ namespace RayTracer
 		bool containsObject(const Shape* s);
 		bool containsLight(const PointLight& s);
 		IntersectionList getIntersections(Ray& ray);
-		Color getHitColor(ComputeValues computeValues);
-		Color getColor(Ray& ray);
+		Color getHitColor(ComputeValues computeValues, int bounces);
+		Color getColor(Ray& ray, int bounces);
 		bool isInShadow(Tuple point, PointLight light);
 		void calculateInverseTransforms(void);
-		Color getReflectedColor(ComputeValues comp);
+		Color getReflectedColor(ComputeValues comp, int bounces);
 
 		// Operators
 		
