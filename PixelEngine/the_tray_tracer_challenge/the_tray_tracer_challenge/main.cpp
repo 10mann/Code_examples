@@ -128,39 +128,39 @@ public:
 			RayTracer::Tuple(0.0, -0.4, 0.0, 0.0));
 
 		
-		//Canvas image(ScreenWidth(), ScreenHeight());
-		//auto timeStart = std::chrono::steady_clock::now();
-		////drawDefaultScene(image);
-		//drawDefaultScene4(image);
-		//auto timeEnd = std::chrono::steady_clock::now();
-		//auto drawDuration = std::chrono::duration_cast<std::chrono::milliseconds>(timeEnd - timeStart);
-		//std::cout << "Time to draw: " << drawDuration.count() << std::endl;
-		//
-		//drawCanvasToScreen(image);
+		Canvas image(ScreenWidth(), ScreenHeight());
+		auto timeStart = std::chrono::steady_clock::now();
+		//drawDefaultScene(image);
+		drawDefaultScene4(image);
+		auto timeEnd = std::chrono::steady_clock::now();
+		auto drawDuration = std::chrono::duration_cast<std::chrono::milliseconds>(timeEnd - timeStart);
+		std::cout << "Time to draw: " << drawDuration.count() << std::endl;
+		
+		drawCanvasToScreen(image);
 
-		Sphere A = glassSphere();
-		A.setTransform(scaling(2, 2, 2));
-		A.material.refractiveIndex = 1.5;
+		//Sphere A = glassSphere();
+		//A.setTransform(scaling(2, 2, 2));
+		//A.material.refractiveIndex = 1.5;
 
-		Sphere B = glassSphere();
-		B.setTransform(translation(0, 0, -0.25));
-		B.material.refractiveIndex = 2.0;
+		//Sphere B = glassSphere();
+		//B.setTransform(translation(0, 0, -0.25));
+		//B.material.refractiveIndex = 2.0;
 
-		Sphere C = glassSphere();
-		C.setTransform(translation(0, 0, 0.25));
-		C.material.refractiveIndex = 2.5;
+		//Sphere C = glassSphere();
+		//C.setTransform(translation(0, 0, 0.25));
+		//C.material.refractiveIndex = 2.5;
 
-		Ray ray(RayTracer::point(0, 0, -4), RayTracer::vector(0, 0, 1));
-		IntersectionList hits;
-		hits.addIntersections(ray, &A);
-		hits.addIntersections(ray, &B);
-		hits.addIntersections(ray, &C);
-		hits.sort();
+		//Ray ray(RayTracer::point(0, 0, -4), RayTracer::vector(0, 0, 1));
+		//IntersectionList hits;
+		//hits.addIntersections(ray, &A);
+		//hits.addIntersections(ray, &B);
+		//hits.addIntersections(ray, &C);
+		//hits.sort();
 
-		for (int i = 0; i < hits.count(); i++)
-		{
-			std::cout << hits[i].i <<", " << hits.getComputeValues(hits[i], ray).n1 << ", " << hits.getComputeValues(hits[i], ray).n2 << std::endl;
-		}
+		//for (int i = 0; i < hits.count(); i++)
+		//{
+		//	std::cout << hits[i].i <<", " << hits.getComputeValues(hits[i], ray).n1 << ", " << hits.getComputeValues(hits[i], ray).n2 << std::endl;
+		//}
 
 		return true;
 	}

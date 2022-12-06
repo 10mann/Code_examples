@@ -94,48 +94,52 @@ namespace RayTracer
 		computeValues.overPoint = computeValues.point + computeValues.normal * DoubleHelpers::EPSILON;
 		computeValues.underPoint = computeValues.point - computeValues.normal * DoubleHelpers::EPSILON;
 
-		Intersection hit = this->hit();
+		//Intersection hit = this->hit();
 		//std::vector<Shape*> containers;
 
-		if (intersect == hit)
+		for (int i = 0; i < this->count(); i++)
 		{
-			if (containers.size() == 0)
+			if (intersect == intersections[i])
 			{
-				computeValues.n1 = 1;
+				if (containers.size() == 0)
+				{
+					computeValues.n1 = 1;
+				}
+				else
+				{
+					computeValues.n1 = containers[containers.size() - 1]->material.refractiveIndex;
+				}
 			}
-			else
+
+			bool exists = false;
+			for (int j = 0; j < containers.size(); j++)
 			{
-				computeValues.n1 = containers[containers.size() - 1]->material.refractiveIndex;
+				if (intersections[i].object == containers[j])
+				{
+					//std::cout << "Object exists" << std::endl;
+					exists = true;
+					containers.erase(containers.begin() + j);
+					break;
+				}
+			}
+			if (false == exists)
+			{
+				containers.push_back(intersections[i].object);
+			}
+
+			if (intersect == intersections[i])
+			{
+				if (containers.size() == 0)
+				{
+					computeValues.n2 = 1;
+				}
+				else
+				{
+					computeValues.n2 = containers[containers.size() - 1]->material.refractiveIndex;
+				}
 			}
 		}
 
-		bool exists = false;
-		for (int j = 0; j < containers.size(); j++)
-		{
-			if (intersect.object == containers[j])
-			{
-				//std::cout << "Object exists" << std::endl;
-				exists = true;
-				containers.erase(containers.begin() + j);
-				break;
-			}
-		}
-		if (false == exists)
-		{
-			containers.push_back(intersect.object);
-		}
-
-		if (intersect == hit)
-		{
-			if (containers.size() == 0)
-			{
-				computeValues.n2 = 1;
-			}
-			else
-			{
-				computeValues.n2 = containers[containers.size() - 1]->material.refractiveIndex;
-			}
-		}
 		
 
 		return computeValues;
