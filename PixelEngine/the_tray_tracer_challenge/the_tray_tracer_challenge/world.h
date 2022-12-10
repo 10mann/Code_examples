@@ -29,6 +29,7 @@ namespace RayTracer
 		bool isInShadow(Tuple point, PointLight light);
 		void calculateInverseTransforms(void);
 		Color getReflectedColor(ComputeValues comp, int bounces);
+		Color getRefractedColor(ComputeValues comp, int bounces);
 
 		// Operators
 		

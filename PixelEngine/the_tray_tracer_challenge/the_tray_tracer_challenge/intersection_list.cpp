@@ -85,7 +85,7 @@ namespace RayTracer
 		computeValues.point = ray.getPosition(computeValues.i);
 		computeValues.eyeDir = -ray.direction;
 		computeValues.normal = computeValues.object->getNormal(computeValues.point);
-		computeValues.inside = (computeValues.normal.dotProduct(computeValues.eyeDir) < 0);
+		computeValues.inside = (computeValues.normal.dotProduct(computeValues.eyeDir) < (DoubleHelpers::EPSILON_HALF));
 		if (true == computeValues.inside)
 		{
 			computeValues.normal = -computeValues.normal;
@@ -93,9 +93,6 @@ namespace RayTracer
 		computeValues.reflectVector = getReflection(ray.direction, computeValues.normal);
 		computeValues.overPoint = computeValues.point + computeValues.normal * DoubleHelpers::EPSILON;
 		computeValues.underPoint = computeValues.point - computeValues.normal * DoubleHelpers::EPSILON;
-
-		//Intersection hit = this->hit();
-		//std::vector<Shape*> containers;
 
 		for (int i = 0; i < this->count(); i++)
 		{
@@ -116,7 +113,6 @@ namespace RayTracer
 			{
 				if (intersections[i].object == containers[j])
 				{
-					//std::cout << "Object exists" << std::endl;
 					exists = true;
 					containers.erase(containers.begin() + j);
 					break;
@@ -139,8 +135,6 @@ namespace RayTracer
 				}
 			}
 		}
-
-		
 
 		return computeValues;
 	}

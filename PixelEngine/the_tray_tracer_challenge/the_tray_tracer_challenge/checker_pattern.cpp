@@ -21,7 +21,7 @@ namespace RayTracer
 	const Color CheckerPattern::colorAt(Tuple point)
 	{
 		Tuple localPoint = invTransform * point;
-		int n = std::floor(std::floor(localPoint.x) + std::floor(localPoint.y) + std::floor(localPoint.z));
+		int n = (int)std::floor(std::floor(localPoint.x) + std::floor(localPoint.y) + std::floor(localPoint.z));
 		return ((n % 2) == 0) ? a : b;
 	}
 

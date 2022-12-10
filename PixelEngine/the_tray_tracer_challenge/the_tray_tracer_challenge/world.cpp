@@ -105,13 +105,25 @@ namespace RayTracer
 	Color World::getReflectedColor(ComputeValues comp, int bounces)
 	{
 		Color c(0, 0, 0);
-		if ((bounces < MAX_REFLECTIONS) &&  (comp.object->material.reflective > DoubleHelpers::EPSILON))
+		if ((bounces > 0) &&  (comp.object->material.reflective > DoubleHelpers::EPSILON))
 		{
 			Ray ray(comp.overPoint, comp.reflectVector);
-			c = getColor(ray, ++bounces) * comp.object->material.reflective;
+			c = getColor(ray, --bounces) * comp.object->material.reflective;
 		}
 
 		return c;
+	}
+
+	Color World::getRefractedColor(ComputeValues comp, int bounces)
+	{
+		Color color(0, 0, 0);
+
+		if ((comp.object->material.transparency > DoubleHelpers::EPSILON_HALF) && (bounces > 0))
+		{
+			color = Color(1, 1, 1);
+		}
+
+		return color;
 	}
 
 	// =========================== Operators ===========================
@@ -145,13 +157,13 @@ namespace RayTracer
 		{
 			Tuple lightDir = (light.position - position).getNormalized();
 			double lightDotNormal = lightDir.dotProduct(normal);
-			if (lightDotNormal > 0)
+			if (lightDotNormal > (DoubleHelpers::EPSILON_HALF))
 			{
 				diffuse = effectiveColor * s->material.diffuse * lightDotNormal;
 				Tuple reflectDir = getReflection(-lightDir, normal);
 				double reflectDotEye = reflectDir.dotProduct(eyeDirection);
 
-				if (reflectDotEye > 0)
+				if (reflectDotEye > (DoubleHelpers::EPSILON_HALF))
 				{
 					double factor = std::pow(reflectDotEye, s->material.shininess);
 					specular = light.intensity * s->material.specular * factor;

@@ -183,5 +183,70 @@ namespace RayTracerTest11
 				Assert::IsTrue(isEqualDouble(hits.getComputeValues(hit, ray).n2, n2List[i]));
 			}
 		}
+
+		TEST_METHOD(TestUnderPoint)
+		{
+			Logger::WriteMessage("Testing underPoint");
+
+			Ray ray(point(0, 0, -5), vector(0, 0, 1));
+			Sphere shape = glassSphere();
+			shape.setTransform(translation(0, 0, 1));
+			Intersection i(5, &shape);
+			IntersectionList list;
+			list.add(i);
+			ComputeValues comp = list.getComputeValues(i, ray);
+
+			Assert::IsTrue(comp.underPoint.z > (DoubleHelpers::EPSILON / 2));
+			Assert::IsTrue(comp.underPoint.z > comp.point.z);
+		}
+
+		TEST_METHOD(TestRefractColorOpaque)
+		{
+			Logger::WriteMessage("Testing refactColorOpaque");
+			World world = createDfaultWorld();
+			Shape* object = world.objects[0];
+			Ray ray(point(0, 0, -5), vector(0, 0, 1));
+			IntersectionList list;
+			list.add(Intersection(4, object));
+			list.add(Intersection(6, object));
+			ComputeValues comp = list.getComputeValues(list[0], ray);
+			Color c = world.getRefractedColor(comp, 5);
+
+			Assert::IsTrue(c == Color(0, 0, 0));
+		}
+
+		TEST_METHOD(TestRefractColorMaxDepth)
+		{
+			Logger::WriteMessage("Testing refactColorMaxDepth");
+			World world = createDfaultWorld();
+			Shape* object = world.objects[0];
+			object->material.transparency = 1;
+			object->material.refractiveIndex = 1.5;
+			Ray ray(point(0, 0, -5), vector(0, 0, 1));
+			IntersectionList list;
+			list.add(Intersection(4, object));
+			list.add(Intersection(6, object));
+			ComputeValues comp = list.getComputeValues(list[0], ray);
+			Color c = world.getRefractedColor(comp, 0);
+
+			Assert::IsTrue(c == Color(0, 0, 0));
+		}
+
+		TEST_METHOD(TestRefractColorTotalReflection)
+		{
+			Logger::WriteMessage("Testing refactColorTotalReflection");
+			World world = createDfaultWorld();
+			Shape* object = world.objects[0];
+			object->material.transparency = 1;
+			object->material.refractiveIndex = 1.5;
+			Ray ray(point(0, 0, -5), vector(0, 0, 1));
+			IntersectionList list;
+			list.add(Intersection(4, object));
+			list.add(Intersection(6, object));
+			ComputeValues comp = list.getComputeValues(list[0], ray);
+			Color c = world.getRefractedColor(comp, 0);
+
+			Assert::IsTrue(c == Color(0, 0, 0));
+		}
 	};
 }

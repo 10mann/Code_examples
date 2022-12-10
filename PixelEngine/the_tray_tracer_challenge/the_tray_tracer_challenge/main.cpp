@@ -131,7 +131,8 @@ public:
 		Canvas image(ScreenWidth(), ScreenHeight());
 		auto timeStart = std::chrono::steady_clock::now();
 		//drawDefaultScene(image);
-		drawDefaultScene4(image);
+		//drawDefaultScene4(image);
+		drawMarbleMadness(image);
 		auto timeEnd = std::chrono::steady_clock::now();
 		auto drawDuration = std::chrono::duration_cast<std::chrono::milliseconds>(timeEnd - timeStart);
 		std::cout << "Time to draw: " << drawDuration.count() << std::endl;

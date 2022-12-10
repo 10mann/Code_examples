@@ -9,4 +9,6 @@ namespace RayTracer
 	void drawDefaultScene2(Canvas& image);
 	void drawDefaultScene3(Canvas& image);
 	void drawDefaultScene4(Canvas& image);
+
+	void drawMarbleMadness(Canvas& image);
 }

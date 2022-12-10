@@ -14,7 +14,8 @@ namespace RayTracer
 {
 	// ========================= Constructors ==========================
 	Camera::Camera()
-		: width(0), height(0), fieldOfView(0), transform(Matrix::identityMatrix), pixelSize(0)
+		: width(0), height(0), fieldOfView(0), transform(Matrix::identityMatrix), pixelSize(0),
+		aspectRatio(1), halfViewX(0), halfViewY(0)
 	{
 	}
 
@@ -112,7 +113,7 @@ namespace RayTracer
 			for (int x = startX; x < (startX + width); x++)
 			{
 				RayTracer::Ray ray = getRay(x, y);
-				canvas.writePixel(x, y, world.getColor(ray, 0));
+				canvas.writePixel(x, y, world.getColor(ray, MAX_REFLECTIONS));
 			}
 		}
 	}
