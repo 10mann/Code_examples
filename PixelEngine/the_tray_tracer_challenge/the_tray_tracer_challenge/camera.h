@@ -14,6 +14,7 @@ namespace RayTracer
 		// Variables
 		int width;
 		int height;
+		static int renderThreads;
 		double fieldOfView;
 		Matrix transform;
 		Matrix invTransform;
@@ -35,7 +36,7 @@ namespace RayTracer
 
 		// Helpers
 		void renderPartScreen(World& world, Canvas& canvas, int startX, int startY, int width, int height);
-
+		static void setRenderThreads(int nThreads);
 	};
 }
 

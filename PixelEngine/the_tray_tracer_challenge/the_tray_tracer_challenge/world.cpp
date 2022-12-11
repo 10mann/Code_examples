@@ -61,9 +61,19 @@ namespace RayTracer
 			color = color + getLighting(computeValues.object, light, computeValues.point, computeValues.eyeDir, computeValues.normal, isInShadow(computeValues.overPoint, light));
 		}
 
-		color = color + getReflectedColor(computeValues, bounces);
+		Color reflected = getReflectedColor(computeValues, bounces);
+		Color refracted = getRefractedColor(computeValues, bounces);
 
-		color = color + getRefractedColor(computeValues, bounces);
+		if ((computeValues.object->material.reflective > DoubleHelpers::EPSILON_HALF) &&
+			(computeValues.object->material.transparency > DoubleHelpers::EPSILON_HALF))
+		{
+			double reflectance = getSchlick(computeValues);
+			color = color + (reflected * reflectance) + (refracted * (1 - reflectance));
+		}
+		else
+		{
+			color = color + (reflected) + (refracted);
+		}
 
 		return color;
 	}
@@ -121,17 +131,12 @@ namespace RayTracer
 	{
 		Color color(0, 0, 0);
 
-		double cos_i = comp.eyeDir.dotProduct(comp.normal);
-		double nRatio = comp.n1 / comp.n2;
-		double sin2t = (nRatio * nRatio) * (1 - (cos_i * cos_i));
-
-		if ((sin2t < 1) && 
+		if ((comp.sin2t < 1) && 
 			(comp.object->material.transparency > DoubleHelpers::EPSILON_HALF) && 
 			(bounces > 0))
 		{
-			//color = Color(1, 1, 1);
-			double cos_t = std::sqrt(1 - sin2t);
-			Tuple dir = (comp.normal * (nRatio * cos_i - cos_t)) - (comp.eyeDir * nRatio);
+			//double cos_t = std::sqrt(1 - comp.sin2t);
+			Tuple dir = (comp.normal * (comp.nRatio * comp.cos_i - comp.cos_t)) - (comp.eyeDir * comp.nRatio);
 
 			Ray refractRay(comp.underPoint, dir);
 			color = getColor(refractRay, --bounces) * comp.object->material.transparency;
@@ -186,5 +191,30 @@ namespace RayTracer
 		}
 
 		return (effectiveColor * s->material.ambient) + specular + diffuse;
+	}
+
+	double getSchlick(ComputeValues comp)
+	{
+		double reflectance = 0;
+
+		if ((comp.sin2t > 1) && (comp.n1 > comp.n2))
+		{
+			reflectance = 1;
+		}
+		else
+		{
+			if (comp.n1 > comp.n2)
+			{
+				reflectance = ((comp.n1 - comp.n2) / (comp.n1 + comp.n2)) * ((comp.n1 - comp.n2) / (comp.n1 + comp.n2));
+				reflectance = reflectance + ((1 - reflectance) * std::pow((1 - comp.cos_t), 5));
+			}
+			else
+			{
+				reflectance = ((comp.n1 - comp.n2) / (comp.n1 + comp.n2)) * ((comp.n1 - comp.n2) / (comp.n1 + comp.n2));
+				reflectance = reflectance + ((1 - reflectance) * std::pow((1 - comp.cos_i), 5));
+			}
+		}
+
+		return reflectance;
 	}
 }

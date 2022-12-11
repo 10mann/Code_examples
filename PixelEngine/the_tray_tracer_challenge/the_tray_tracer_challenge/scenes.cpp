@@ -1041,22 +1041,73 @@ namespace RayTracer
         floor.material.color = Color(0.4, 0.4, 0.4);
         floor.setTransform(translation(0, -1, 0));
         floor.material.pattern = &checkerPattern;
+        floor.material.reflective = 0.4;
         //floor.material.pattern = &gradientPattern;
         //floor.material.pattern = &ringPattern;
         world.objects.push_back(&floor);
 
         Sphere ball;
+        ball.material.color = Color(0.4, 0, 0);
         ball.material.transparency = 1;
-        ball.material.refractiveIndex = 1.2;
-        ball.material.reflective = 0.1;
-        ball.material.ambient = 0;
-        ball.setTransform(translation(0, 1, 0));
+        ball.material.refractiveIndex = 1.5;
+        ball.material.reflective = 0.9;
+        ball.material.ambient = 0.05;
+        ball.material.diffuse = 0.02;
+        ball.material.specular = 1;
+        ball.material.shininess = 300;
+        ball.setTransform(translation(0, 0, 1));
         world.objects.push_back(&ball);
 
-        world.lights.push_back(PointLight(Color(0.5, 0.5, 0.5), point(-4, 4, -3)));
+        world.lights.push_back(PointLight(Color(1, 1, 1), point(-4, 4, -3)));
 
         Camera camera(image.width, image.height, MATH_PI / 3);
-        camera.transform = viewTransform(point(0, 4, -10), point(0, 1, 0), vector(0, 1, 0));
+        camera.transform = viewTransform(point(0, 2, -8), point(0, 1, 0), vector(0, 1, 0));
+        image = camera.render(world);
+    }
+
+    void drawSphereGrid(Canvas& image)
+    {
+        int gridSize = 10;
+        int marblesNumber = gridSize * gridSize * gridSize;
+        World world;
+        world.lights.push_back(PointLight(Color(1.5, 1.5, 1.5), point(40, 40, -40)));
+
+        Camera camera(image.width, image.height, MATH_PI / 3);
+        camera.transform = viewTransform(point(50, 50, -20), point(20, 20, 0), vector(0, 1, 0));
+
+        std::shared_ptr<Sphere[]> marbles(new Sphere[marblesNumber]);
+        int index = 0;
+
+        for (int x = 0; x < gridSize; x++)
+        {
+            for (int y = 0; y < gridSize; y++)
+            {
+                for (int z = 0; z < gridSize; z++)
+                {
+
+                    marbles[index].material.color =
+                        Color(
+                            (double)x / (double)gridSize, 
+                            (double)y / (double)gridSize, 
+                            (double)z / (double)gridSize);
+
+                    marbles[index].setTransform(
+                        translation(x * 3, y * 3, z * 3));
+
+                    marbles[index].material.diffuse = 0.9;
+                    marbles[index].material.specular = 0.9;
+                    marbles[index].material.ambient = 0.1;
+                    marbles[index].material.reflective = 0.9;
+                    marbles[index].material.transparency = 0.5;
+                    marbles[index].material.refractiveIndex = 1.5;
+                    marbles[index].material.shininess = 200;
+
+                    world.objects.push_back(&marbles[index]);
+                    index++;
+                }
+            }
+        }
+
         image = camera.render(world);
     }
 }

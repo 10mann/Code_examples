@@ -45,6 +45,7 @@ using RayTracer::scaling;
 using RayTracer::translation;
 using RayTracer::createDfaultWorld;
 using RayTracer::glassSphere;
+using RayTracer::getSchlick;
 
 
 namespace RayTracerTest11
@@ -301,6 +302,74 @@ namespace RayTracerTest11
 			Color c = world.getHitColor(comp, 5);
 
 			Assert::IsTrue(c == Color(0.93642, 0.68642, 0.68642));
+		}
+
+		TEST_METHOD(TestGetSchlickTotalReflection)
+		{
+			Logger::WriteMessage("Testing getSchlickTotalReflection");
+			Sphere shape = glassSphere();
+			Ray ray(point(0, 0, std::sqrt(2) / 2), vector(0, 1, 0));
+			IntersectionList list;
+			list.add(Intersection(-std::sqrt(2) / 2, &shape));
+			list.add(Intersection(std::sqrt(2) / 2, &shape));
+			ComputeValues comp = list.getComputeValues(list[1], ray);
+			double reflectance = getSchlick(comp);
+
+			Assert::IsTrue(isEqualDouble(reflectance, 1));
+		}
+
+		TEST_METHOD(TestGetSchlickPerpendicular)
+		{
+			Logger::WriteMessage("Testing getSchlickPerpendicular");
+			Sphere shape = glassSphere();
+			Ray ray(point(0, 0, 0), vector(0, 1, 0));
+			IntersectionList list;
+			list.add(Intersection(-1, &shape));
+			list.add(Intersection(1, &shape));
+			ComputeValues comp = list.getComputeValues(list[1], ray);
+			double reflectance = getSchlick(comp);
+
+			Assert::IsTrue(isEqualDouble(reflectance, 0.04258));
+		}
+
+		TEST_METHOD(TestGetSchlickN2N1SmallAngle)
+		{
+			Logger::WriteMessage("Testing getSchlickN2N1SmallAngle");
+			Sphere shape = glassSphere();
+			Ray ray(point(0, 0.99, -2), vector(0, 0, 1));
+			IntersectionList list;
+			list.add(Intersection(1.8589, &shape));
+			ComputeValues comp = list.getComputeValues(list[0], ray);
+			double reflectance = getSchlick(comp);
+
+			Assert::IsTrue(isEqualDouble(reflectance, 0.4901));
+		}
+
+		TEST_METHOD(TestRefractColorRefractedReflectedRayGlassFloor)
+		{
+			Logger::WriteMessage("Testing refactColorRefractedReflectedRayGlassFloor");
+			World world = createDfaultWorld();
+			Plane floor;
+			floor.material.reflective = 0.5;
+			floor.material.transparency = 0.5;
+			floor.material.refractiveIndex = 1.5;
+			floor.setTransform(translation(0, -1, 0));
+			world.objects.push_back(&floor);
+
+			Sphere ball;
+			ball.material.color = Color(1, 0, 0);
+			ball.material.ambient = 0.5;
+			ball.setTransform(translation(0, -3.5, -0.5));
+			world.objects.push_back(&ball);
+
+			Ray ray(point(0, 0, -3), vector(0, -std::sqrt(2) / 2, std::sqrt(2) / 2));
+
+			IntersectionList list;
+			list.add(Intersection(std::sqrt(2), &floor));
+			ComputeValues comp = list.getComputeValues(list[0], ray);
+			Color c = world.getHitColor(comp, 5);
+
+			Assert::IsTrue(c == Color(0.93391, 0.69643, 0.69243));
 		}
 	};
 }

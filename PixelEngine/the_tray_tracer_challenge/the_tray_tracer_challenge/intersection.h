@@ -17,6 +17,10 @@ namespace RayTracer
 		Tuple reflectVector;
 		double n1;
 		double n2;
+		double nRatio;
+		double cos_i;
+		double cos_t;
+		double sin2t;
 		bool inside;
 	};
 

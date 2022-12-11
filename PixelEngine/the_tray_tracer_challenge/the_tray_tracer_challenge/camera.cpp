@@ -12,6 +12,8 @@ using DoubleHelpers::EPSILON;
 
 namespace RayTracer
 {
+	int Camera::renderThreads = DEFAULT_RENDER_THREADS;
+
 	// ========================= Constructors ==========================
 	Camera::Camera()
 		: width(0), height(0), fieldOfView(0), transform(Matrix::identityMatrix), pixelSize(0),
@@ -64,7 +66,7 @@ namespace RayTracer
 	{
 		Canvas image(width, height);
 
-		int subWidth = width / MAX_RENDER_THREADS;
+		int subWidth = width / renderThreads;
 		int startX = 0;
 		int startY = 0;
 
@@ -72,7 +74,7 @@ namespace RayTracer
 		calculateInverseTransform();
 
 		std::thread threads[MAX_RENDER_THREADS];
-		for (int i = 0; i < (MAX_RENDER_THREADS - 1); i++)
+		for (int i = 0; i < (renderThreads - 1); i++)
 		{
 			threads[i] = std::thread(&Camera::renderPartScreen, this,
 				std::ref(world),
@@ -83,16 +85,16 @@ namespace RayTracer
 				height);
 		}
 
-		threads[MAX_RENDER_THREADS - 1] = std::thread(&Camera::renderPartScreen, this,
+		threads[renderThreads - 1] = std::thread(&Camera::renderPartScreen, this,
 			std::ref(world),
 			std::ref(image),
-			startX + subWidth * (MAX_RENDER_THREADS - 1),
+			startX + subWidth * (renderThreads - 1),
 			startY,
-			width - (startX + subWidth * (MAX_RENDER_THREADS - 1)),
+			width - (startX + subWidth * (renderThreads - 1)),
 			height);
 
 
-		for (int i = 0; i < MAX_RENDER_THREADS; i++)
+		for (int i = 0; i < renderThreads; i++)
 		{
 			threads[i].join();
 		}
@@ -116,6 +118,11 @@ namespace RayTracer
 				canvas.writePixel(x, y, world.getColor(ray, MAX_REFLECTIONS));
 			}
 		}
+	}
+
+	void Camera::setRenderThreads(int nThreads)
+	{
+		Camera::renderThreads = nThreads;
 	}
 
 

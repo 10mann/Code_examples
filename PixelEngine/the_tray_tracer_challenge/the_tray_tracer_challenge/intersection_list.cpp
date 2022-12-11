@@ -136,6 +136,11 @@ namespace RayTracer
 			}
 		}
 
+		computeValues.cos_i = computeValues.eyeDir.dotProduct(computeValues.normal);
+		computeValues.nRatio = computeValues.n1 / computeValues.n2;
+		computeValues.sin2t = (computeValues.nRatio * computeValues.nRatio) * (1 - (computeValues.cos_i * computeValues.cos_i));
+		computeValues.cos_t = std::sqrt(1 - computeValues.sin2t);
+
 		return computeValues;
 	}
 

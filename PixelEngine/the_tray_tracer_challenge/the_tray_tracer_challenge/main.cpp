@@ -131,38 +131,38 @@ public:
 			RayTracer::Tuple(0.0, -0.4, 0.0, 0.0));
 
 		
+		unsigned int threadCount = DEFAULT_RENDER_THREADS;
+
+		if (OVERRIDE_THREAD_COUNT == 0)
+		{
+			threadCount = std::thread::hardware_concurrency() * 2;
+			if (threadCount == 0)
+			{
+				threadCount = DEFAULT_RENDER_THREADS;
+			}
+			else if (threadCount > MAX_RENDER_THREADS)
+			{
+				threadCount = MAX_RENDER_THREADS;
+			}
+		}
+		std::cout << "Render threads: " << threadCount << std::endl;
+		Camera::setRenderThreads(threadCount);
+
 		Canvas image(ScreenWidth(), ScreenHeight());
 		auto timeStart = std::chrono::steady_clock::now();
 		//drawDefaultScene(image);
 		//drawDefaultScene4(image);
-		//drawMarbleMadness(image);
-		drawDefaultRefractionScene1(image);
+		drawMarbleMadness(image);
+		//drawDefaultRefractionScene1(image);
+		//drawSphereGrid(image);
 		auto timeEnd = std::chrono::steady_clock::now();
 		auto drawDuration = std::chrono::duration_cast<std::chrono::milliseconds>(timeEnd - timeStart);
 		std::cout << "Time to draw: " << drawDuration.count() << std::endl;
 		
 		drawCanvasToScreen(image);
 
-		//World world = createDfaultWorld();
-		//Plane floor;
-		//floor.material.transparency = 0.5;
-		//floor.material.refractiveIndex = 1.5;
-		//floor.setTransform(translation(0, -1, 0));
-		//world.objects.push_back(&floor);
 
-		//Sphere ball;
-		//ball.material.color = Color(1, 0, 0);
-		//ball.material.ambient = 0.5;
-		//ball.setTransform(translation(0, -3.5, -0.5));
-		//world.objects.push_back(&ball);
-
-		//Ray ray(RayTracer::point(0, 0, -3), RayTracer::vector(0, -std::sqrt(2) / 2, std::sqrt(2) / 2));
-
-		//IntersectionList list;
-		//list.add(Intersection(std::sqrt(2), &floor));
-		//ComputeValues comp = list.getComputeValues(list[0], ray);
-		//Color c = world.getHitColor(comp, 5);
-		//c.print();
+		//saveToFile(image, "MarbleMadness.ppm");
 
 		return true;
 	}
@@ -195,6 +195,14 @@ public:
 			}
 		}
 	}
+
+	void saveToFile(Canvas& image, std::string fileName)
+	{
+		std::ofstream file;
+		file.open(fileName);
+		file << image.getPPM();
+		file.close();
+	}
 };
 
 Game::Game()
@@ -206,7 +214,7 @@ Game::Game()
 int main()
 {
 	Game game;
-	if (game.Construct(1920, 1080, 1, 1))
+	if (game.Construct(1024, 576, 1, 1))
 	{
 		game.Start();
 	}

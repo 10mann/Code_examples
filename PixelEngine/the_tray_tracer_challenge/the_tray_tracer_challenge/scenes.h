@@ -13,4 +13,6 @@ namespace RayTracer
 	void drawMarbleMadness(Canvas& image);
 
 	void drawDefaultRefractionScene1(Canvas& image);
+
+	void drawSphereGrid(Canvas& image);
 }
