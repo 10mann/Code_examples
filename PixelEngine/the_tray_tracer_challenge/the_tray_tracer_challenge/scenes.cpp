@@ -1024,4 +1024,39 @@ namespace RayTracer
 
         image = camera.render(world);
 	}
+
+    void drawDefaultRefractionScene1(Canvas& image)
+    {
+        World world;
+
+        CheckerPattern checkerPattern(Color(1, 1, 1), Color(0.5, 0.2, 0.6));
+        checkerPattern.setTransform(translation(5.5, 0, 548) * rotationY(MATH_PI / 4));
+
+        GradientPattern gradientPattern(Color(1, 1, 1), Color(0.5, 0.2, 0.6));
+        gradientPattern.setTransform(translation(0, 0, 34.3) * rotationY(MATH_PI / 4));
+
+        RingPattern ringPattern(Color(1, 1, 1), Color(0.5, 0.2, 0.6));
+
+        Plane floor;
+        floor.material.color = Color(0.4, 0.4, 0.4);
+        floor.setTransform(translation(0, -1, 0));
+        floor.material.pattern = &checkerPattern;
+        //floor.material.pattern = &gradientPattern;
+        //floor.material.pattern = &ringPattern;
+        world.objects.push_back(&floor);
+
+        Sphere ball;
+        ball.material.transparency = 1;
+        ball.material.refractiveIndex = 1.2;
+        ball.material.reflective = 0.1;
+        ball.material.ambient = 0;
+        ball.setTransform(translation(0, 1, 0));
+        world.objects.push_back(&ball);
+
+        world.lights.push_back(PointLight(Color(0.5, 0.5, 0.5), point(-4, 4, -3)));
+
+        Camera camera(image.width, image.height, MATH_PI / 3);
+        camera.transform = viewTransform(point(0, 4, -10), point(0, 1, 0), vector(0, 1, 0));
+        image = camera.render(world);
+    }
 }

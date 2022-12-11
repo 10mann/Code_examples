@@ -15,6 +15,7 @@
 #include "../the_tray_tracer_challenge/ray.h"
 #include "../the_tray_tracer_challenge/intersection.h"
 #include "../the_tray_tracer_challenge/world.h"
+#include "../the_tray_tracer_challenge/test_pattern.h"
 
 
 
@@ -33,6 +34,7 @@ using RayTracer::IntersectionList;
 using RayTracer::ComputeValues;
 using RayTracer::World;
 using RayTracer::Shape;
+using RayTracer::TestPattern;
 
 using DoubleHelpers::MATH_PI;
 using RayTracer::point;
@@ -98,7 +100,7 @@ namespace RayTracerTest11
 			Intersection i(std::sqrt(2), &plane);
 			IntersectionList list;
 			ComputeValues comp = list.getComputeValues(i, ray);
-			Color c = world.getHitColor(comp, 0);
+			Color c = world.getHitColor(comp, MAX_REFLECTIONS);
 
 			Assert::IsTrue(c == Color(0.87676, 0.92435, 0.82917));
 		}
@@ -239,14 +241,66 @@ namespace RayTracerTest11
 			Shape* object = world.objects[0];
 			object->material.transparency = 1;
 			object->material.refractiveIndex = 1.5;
-			Ray ray(point(0, 0, -5), vector(0, 0, 1));
+			Ray ray(point(0, 0, std::sqrt(2) / 2), vector(0, 1, 0));
 			IntersectionList list;
-			list.add(Intersection(4, object));
-			list.add(Intersection(6, object));
-			ComputeValues comp = list.getComputeValues(list[0], ray);
-			Color c = world.getRefractedColor(comp, 0);
+			list.add(Intersection(-std::sqrt(2) / 2, object));
+			list.add(Intersection(std::sqrt(2) / 2, object));
+			ComputeValues comp = list.getComputeValues(list[1], ray);
+			Color c = world.getRefractedColor(comp, 5);
 
 			Assert::IsTrue(c == Color(0, 0, 0));
+		}
+
+		TEST_METHOD(TestRefractColorRefractedRay)
+		{
+			Logger::WriteMessage("Testing refactColorRefractedRay");
+			World world = createDfaultWorld();
+			TestPattern testPattern;
+			Shape* A = world.objects[0];
+			A->material.ambient = 1;
+			A->material.pattern = &testPattern;
+
+			Shape* B = world.objects[1];
+			B->material.transparency = 1;
+			B->material.refractiveIndex = 1.5;
+
+			Ray ray(point(0, 0, 0.1), vector(0, 1, 0));
+			IntersectionList list;
+			list.add(Intersection(-0.9899, A));
+			list.add(Intersection(-0.4899, B));
+			list.add(Intersection(0.4899, B));
+			list.add(Intersection(0.9899, A));
+			
+			ComputeValues comp = list.getComputeValues(list[2], ray);
+			Color c = world.getRefractedColor(comp, 5);
+
+			Assert::IsTrue(c == Color(0, 0.99888, 0.0472195));
+		}
+
+		TEST_METHOD(TestRefractColorRefractedRayGlassFloor)
+		{
+			Logger::WriteMessage("Testing refactColorRefractedRayGlassFloor");
+			World world = createDfaultWorld();
+			Plane floor;
+			floor.material.transparency = 0.5;
+			floor.material.refractiveIndex = 1.5;
+			floor.setTransform(translation(0, -1, 0));
+			world.objects.push_back(&floor);
+
+			Sphere ball;
+			ball.material.color = Color(1, 0, 0);
+			ball.material.ambient = 0.5;
+			ball.setTransform(translation(0, -3.5, -0.5));
+			world.objects.push_back(&ball);
+
+			Ray ray(point(0, 0, -3), vector(0, -std::sqrt(2) / 2, std::sqrt(2) / 2));
+
+			IntersectionList list;
+			list.add(Intersection(std::sqrt(2), &floor));
+			ComputeValues comp = list.getComputeValues(list[0], ray);
+			Color c = world.getHitColor(comp, 5);
+
+			Assert::IsTrue(c == Color(0.93642, 0.68642, 0.68642));
 		}
 	};
 }

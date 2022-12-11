@@ -3,6 +3,7 @@
 #include "raytracer_config.h"
 
 #include <cmath>
+#include <iostream>
 
 namespace RayTracer
 {
@@ -62,6 +63,8 @@ namespace RayTracer
 
 		color = color + getReflectedColor(computeValues, bounces);
 
+		color = color + getRefractedColor(computeValues, bounces);
+
 		return color;
 	}
 
@@ -118,9 +121,20 @@ namespace RayTracer
 	{
 		Color color(0, 0, 0);
 
-		if ((comp.object->material.transparency > DoubleHelpers::EPSILON_HALF) && (bounces > 0))
+		double cos_i = comp.eyeDir.dotProduct(comp.normal);
+		double nRatio = comp.n1 / comp.n2;
+		double sin2t = (nRatio * nRatio) * (1 - (cos_i * cos_i));
+
+		if ((sin2t < 1) && 
+			(comp.object->material.transparency > DoubleHelpers::EPSILON_HALF) && 
+			(bounces > 0))
 		{
-			color = Color(1, 1, 1);
+			//color = Color(1, 1, 1);
+			double cos_t = std::sqrt(1 - sin2t);
+			Tuple dir = (comp.normal * (nRatio * cos_i - cos_t)) - (comp.eyeDir * nRatio);
+
+			Ray refractRay(comp.underPoint, dir);
+			color = getColor(refractRay, --bounces) * comp.object->material.transparency;
 		}
 
 		return color;

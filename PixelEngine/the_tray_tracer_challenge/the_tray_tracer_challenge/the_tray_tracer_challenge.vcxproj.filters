@@ -167,5 +167,8 @@
     <ClInclude Include="checker_pattern.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="test_pattern.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

@@ -16,7 +16,7 @@ namespace RayTracer
 		StripePattern(Color c1, Color c2);
 
 		// Methods
-		const Color colorAt(Tuple point) override;
+		Color colorAt(Tuple point) override;
 		//const Color& colorAtObject(Shape* object, Tuple point);
 		void setTransform(Matrix m);
 

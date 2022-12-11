@@ -18,7 +18,7 @@ namespace RayTracer
 	}
 
 	// ============================ Methods ============================
-	const Color GradientPattern::colorAt(Tuple point)
+	Color GradientPattern::colorAt(Tuple point)
 	{
 		Tuple localPoint = invTransform * point;
 		double frac = localPoint.x - std::floor(localPoint.x);

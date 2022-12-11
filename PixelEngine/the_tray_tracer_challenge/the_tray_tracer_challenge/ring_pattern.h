@@ -16,7 +16,7 @@ namespace RayTracer
 		RingPattern(Color c1, Color c2);
 
 		// Methods
-		const Color colorAt(Tuple point) override;
+		Color colorAt(Tuple point) override;
 		void setTransform(Matrix m);
 
 		// Operators

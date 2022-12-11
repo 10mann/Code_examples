@@ -30,7 +30,7 @@ namespace RayTracer
 		}
 
 		// Methods
-		virtual const Color colorAt(Tuple point) = 0;
+		virtual Color colorAt(Tuple point) = 0;
 		//virtual const Color& colorAtObject(Shape* object, Tuple point) = 0;
 		virtual void setTransform(Matrix m) = 0;
 

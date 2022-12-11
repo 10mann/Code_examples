@@ -17,6 +17,7 @@
 #include "stripe_pattern.h"
 #include "gradient_pattern.h"
 #include "plane.h"
+#include "test_pattern.h"
 
 #include "scenes.h"
 #include "benchmarks.h"
@@ -42,6 +43,8 @@ using RayTracer::Camera;
 using RayTracer::StripePattern;
 using RayTracer::GradientPattern;
 using RayTracer::Plane;
+using RayTracer::Shape;
+using RayTracer::TestPattern;
 
 using RayTracer::rotationX;
 using RayTracer::rotationY;
@@ -132,36 +135,34 @@ public:
 		auto timeStart = std::chrono::steady_clock::now();
 		//drawDefaultScene(image);
 		//drawDefaultScene4(image);
-		drawMarbleMadness(image);
+		//drawMarbleMadness(image);
+		drawDefaultRefractionScene1(image);
 		auto timeEnd = std::chrono::steady_clock::now();
 		auto drawDuration = std::chrono::duration_cast<std::chrono::milliseconds>(timeEnd - timeStart);
 		std::cout << "Time to draw: " << drawDuration.count() << std::endl;
 		
 		drawCanvasToScreen(image);
 
-		//Sphere A = glassSphere();
-		//A.setTransform(scaling(2, 2, 2));
-		//A.material.refractiveIndex = 1.5;
+		//World world = createDfaultWorld();
+		//Plane floor;
+		//floor.material.transparency = 0.5;
+		//floor.material.refractiveIndex = 1.5;
+		//floor.setTransform(translation(0, -1, 0));
+		//world.objects.push_back(&floor);
 
-		//Sphere B = glassSphere();
-		//B.setTransform(translation(0, 0, -0.25));
-		//B.material.refractiveIndex = 2.0;
+		//Sphere ball;
+		//ball.material.color = Color(1, 0, 0);
+		//ball.material.ambient = 0.5;
+		//ball.setTransform(translation(0, -3.5, -0.5));
+		//world.objects.push_back(&ball);
 
-		//Sphere C = glassSphere();
-		//C.setTransform(translation(0, 0, 0.25));
-		//C.material.refractiveIndex = 2.5;
+		//Ray ray(RayTracer::point(0, 0, -3), RayTracer::vector(0, -std::sqrt(2) / 2, std::sqrt(2) / 2));
 
-		//Ray ray(RayTracer::point(0, 0, -4), RayTracer::vector(0, 0, 1));
-		//IntersectionList hits;
-		//hits.addIntersections(ray, &A);
-		//hits.addIntersections(ray, &B);
-		//hits.addIntersections(ray, &C);
-		//hits.sort();
-
-		//for (int i = 0; i < hits.count(); i++)
-		//{
-		//	std::cout << hits[i].i <<", " << hits.getComputeValues(hits[i], ray).n1 << ", " << hits.getComputeValues(hits[i], ray).n2 << std::endl;
-		//}
+		//IntersectionList list;
+		//list.add(Intersection(std::sqrt(2), &floor));
+		//ComputeValues comp = list.getComputeValues(list[0], ray);
+		//Color c = world.getHitColor(comp, 5);
+		//c.print();
 
 		return true;
 	}

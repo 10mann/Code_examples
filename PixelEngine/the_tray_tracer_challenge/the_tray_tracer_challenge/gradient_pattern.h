@@ -16,7 +16,7 @@ namespace RayTracer
 		GradientPattern(Color c1, Color c2);
 
 		// Methods
-		const Color colorAt(Tuple point);
+		Color colorAt(Tuple point);
 		void setTransform(Matrix m);
 
 		// Operators

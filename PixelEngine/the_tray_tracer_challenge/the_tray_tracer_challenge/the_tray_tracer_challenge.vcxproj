@@ -177,6 +177,7 @@
     <ClInclude Include="shape.h" />
     <ClInclude Include="sphere.h" />
     <ClInclude Include="stripe_pattern.h" />
+    <ClInclude Include="test_pattern.h" />
     <ClInclude Include="test_shape.h" />
     <ClInclude Include="tuple.h" />
     <ClInclude Include="DoubleHelpers.h" />
