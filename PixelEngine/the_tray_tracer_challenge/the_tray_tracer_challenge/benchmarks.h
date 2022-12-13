@@ -13,6 +13,7 @@
 #include "point_light.h"
 #include "world.h"
 #include "camera.h"
+#include "cube.h"
 
 #include <iostream>
 #include <chrono>
@@ -28,4 +29,5 @@ namespace RayTracer
 	long long benchmarkIsInShadow(int iterations);
 	long long benchmarkGetInverse(int iterations);
 	long long benchmarkGetSubMatrix(int iterations);
+	long long benchmarkCompareCubeIntersect(int iterations);
 }

@@ -1,7 +1,7 @@
 #pragma once
 
 // ================ Render settings ==================
-#define MAX_RENDER_THREADS     40
+#define MAX_RENDER_THREADS     80
 #define DEFAULT_RENDER_THREADS 20
 #define OVERRIDE_THREAD_COUNT  0
 

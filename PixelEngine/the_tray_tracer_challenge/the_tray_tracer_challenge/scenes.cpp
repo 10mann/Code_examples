@@ -18,6 +18,7 @@
 #include "gradient_pattern.h"
 #include "ring_pattern.h"
 #include "checker_pattern.h"
+#include "cube.h"
 
 #include <memory>
 
@@ -36,6 +37,7 @@ using RayTracer::StripePattern;
 using RayTracer::GradientPattern;
 using RayTracer::RingPattern;
 using RayTracer::CheckerPattern;
+using RayTracer::Cube;
 
 using RayTracer::rotationX;
 using RayTracer::rotationY;
@@ -1047,7 +1049,7 @@ namespace RayTracer
         world.objects.push_back(&floor);
 
         Sphere ball;
-        ball.material.color = Color(0.4, 0, 0);
+        ball.material.color = Color(1, 1, 1);
         ball.material.transparency = 1;
         ball.material.refractiveIndex = 1.5;
         ball.material.reflective = 0.9;
@@ -1071,6 +1073,9 @@ namespace RayTracer
         int marblesNumber = gridSize * gridSize * gridSize;
         World world;
         world.lights.push_back(PointLight(Color(1.5, 1.5, 1.5), point(40, 40, -40)));
+
+        //Camera camera(image.width, image.height, MATH_PI / 3);
+        //camera.transform = viewTransform(point(50, 50, -20), point(20, 20, 0), vector(0, 1, 0));
 
         Camera camera(image.width, image.height, MATH_PI / 3);
         camera.transform = viewTransform(point(50, 50, -20), point(20, 20, 0), vector(0, 1, 0));
@@ -1098,8 +1103,8 @@ namespace RayTracer
                     marbles[index].material.specular = 0.9;
                     marbles[index].material.ambient = 0.1;
                     marbles[index].material.reflective = 0.9;
-                    marbles[index].material.transparency = 0.5;
-                    marbles[index].material.refractiveIndex = 1.5;
+                    //marbles[index].material.transparency = 0.5;
+                    //marbles[index].material.refractiveIndex = 1.5;
                     marbles[index].material.shininess = 200;
 
                     world.objects.push_back(&marbles[index]);
@@ -1107,6 +1112,29 @@ namespace RayTracer
                 }
             }
         }
+
+        image = camera.render(world);
+    }
+
+    void drawCubeScene1(Canvas& image)
+    {
+        World world;
+        world.lights.push_back(PointLight(Color(1.5, 1.5, 1.5), point(-5, 7, -10)));
+
+        Camera camera(image.width, image.height, MATH_PI / 3);
+        camera.transform = viewTransform(point(-2, 4, -8), point(1, 1, 0), vector(0, 1, 0));
+
+        Plane floor;
+        floor.material.color = Color(0.7, 0.7, 0.7);
+        //floor.material.reflective = 0.5;
+        world.objects.push_back(&floor);
+
+        Cube cube;
+        cube.material.color = Color(0, 0.7, 0);
+        //cube.material.transparency = 1;
+        //cube.material.refractiveIndex = 1.3;
+        cube.setTransform(translation(0, 0.5, 0));
+        world.objects.push_back(&cube);
 
         image = camera.render(world);
     }

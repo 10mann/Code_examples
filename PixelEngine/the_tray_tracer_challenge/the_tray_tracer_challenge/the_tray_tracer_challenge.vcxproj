@@ -136,6 +136,7 @@
     <ClCompile Include="checker_pattern.cpp" />
     <ClCompile Include="class_source_template.cpp" />
     <ClCompile Include="color.cpp" />
+    <ClCompile Include="cube.cpp" />
     <ClCompile Include="DoubleHelpers.cpp" />
     <ClCompile Include="gradient_pattern.cpp" />
     <ClCompile Include="intersection.cpp" />
@@ -160,6 +161,7 @@
     <ClInclude Include="checker_pattern.h" />
     <ClInclude Include="color.h" />
     <ClInclude Include="class_header_template.h" />
+    <ClInclude Include="cube.h" />
     <ClInclude Include="gradient_pattern.h" />
     <ClInclude Include="intersection.h" />
     <ClInclude Include="intersection_list.h" />

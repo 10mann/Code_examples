@@ -58,6 +58,7 @@ using RayTracer::benchmarkGetDistance;
 using RayTracer::benchmarkIsInShadow;
 using RayTracer::benchmarkGetSubMatrix;
 using RayTracer::benchmarkGetInverse;
+using RayTracer::benchmarkCompareCubeIntersect;
 using RayTracer::glassSphere;
 
 using DoubleHelpers::MATH_PI;
@@ -152,17 +153,21 @@ public:
 		auto timeStart = std::chrono::steady_clock::now();
 		//drawDefaultScene(image);
 		//drawDefaultScene4(image);
-		drawMarbleMadness(image);
+		//drawMarbleMadness(image);
 		//drawDefaultRefractionScene1(image);
 		//drawSphereGrid(image);
+		drawCubeScene1(image);
 		auto timeEnd = std::chrono::steady_clock::now();
 		auto drawDuration = std::chrono::duration_cast<std::chrono::milliseconds>(timeEnd - timeStart);
 		std::cout << "Time to draw: " << drawDuration.count() << std::endl;
 		
 		drawCanvasToScreen(image);
-
-
 		//saveToFile(image, "MarbleMadness.ppm");
+
+		//long long time = benchmarkCompareCubeIntersect(10000000);
+		//std::cout << "Time: " << time << std::endl;
+
+		
 
 		return true;
 	}
@@ -214,7 +219,7 @@ Game::Game()
 int main()
 {
 	Game game;
-	if (game.Construct(1024, 576, 1, 1))
+	if (game.Construct(1024, 1024, 1, 1))
 	{
 		game.Start();
 	}

@@ -13,6 +13,7 @@ using RayTracer::PointLight;
 using RayTracer::Canvas;
 using RayTracer::ComputeValues;
 using RayTracer::Camera;
+using RayTracer::Cube;
 
 using RayTracer::rotationX;
 using RayTracer::rotationY;
@@ -288,6 +289,26 @@ namespace RayTracer
 
 		m2.print();
 
+
+		return duration.count();
+	}
+
+	long long benchmarkCompareCubeIntersect(int iterations)
+	{
+		Cube cube;
+
+		Ray ray(point(5, 0.5, 0), vector(-1, 0, 0));
+		std::vector<double> intersects;
+
+		auto timeStart = std::chrono::high_resolution_clock::now();
+		for (int i = 0; i < iterations; i++)
+		{
+			intersects = cube.getIntersectTime(ray);
+		}
+		auto timeEnd = std::chrono::high_resolution_clock::now();
+		auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(timeEnd - timeStart);
+
+		intersects[0] += 1;
 
 		return duration.count();
 	}
