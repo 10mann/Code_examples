@@ -1122,18 +1122,27 @@ namespace RayTracer
         world.lights.push_back(PointLight(Color(1.5, 1.5, 1.5), point(-5, 7, -10)));
 
         Camera camera(image.width, image.height, MATH_PI / 3);
-        camera.transform = viewTransform(point(-2, 4, -8), point(1, 1, 0), vector(0, 1, 0));
+        camera.transform = viewTransform(point(-2, 3.5, -10), point(1, 1, 0), vector(0, 1, 0));
+
+        CheckerPattern checkerPattern(Color(1, 1, 1), Color(0.5, 0.2, 0.6));
+        checkerPattern.setTransform(translation(5.5, 0, 548) * rotationY(MATH_PI / 4));
 
         Plane floor;
         floor.material.color = Color(0.7, 0.7, 0.7);
-        //floor.material.reflective = 0.5;
+        floor.material.reflective = 0.5;
+        floor.material.pattern = &checkerPattern;
         world.objects.push_back(&floor);
 
         Cube cube;
         cube.material.color = Color(0, 0.7, 0);
-        //cube.material.transparency = 1;
-        //cube.material.refractiveIndex = 1.3;
-        cube.setTransform(translation(0, 0.5, 0));
+        cube.material.transparency = 0.6;
+        cube.material.reflective = 0.9;
+        cube.material.ambient = 0.05;
+        cube.material.diffuse = 0.02;
+        cube.material.specular = 1;
+        cube.material.shininess = 300;
+        cube.material.refractiveIndex = 1.3;
+        cube.setTransform(translation(0, 1, 0));
         world.objects.push_back(&cube);
 
         image = camera.render(world);

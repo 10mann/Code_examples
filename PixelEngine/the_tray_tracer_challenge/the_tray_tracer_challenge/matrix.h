@@ -32,6 +32,7 @@ namespace RayTracer
 		double getCofactor(int row, int col);
 		bool isInvertable(void);
 		Matrix getInverse(void);
+		Matrix mul(Matrix m2);
 
 		// Operators
 		double* operator[](int index);

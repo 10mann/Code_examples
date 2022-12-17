@@ -26,6 +26,7 @@
 #include <chrono>
 #include <fstream>
 #include <thread>
+#include <immintrin.h>
 
 using RayTracer::Matrix;
 using RayTracer::Tuple;
@@ -123,13 +124,13 @@ public:
 		sAppName = "TheRayTracerChallenge";
 		canvas = RayTracer::Canvas(ScreenWidth(), ScreenHeight());
 
-		projectile = Projectile(
-			RayTracer::Tuple(9.0, 14.0, 0.0, 0.0),
-			RayTracer::Tuple(0.0, 0.0, 0.0, 0.0));
+		//projectile = Projectile(
+		//	RayTracer::Tuple(9.0, 14.0, 0.0, 0.0),
+		//	RayTracer::Tuple(0.0, 0.0, 0.0, 0.0));
 
-		environment = Environment(
-			RayTracer::Tuple(-0.0, 0.0, 0.0, 0.0),
-			RayTracer::Tuple(0.0, -0.4, 0.0, 0.0));
+		//environment = Environment(
+		//	RayTracer::Tuple(-0.0, 0.0, 0.0, 0.0),
+		//	RayTracer::Tuple(0.0, -0.4, 0.0, 0.0));
 
 		
 		unsigned int threadCount = DEFAULT_RENDER_THREADS;
@@ -152,6 +153,7 @@ public:
 		Canvas image(ScreenWidth(), ScreenHeight());
 		auto timeStart = std::chrono::steady_clock::now();
 		//drawDefaultScene(image);
+		//drawDefaultScene(image);
 		//drawDefaultScene4(image);
 		//drawMarbleMadness(image);
 		//drawDefaultRefractionScene1(image);
@@ -167,7 +169,41 @@ public:
 		//long long time = benchmarkCompareCubeIntersect(10000000);
 		//std::cout << "Time: " << time << std::endl;
 
-		
+		//double test1[4] = { 1, 2, 3, 4 };
+		//double test2[4] = { 2, 4, 6, 8 };
+		//__m256d c = { 0, 0, 0, 0 };
+
+		//__m256d a = _mm256_load_pd(test1);
+		//__m256d b = _mm256_load_pd(test2);
+		//c = _mm256_fmadd_pd(a, b, c);
+		//c = _mm256_add_pd(c, c);
+		//double* c_p = (double*)&c;
+
+		//double values1[] =
+		//{
+		//	1, 2, 3, 4,
+		//	5, 6, 7, 8,
+		//	9, 8, 7, 6,
+		//	5, 4, 3, 2
+		//};
+
+		//Matrix a(4, 4, values1);
+		////Matrix b(4, 4, values1);
+
+		//Matrix e = a.getSubMatrix(0, 0);
+		//e.print();
+
+		//Matrix c = a * b;
+		//Matrix d = a.mul(b);
+		//std::cout << "Operator *" << std::endl;
+		//c.print();
+		//std::cout << std::endl << "Mul" << std::endl;
+		//d.print();
+
+		//std::cout << c_p[0] << ", " << c_p[1] << ", " << c_p[2] << ", " << c_p[3] << std::endl;
+
+		//long long matrixTime = benchmarkMatrixMult(100000000);
+		//std::cout << "Multiplication time: " << matrixTime << std::endl;
 
 		return true;
 	}

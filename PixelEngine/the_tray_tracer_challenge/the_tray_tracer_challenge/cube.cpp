@@ -16,19 +16,20 @@ namespace RayTracer
 	// ============================ Methods ============================
 	Tuple Cube::getNormal(Tuple point)
 	{
-		Tuple normal = vector(point.x, 0 ,0);
+		Tuple localPoint = invTransform * point;
+		Tuple normal = vector(localPoint.x, 0 ,0);
 
-		double maxVal = std::abs(point.x);
-		if (std::abs(point.y) > maxVal)
+		double maxVal = std::abs(localPoint.x);
+		if (std::abs(localPoint.y) > maxVal)
 		{
-			maxVal = std::abs(point.y);
-			normal = vector(0, point.y, 0);
+			maxVal = std::abs(localPoint.y);
+			normal = vector(0, localPoint.y, 0);
 		}
 
-		if (std::abs(point.z) > maxVal)
+		if (std::abs(localPoint.z) > maxVal)
 		{
-			maxVal = std::abs(point.z);
-			normal = vector(0, 0, point.z);
+			maxVal = std::abs(localPoint.z);
+			normal = vector(0, 0, localPoint.z);
 		}
 
 		return normal;

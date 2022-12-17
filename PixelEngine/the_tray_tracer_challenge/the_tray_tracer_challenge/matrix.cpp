@@ -4,6 +4,8 @@
 #include <iostream>
 #include <cmath>
 
+#include <immintrin.h>
+
 namespace RayTracer
 {
 	using DoubleHelpers::isEqualDouble;
@@ -157,6 +159,11 @@ namespace RayTracer
 			matrix.m[i][3] = matrix.m[i + 1][3];
 		}
 
+		/*memcpy(&matrix.m[0][col], &matrix.m[0][col + 1], (cols - col - 1) * sizeof(m[0][0]));
+		memcpy(&matrix.m[1][col], &matrix.m[1][col + 1], (cols - col - 1) * sizeof(m[0][0]));
+		memcpy(&matrix.m[2][col], &matrix.m[2][col + 1], (cols - col - 1) * sizeof(m[0][0]));
+		memcpy(&matrix.m[3][col], &matrix.m[3][col + 1], (cols - col - 1) * sizeof(m[0][0]));*/
+
 		for (int i = col; i < matrix.cols; i++)
 		{
 			matrix.m[0][i] = matrix.m[0][i + 1];
@@ -200,6 +207,61 @@ namespace RayTracer
 		return coMatrix;
 	}
 
+	Matrix Matrix::mul(Matrix m2)
+	{
+		__m256d a1, a2, a3, a4, c1, c2, c3, c4, b;
+		a1 = _mm256_set_pd(m2.m[3][0], m2.m[2][0], m2.m[1][0], m2.m[0][0]);
+		a2 = _mm256_set_pd(m2.m[3][1], m2.m[2][1], m2.m[1][1], m2.m[0][1]);
+		a3 = _mm256_set_pd(m2.m[3][2], m2.m[2][2], m2.m[1][2], m2.m[0][2]);
+		a4 = _mm256_set_pd(m2.m[3][3], m2.m[2][3], m2.m[1][3], m2.m[0][3]);
+
+		Matrix prodMatrix;
+		for (int i = 0; i < rows; i++)
+		{
+			b = _mm256_load_pd(m[i]);
+			double* ap;
+			if (i == 0)
+			{
+				ap = (double*)&a1;
+			}
+			else if (i == 1)
+			{
+				ap = (double*)&a2;
+			}
+			else if (i == 2)
+			{
+				ap = (double*)&a3;
+			}
+			else if (i == 3)
+			{
+				ap = (double*)&a4;
+			}
+			else
+			{
+				ap = (double*)&a1;
+			}
+			double* bp = (double*)&b;
+			std::cout << "a: " << ap[0] << ", " << ap[1] << ", " << ap[2] << ", " << ap[3] << std::endl;
+			std::cout << "b: " << bp[0] << ", " << bp[1] << ", " << bp[2] << ", " << bp[3] << std::endl;
+			c1 = _mm256_mul_pd(b, a1);
+			c2 = _mm256_mul_pd(b, a2);
+			c3 = _mm256_mul_pd(b, a3);
+			c4 = _mm256_mul_pd(b, a4);
+
+			double* p1 = (double*)&c1;
+			double* p2 = (double*)&c2;
+			double* p3 = (double*)&c3;
+			double* p4 = (double*)&c4;
+
+			prodMatrix[i][0] = p1[0] + p1[1] + p1[2] + p1[3];
+			prodMatrix[i][1] = p2[0] + p2[1] + p2[2] + p2[3];
+			prodMatrix[i][2] = p3[0] + p3[1] + p3[2] + p3[3];
+			prodMatrix[i][3] = p4[0] + p4[1] + p4[2] + p4[3];
+
+		}
+		return prodMatrix;
+	}
+
 	// ============================ Operators ============================
 	double* Matrix::operator[](int index)
 	{
@@ -231,6 +293,11 @@ namespace RayTracer
 
 	Matrix operator*(Matrix m1, Matrix m2)
 	{
+		//__m256d a1, a2, a3, a4, c1, c2, c3, c4, b, acc;
+		//a1 = _mm256_set_pd(m2.m[3][0], m2.m[2][0], m2.m[1][0], m2.m[0][0]);
+		//a2 = _mm256_set_pd(m2.m[3][1], m2.m[2][1], m2.m[1][1], m2.m[0][1]);
+		//a3 = _mm256_set_pd(m2.m[3][2], m2.m[2][2], m2.m[1][2], m2.m[0][2]);
+		//a4 = _mm256_set_pd(m2.m[3][3], m2.m[2][3], m2.m[1][3], m2.m[0][3]);
 		Matrix prodMatrix;
 		for (int i = 0; i < m1.rows; i++)
 		{
@@ -257,6 +324,40 @@ namespace RayTracer
 				m1.m[i][1] * m2.m[1][3] +
 				m1.m[i][2] * m2.m[2][3] +
 				m1.m[i][3] * m2.m[3][3];
+
+			//a1 = _mm256_set_pd(m2.m[3][0], m2.m[2][0], m2.m[1][0], m2.m[0][0]);
+			//a2 = _mm256_set_pd(m2.m[3][1], m2.m[2][1], m2.m[1][1], m2.m[0][1]);
+			//a3 = _mm256_set_pd(m2.m[3][2], m2.m[2][2], m2.m[1][2], m2.m[0][2]);
+			//a4 = _mm256_set_pd(m2.m[3][3], m2.m[2][3], m2.m[1][3], m2.m[0][3]);
+
+			//b = _mm256_load_pd(m1.m[i]);
+
+			//c1 = _mm256_mul_pd(b, a1);
+			//c2 = _mm256_mul_pd(b, a2);
+			//c3 = _mm256_mul_pd(b, a3);
+			//c4 = _mm256_mul_pd(b, a4);
+
+			//acc = _mm256_add_pd(c1, c2);
+			//acc = _mm256_add_pd(acc, c2);
+			//acc = _mm256_add_pd(acc, c4);
+
+			//double* p = (double*)&acc;
+
+			//prodMatrix[i][0] = p[0];
+			//prodMatrix[i][1] = p[1];
+			//prodMatrix[i][2] = p[2];
+			//prodMatrix[i][3] = p[3];
+
+			//double* p1 = (double*)&c1;
+			//double* p2 = (double*)&c2;
+			//double* p3 = (double*)&c3;
+			//double* p4 = (double*)&c4;
+
+			//prodMatrix[i][0] = p1[0] + p1[1] + p1[2] + p1[3];
+			//prodMatrix[i][1] = p2[0] + p2[1] + p2[2] + p2[3];
+			//prodMatrix[i][2] = p3[0] + p3[1] + p3[2] + p3[3];
+			//prodMatrix[i][3] = p4[0] + p4[1] + p4[2] + p4[3];
+
 		}
 
 		return prodMatrix;
