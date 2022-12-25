@@ -63,12 +63,12 @@ namespace RayTracer
 
 	void IntersectionList::addIntersections(Ray& ray, Shape* shape)
 	{
-		Ray newRay = ray.transform(shape->invTransform);
-		std::vector<double> intersectTimes = shape->getIntersectTime(newRay);
+		std::vector<Shape::ObjectHit> intersectTimes = shape->getIntersectTime(ray);
 
-		for (auto& it : intersectTimes)
+		for (auto it : intersectTimes)
 		{
-			add(Intersection(it, shape));
+			Intersection intersect(it.i, it.object);
+			add(intersect);
 		}
 	}
 

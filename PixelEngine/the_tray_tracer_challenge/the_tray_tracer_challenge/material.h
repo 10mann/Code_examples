@@ -24,7 +24,7 @@ namespace RayTracer
 		Material();
 
 		// Methods
-		const Color& getColor(Tuple point);
+		Color getColor(Tuple point);
 
 		// Operators
 		friend bool operator== (Material const& t1, Material const& t2);

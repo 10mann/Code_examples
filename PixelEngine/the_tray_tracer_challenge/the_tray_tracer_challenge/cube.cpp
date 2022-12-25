@@ -14,35 +14,35 @@ namespace RayTracer
 	}
 
 	// ============================ Methods ============================
-	Tuple Cube::getNormal(Tuple point)
+	Tuple Cube::getLocalNormal(Tuple point)
 	{
-		Tuple localPoint = invTransform * point;
-		Tuple normal = vector(localPoint.x, 0 ,0);
+		Tuple normal = vector(point.x, 0, 0);
 
-		double maxVal = std::abs(localPoint.x);
-		if (std::abs(localPoint.y) > maxVal)
+		double maxVal = std::abs(point.x);
+		if (std::abs(point.y) > maxVal)
 		{
-			maxVal = std::abs(localPoint.y);
-			normal = vector(0, localPoint.y, 0);
+			maxVal = std::abs(point.y);
+			normal = vector(0, point.y, 0);
 		}
 
-		if (std::abs(localPoint.z) > maxVal)
+		if (std::abs(point.z) > maxVal)
 		{
-			maxVal = std::abs(localPoint.z);
-			normal = vector(0, 0, localPoint.z);
+			maxVal = std::abs(point.z);
+			normal = vector(0, 0, point.z);
 		}
 
 		return normal;
 	}
 
-	std::vector<double> Cube::getIntersectTime(Ray& ray)
+	std::vector<Shape::ObjectHit> Cube::getIntersectTime(Ray& ray)
 	{
-		std::vector<double> intersectTimes;
+		std::vector<ObjectHit> intersectTimes;
+		Ray transformedRay = ray.transform(invTransform);
 
 		double xMin, yMin, zMin, xMax, yMax, zMax, temp, tMin, tMax;
 
-		xMin = (-1 - ray.origin.x) / ray.direction.x;
-		xMax = (1 - ray.origin.x) / ray.direction.x;
+		xMin = (-1 - transformedRay.origin.x) / transformedRay.direction.x;
+		xMax = (1 - transformedRay.origin.x) / transformedRay.direction.x;
 
 		if (xMin > xMax)
 		{
@@ -51,8 +51,8 @@ namespace RayTracer
 			xMax = temp;
 		}
 
-		yMin = (-1 - ray.origin.y) / ray.direction.y;
-		yMax = (1 - ray.origin.y) / ray.direction.y;
+		yMin = (-1 - transformedRay.origin.y) / transformedRay.direction.y;
+		yMax = (1 - transformedRay.origin.y) / transformedRay.direction.y;
 
 		if (yMin > yMax)
 		{
@@ -61,8 +61,8 @@ namespace RayTracer
 			yMax = temp;
 		}
 
-		zMin = (-1 - ray.origin.z) / ray.direction.z;
-		zMax = (1 - ray.origin.z) / ray.direction.z;
+		zMin = (-1 - transformedRay.origin.z) / transformedRay.direction.z;
+		zMax = (1 - transformedRay.origin.z) / transformedRay.direction.z;
 
 		if (zMin > zMax)
 		{
@@ -79,22 +79,16 @@ namespace RayTracer
 		tMax = (zMax < temp) ? zMax : temp;
 		if (tMax > tMin)
 		{
-			intersectTimes.push_back(tMin);
-			intersectTimes.push_back(tMax);
+			ObjectHit objHit1(tMin, this);
+			ObjectHit objHit2(tMax, this);
+			intersectTimes.push_back(objHit1);
+			intersectTimes.push_back(objHit2);
 		}
 
 		return intersectTimes;
 	}
 
-	const Color& Cube::colorAt(Tuple point)
-	{
-		// TODO: insert return statement here
-		return Color();
-	}
-
 	// =========================== Operators ===========================
-
-
 	bool Cube::operator==(Shape const& s1)
 	{
 		return (transform == s1.transform);

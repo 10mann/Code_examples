@@ -18,20 +18,20 @@ namespace RayTracer
 		}
 
 		// Methods
-		Tuple getNormal(Tuple point) override
+		Tuple getLocalNormal(Tuple point) override
 		{
 			return vector(0, 0, -1);
 		}
 
-		std::vector<double> getIntersectTime(Ray& ray) override 
+		std::vector<Shape::ObjectHit> getIntersectTime(Ray& ray) override 
 		{
-			return std::vector<double>();
+			return std::vector<ObjectHit>();
 		}
 
-		const Color& colorAt(Tuple point) override
-		{
-			return material.color;
-		}
+		//Color colorAt(Tuple point) override
+		//{
+		//	return material.color;
+		//}
 
 		// Operators
 		bool operator== (Shape const& s1)

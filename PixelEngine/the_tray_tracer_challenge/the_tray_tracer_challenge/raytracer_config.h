@@ -6,7 +6,7 @@
 #define OVERRIDE_THREAD_COUNT  0
 
 // ================ Quality settings =================
-#define MAX_REFLECTIONS    6
+#define MAX_REFLECTIONS    4
 
 // ================ Material settings ================
 #define REFRACT_GLASS      1.52

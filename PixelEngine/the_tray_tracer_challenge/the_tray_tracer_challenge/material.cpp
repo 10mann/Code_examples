@@ -20,7 +20,7 @@ namespace RayTracer
 	{
 	}
 
-	const Color& Material::getColor(Tuple point)
+	Color Material::getColor(Tuple point)
 	{
 		return (pattern == nullptr) ? color : pattern->colorAt(point);
 	}

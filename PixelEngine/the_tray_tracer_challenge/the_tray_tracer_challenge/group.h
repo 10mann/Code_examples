@@ -4,21 +4,23 @@
 
 namespace RayTracer
 {
-	class Cube : public Shape
+	class Group : public Shape
 	{
 	public:
 
 		// Variables
+		std::vector<Shape*> objects;
 
 		// Constructors
-		Cube();
+		Group();
 
 		// Methods
 		//Tuple getNormal(Tuple point) override;
 		Tuple getLocalNormal(Tuple point) override;
-		//std::vector<double> getIntersectTime(Ray& ray) override;
 		std::vector<ObjectHit> getIntersectTime(Ray& ray) override;
 		//Color colorAt(Tuple point) override;
+
+		void addChild(Shape* child);
 
 		// Operators
 		bool operator== (Shape const& s1) override;

@@ -87,6 +87,18 @@
     <ClCompile Include="cube.cpp">
       <Filter>Resource Files</Filter>
     </ClCompile>
+    <ClCompile Include="cylinder.cpp">
+      <Filter>Resource Files</Filter>
+    </ClCompile>
+    <ClCompile Include="cone.cpp">
+      <Filter>Resource Files</Filter>
+    </ClCompile>
+    <ClCompile Include="group.cpp">
+      <Filter>Resource Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bounding_box.cpp">
+      <Filter>Resource Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="tuple.h">
@@ -174,6 +186,18 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="cube.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="cylinder.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="cone.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="group.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="bounding_box.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

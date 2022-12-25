@@ -19,6 +19,9 @@
 #include "ring_pattern.h"
 #include "checker_pattern.h"
 #include "cube.h"
+#include "cylinder.h"
+#include "cone.h"
+#include "group.h"
 
 #include <memory>
 
@@ -38,6 +41,9 @@ using RayTracer::GradientPattern;
 using RayTracer::RingPattern;
 using RayTracer::CheckerPattern;
 using RayTracer::Cube;
+using RayTracer::Cylinder;
+using RayTracer::Cone;
+using RayTracer::Group;
 
 using RayTracer::rotationX;
 using RayTracer::rotationY;
@@ -941,12 +947,14 @@ namespace RayTracer
 		Sphere s2;
 		s2.transform = translation(-0.5, 2.9, -2) * scaling(0.35, 0.35, 0.35);
 		//s2.material.color = Color(0.34, 0.96, 0.26);
-		s2.material.color = Color(0.6, 0.1, 0.6);
-		s2.material.diffuse = 0.9;
+		s2.material.color = Color(0.3, 0.1, 0.3);
 		s2.material.reflective = 1;
-		s2.material.shininess = 100;
+		s2.material.shininess = 300;
 		s2.material.specular = 0.9;
-		//s2.material.pattern = &pattern2;
+        s2.material.ambient = 0.1;
+        s2.material.diffuse = 0.2;
+        s2.material.transparency = 0.9;
+        s2.material.refractiveIndex = 1.3;
 
 
 		Sphere s3;
@@ -1119,10 +1127,10 @@ namespace RayTracer
     void drawCubeScene1(Canvas& image)
     {
         World world;
-        world.lights.push_back(PointLight(Color(1.5, 1.5, 1.5), point(-5, 7, -10)));
+        world.lights.push_back(PointLight(Color(1.5, 1.5, 1.5), point(-8, 7, -10)));
 
         Camera camera(image.width, image.height, MATH_PI / 3);
-        camera.transform = viewTransform(point(-2, 3.5, -10), point(1, 1, 0), vector(0, 1, 0));
+        camera.transform = viewTransform(point(-2, 5, -8), point(1, 1, 0), vector(0, 1, 0));
 
         CheckerPattern checkerPattern(Color(1, 1, 1), Color(0.5, 0.2, 0.6));
         checkerPattern.setTransform(translation(5.5, 0, 548) * rotationY(MATH_PI / 4));
@@ -1134,16 +1142,406 @@ namespace RayTracer
         world.objects.push_back(&floor);
 
         Cube cube;
-        cube.material.color = Color(0, 0.7, 0);
-        cube.material.transparency = 0.6;
+        cube.material.color = Color(0.4, 0.9, 0.4);
+        cube.material.transparency = 0.7;
         cube.material.reflective = 0.9;
-        cube.material.ambient = 0.05;
-        cube.material.diffuse = 0.02;
+        cube.material.ambient = 0.1;
+        cube.material.diffuse = 0.2;
         cube.material.specular = 1;
         cube.material.shininess = 300;
         cube.material.refractiveIndex = 1.3;
-        cube.setTransform(translation(0, 1, 0));
+        cube.setTransform(translation(2.5, 1.001, 0) * rotationY(DoubleHelpers::MATH_PI / 4));
         world.objects.push_back(&cube);
+
+        Cube cube1;
+        cube1.material.color = Color(0.4, 0.4, 0.9);
+        cube1.material.transparency = 0.7;
+        cube1.material.reflective = 0.9;
+        cube1.material.ambient = 0.1;
+        cube1.material.diffuse = 0.2;
+        cube1.material.specular = 1;
+        cube1.material.shininess = 300;
+        cube1.material.refractiveIndex = 1.3;
+        cube1.setTransform(translation(2.5, 3.001, 0) * rotationY(DoubleHelpers::MATH_PI / 4));
+        world.objects.push_back(&cube1);
+
+        image = camera.render(world);
+    }
+
+    void drawCubeScene2(Canvas& image)
+    {
+        World world;
+        world.lights.push_back(PointLight(Color(1.5, 1.5, 1.5), point(-8, 7, -10)));
+
+        Camera camera(image.width, image.height, MATH_PI / 3);
+        camera.transform = viewTransform(point(0, 3, -4), point(0, 3, 0), vector(0, 1, 0));
+
+        CheckerPattern checkerPattern(Color(1, 1, 1), Color(0.5, 0.2, 0.6));
+        checkerPattern.setTransform(translation(5.5, 0, 548) * rotationY(MATH_PI / 4));
+
+        Plane floor;
+        floor.material.color = Color(0.7, 0.7, 0.7);
+        floor.material.reflective = 0.5;
+        floor.material.pattern = &checkerPattern;
+        world.objects.push_back(&floor);
+
+        Cube cube;
+        cube.material.color = Color(0.2, 0.2, 0.2);
+        cube.material.transparency = 1;
+        cube.material.reflective = 0;
+        cube.material.ambient = 0.1;
+        cube.material.diffuse = 0.1;
+        cube.material.specular = 1;
+        cube.material.shininess = 300;
+        cube.material.refractiveIndex = 1.2;
+        cube.setTransform(translation(2.5, 3, 0) * rotationX(DoubleHelpers::MATH_PI / 4));
+        world.objects.push_back(&cube);
+
+        image = camera.render(world);
+    }
+
+    void drawCubeScene3(Canvas& image)
+    {
+        World world;
+        world.lights.push_back(PointLight(Color(1., 1., 1.), point(-8, 7, -10)));
+        //world.lights.push_back(PointLight(Color(1.5, 1.5, 1.5), point(-8, 7, -100)));
+
+        Camera camera(image.width, image.height, MATH_PI / 3);
+        camera.transform = viewTransform(point(0, 3, -6), point(0, 3, 0), vector(0, 1, 0));
+
+        CheckerPattern checkerPattern(Color(1, 1, 1), Color(0.5, 0.2, 0.6));
+        //checkerPattern.setTransform();
+
+        Plane floor;
+        floor.material.color = Color(0.7, 0.7, 0.7);
+        floor.material.reflective = 0.5;
+        floor.material.pattern = &checkerPattern;
+        world.objects.push_back(&floor);
+
+        Cube skybox;
+        skybox.material.color = Color(0.6, 0.6, 0.8);
+        skybox.material.ambient = 0.1;
+        skybox.setTransform(scaling(40, 40, 40));
+        world.objects.push_back(&skybox);
+
+        Cube cube;
+        cube.material.color = Color(0.1, 0.1, 0.1);
+        cube.material.transparency = 0;
+        cube.material.reflective = 1;
+        cube.material.ambient = 0.1;
+        cube.material.diffuse = 0.1;
+        cube.material.specular = 1;
+        cube.material.shininess = 300;
+        cube.material.refractiveIndex = 1.2;
+        cube.setTransform(translation(-1, 3, 0) * rotationY(-DoubleHelpers::MATH_PI / 4) * scaling(1, 1, 0.001));
+        //cube.setTransform(translation(0, 3, 0));
+        world.objects.push_back(&cube);
+
+        Cube cube1;
+        cube1.material.color = Color(0.6, 1, 0.6);
+        cube1.material.transparency = 0;
+        cube1.material.reflective = 0;
+        cube1.material.ambient = 0.4;
+        cube1.material.diffuse = 0.5;
+        cube1.material.specular = 1;
+        cube1.material.shininess = 300;
+        cube1.material.refractiveIndex = 1.3;
+        cube1.setTransform(translation(2.5, 3, 0));
+        world.objects.push_back(&cube1);
+
+        image = camera.render(world);
+    }
+
+    void drawCubeScene4(Canvas& image)
+    {
+        World world;
+        world.lights.push_back(PointLight(Color(1.5, 1.5, 1.5), point(-8, 7, -10)));
+
+        Camera camera(image.width, image.height, MATH_PI / 3);
+        camera.transform = viewTransform(point(0, 3, -6), point(0, 3, 0), vector(0, 1, 0));
+
+        CheckerPattern checkerPattern(Color(1, 1, 1), Color(0.5, 0.2, 0.6));
+        //checkerPattern.setTransform();
+
+        Plane floor;
+        floor.material.color = Color(0.7, 0.7, 0.7);
+        floor.material.reflective = 0.2;
+        floor.material.specular = 0.2;
+        floor.material.ambient = 0.2;
+        floor.material.diffuse = 0.8;
+        floor.material.pattern = &checkerPattern;
+        world.objects.push_back(&floor);
+
+        Cube skybox;
+        skybox.material.color = Color(0.6, 0.6, 0.8);
+        skybox.material.ambient = 0.;
+        skybox.material.specular = 0.;
+        skybox.setTransform(scaling(40, 40, 40));
+        world.objects.push_back(&skybox);
+
+        Cube cube;
+        cube.material.color = Color(0.1, 0.1, 0.1);
+        cube.material.transparency = 0.8;
+        cube.material.reflective = 0;
+        cube.material.ambient = 0.1;
+        cube.material.diffuse = 0.1;
+        cube.material.specular = 1;
+        cube.material.shininess = 300;
+        cube.material.refractiveIndex = 1.2;
+        cube.setTransform(translation(0, 3, 0) * rotationY(DoubleHelpers::MATH_PI / 4));
+        world.objects.push_back(&cube);
+
+        //Sphere sphere;
+        //sphere.material.color = Color(0, 0, 0);
+        //sphere.material.transparency = 1;
+        //sphere.material.reflective = 0;
+        //sphere.material.ambient = 0.1;
+        //sphere.material.diffuse = 0.1;
+        //sphere.material.specular = 1;
+        //sphere.material.shininess = 300;
+        //sphere.material.refractiveIndex = 1.2;
+        //sphere.setTransform(translation(0, 3, 0));
+        //world.objects.push_back(&sphere);
+
+        image = camera.render(world);
+    }
+
+    void drawCylinderScene1(Canvas& image)
+    {
+        World world;
+        world.lights.push_back(PointLight(Color(1.5, 1.5, 1.5), point(-8, 7, -10)));
+
+        Camera camera(image.width, image.height, MATH_PI / 3);
+        camera.transform = viewTransform(point(0, 5, -15), point(1, 1, 0), vector(0, 1, 0));
+
+        CheckerPattern checkerPattern(Color(1, 1, 1), Color(0.3, 0.3, 0.3));
+        checkerPattern.setTransform(translation(5.5, 0, 548) * rotationY(MATH_PI / 4));
+
+        Plane floor;
+        floor.material.color = Color(1, 1, 1);
+        floor.material.reflective = 0.5;
+        floor.material.pattern = &checkerPattern;
+        floor.setTransform(translation(0, -6, 0));
+        world.objects.push_back(&floor);
+
+        Cylinder cylinder;
+        cylinder.closed = true;
+        cylinder.minY = -6;
+        cylinder.maxY = 6;
+        cylinder.material.color = Color(0.6, 0.2, 0.2);
+        cylinder.material.transparency = 0.9;
+        cylinder.material.reflective = 0.9;
+        cylinder.material.ambient = 0.1;
+        cylinder.material.diffuse = 0.2;
+        cylinder.material.specular = 1;
+        cylinder.material.shininess = 300;
+        cylinder.material.refractiveIndex = 1.3;
+        world.objects.push_back(&cylinder);
+
+        Cylinder cylinder1;
+        cylinder1.closed = true;
+        cylinder1.minY = -6;
+        cylinder1.maxY = 6;
+        cylinder1.material.color = Color(0.2, 0.2, 0.6);
+        cylinder1.material.transparency = 0.9;
+        cylinder1.material.reflective = 0.9;
+        cylinder1.material.ambient = 0.1;
+        cylinder1.material.diffuse = 0.2;
+        cylinder1.material.specular = 1;
+        cylinder1.material.shininess = 300;
+        cylinder1.material.refractiveIndex = 1.3;
+        cylinder1.setTransform(translation(0, 0, 0) * rotationZ(DoubleHelpers::MATH_PI / 2));
+        world.objects.push_back(&cylinder1);
+
+        Cylinder cylinder2;
+        cylinder2.closed = true;
+        cylinder2.minY = -6;
+        cylinder2.maxY = 6;
+        cylinder2.material.color = Color(0.2, 0.6, 0.2);
+        cylinder2.material.transparency = 0.9;
+        cylinder2.material.reflective = 0.9;
+        cylinder2.material.ambient = 0.1;
+        cylinder2.material.diffuse = 0.2;
+        cylinder2.material.specular = 1;
+        cylinder2.material.shininess = 300;
+        cylinder2.material.refractiveIndex = 1.3;
+        cylinder2.setTransform(translation(0, 0, 0) * rotationX(DoubleHelpers::MATH_PI / 2));
+        world.objects.push_back(&cylinder2);
+
+        image = camera.render(world);
+    }
+
+    void drawCylinderScene2(Canvas& image)
+    {
+        World world;
+        world.lights.push_back(PointLight(Color(1.5, 1.5, 1.5), point(-8, 7, -10)));
+
+        Camera camera(image.width, image.height, MATH_PI / 3);
+        camera.transform = viewTransform(point(0, 0, -12), point(0, 0, 0), vector(0, 1, 0));
+
+        CheckerPattern checkerPattern(Color(1, 1, 1), Color(0.3, 0.3, 0.3));
+        checkerPattern.setTransform(translation(5.5, 0, 548) * rotationY(MATH_PI / 4));
+
+        Plane floor;
+        floor.material.color = Color(0.7, 0.7, 0.7);
+        floor.material.reflective = 0.5;
+        floor.material.pattern = &checkerPattern;
+        floor.setTransform(translation(0, -6, 0));
+        world.objects.push_back(&floor);
+
+        Cylinder cylinder;
+        cylinder.closed = true;
+        cylinder.minY = -6;
+        cylinder.maxY = 6;
+        cylinder.material.color = Color(0.2, 0.2, 0.2);
+        cylinder.material.transparency = 0.9;
+        cylinder.material.reflective = 0.9;
+        cylinder.material.ambient = 0.1;
+        cylinder.material.diffuse = 0.2;
+        cylinder.material.specular = 1;
+        cylinder.material.shininess = 300;
+        cylinder.material.refractiveIndex = 1.3;
+        //cylinder.setTransform(rotationX(DoubleHelpers::MATH_PI / 2));
+        world.objects.push_back(&cylinder);
+
+        image = camera.render(world);
+    }
+
+    void drawConeScene1(Canvas& image)
+    {
+        World world;
+        world.lights.push_back(PointLight(Color(1.5, 1.5, 1.5), point(-8, 7, -10)));
+
+        Camera camera(image.width, image.height, MATH_PI / 3);
+        camera.transform = viewTransform(point(2, 3, -5), point(0, 0, 0), vector(0, 1, 0));
+
+        CheckerPattern checkerPattern(Color(1, 1, 1), Color(0.3, 0.3, 0.3));
+        checkerPattern.setTransform(translation(5.5, 0, 548) * rotationY(MATH_PI / 4));
+
+        Plane floor;
+        floor.material.color = Color(0.7, 0.7, 0.7);
+        floor.material.reflective = 0.5;
+        floor.material.pattern = &checkerPattern;
+        floor.setTransform(translation(0, 0, 0));
+        world.objects.push_back(&floor);
+
+        Cone cone;
+        cone.closed = true;
+        cone.minY = -1;
+        cone.maxY = 0;
+        cone.material.color = Color(0.2, 0.2, 0.2);
+        cone.material.transparency = 0.9;
+        cone.material.reflective = 0.9;
+        cone.material.ambient = 0.1;
+        cone.material.diffuse = 0.2;
+        cone.material.specular = 1;
+        cone.material.shininess = 300;
+        cone.material.refractiveIndex = 1.3;
+        cone.setTransform(translation(0, 2.01, 0));
+        world.objects.push_back(&cone);
+
+        image = camera.render(world);
+    }
+
+    void drawConeScene2(Canvas& image)
+    {
+        World world;
+        world.lights.push_back(PointLight(Color(1.5, 1.5, 1.5), point(-8, 7, -10)));
+
+        Camera camera(image.width, image.height, MATH_PI / 3);
+        camera.transform = viewTransform(point(5, 3, -5), point(0, 0, 0), vector(0, 1, 0));
+
+        CheckerPattern checkerPattern(Color(1, 1, 1), Color(0.3, 0.3, 0.3));
+        checkerPattern.setTransform(translation(5.5, 0, 548) * rotationY(MATH_PI / 4));
+
+        Plane floor;
+        floor.material.color = Color(0.7, 0.7, 0.7);
+        floor.material.reflective = 0.5;
+        floor.material.pattern = &checkerPattern;
+        floor.setTransform(translation(0, 0, 0));
+        world.objects.push_back(&floor);
+
+        Cube cube;
+        cube.material.color = Color(0.4, 0.9, 0.4);
+        cube.material.transparency = 0.7;
+        cube.material.reflective = 0.9;
+        cube.material.ambient = 0.1;
+        cube.material.diffuse = 0.2;
+        cube.material.specular = 1;
+        cube.material.shininess = 300;
+        cube.material.refractiveIndex = 1.3;
+        cube.setTransform(translation(0, 1.001, 0) * rotationY(DoubleHelpers::MATH_PI / 4));
+        //world.objects.push_back(&cube);
+
+        Cone cone;
+        cone.closed = true;
+        cone.minY = 0;
+        cone.maxY = 1;
+        cone.material.color = Color(0.2, 0.2, 0.2);
+        cone.material.transparency = 0.8;
+        cone.material.reflective = 0.8;
+        cone.material.ambient = 0.1;
+        cone.material.diffuse = 0.2;
+        cone.material.specular = 1;
+        cone.material.shininess = 300;
+        cone.material.refractiveIndex = 1.3;
+        //cone.setTransform(translation(0, 0.002 + 1, 0) * scaling(1.5, 2, 1.5));
+        cone.setTransform(translation(0, 2, 0) * rotationX(DoubleHelpers::MATH_PI / 2) * scaling(1, 2, 1));
+        world.objects.push_back(&cone);
+
+
+
+        image = camera.render(world);
+    }
+
+    void drawGroupScene1(Canvas& image)
+    {
+        World world;
+        world.lights.push_back(PointLight(Color(1.5, 1.5, 1.5), point(-8, 7, -10)));
+
+        Camera camera(image.width, image.height, MATH_PI / 3);
+        camera.transform = viewTransform(point(5, 3, -8), point(0, 2, 0), vector(0, 1, 0));
+
+        CheckerPattern checkerPattern(Color(1, 1, 1), Color(0.3, 0.3, 0.3));
+        checkerPattern.setTransform(translation(5.5, 0, 548) * rotationY(MATH_PI / 4));
+
+        Plane floor;
+        floor.material.color = Color(0.7, 0.7, 0.7);
+        floor.material.reflective = 0.5;
+        floor.material.pattern = &checkerPattern;
+        floor.setTransform(translation(0, 0, 0));
+        world.objects.push_back(&floor);
+
+        Cube cube;
+        cube.material.color = Color(0.4, 0.9, 0.4);
+        cube.material.transparency = 0.7;
+        cube.material.reflective = 0.9;
+        cube.material.ambient = 0.1;
+        cube.material.diffuse = 0.2;
+        cube.material.specular = 1;
+        cube.material.shininess = 300;
+        cube.material.refractiveIndex = 1.3;
+        cube.setTransform(translation(0, 1.001, 0) * rotationY(DoubleHelpers::MATH_PI / 4));
+        //world.objects.push_back(&cube);
+
+        Cube cube1;
+        cube1.material.color = Color(0.6, 1, 0.6);
+        cube1.material.transparency = 0;
+        cube1.material.reflective = 0;
+        cube1.material.ambient = 0.4;
+        cube1.material.diffuse = 0.5;
+        cube1.material.specular = 1;
+        cube1.material.shininess = 300;
+        cube1.material.refractiveIndex = 1.3;
+        cube1.setTransform(translation(0, 3, 0));
+        //world.objects.push_back(&cube1);
+
+        Group group;
+        group.addChild(&cube);
+        group.addChild(&cube1);
+        group.setTransform(rotationY(DoubleHelpers::MATH_PI / 4));
+        world.objects.push_back(&group);
+
 
         image = camera.render(world);
     }

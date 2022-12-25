@@ -4,14 +4,17 @@
 
 namespace RayTracer
 {
-	class Cube : public Shape
+	class Cylinder : public Shape
 	{
 	public:
 
 		// Variables
+		double minY;
+		double maxY;
+		bool closed;
 
 		// Constructors
-		Cube();
+		Cylinder();
 
 		// Methods
 		//Tuple getNormal(Tuple point) override;
@@ -22,5 +25,6 @@ namespace RayTracer
 
 		// Operators
 		bool operator== (Shape const& s1) override;
+
 	};
 }

@@ -18,6 +18,9 @@
 #include "gradient_pattern.h"
 #include "plane.h"
 #include "test_pattern.h"
+#include "cylinder.h"
+#include "cone.h"
+#include "group.h"
 
 #include "scenes.h"
 #include "benchmarks.h"
@@ -46,6 +49,9 @@ using RayTracer::GradientPattern;
 using RayTracer::Plane;
 using RayTracer::Shape;
 using RayTracer::TestPattern;
+using RayTracer::Cylinder;
+using RayTracer::Cone;
+using RayTracer::Group;
 
 using RayTracer::rotationX;
 using RayTracer::rotationY;
@@ -61,6 +67,15 @@ using RayTracer::benchmarkGetSubMatrix;
 using RayTracer::benchmarkGetInverse;
 using RayTracer::benchmarkCompareCubeIntersect;
 using RayTracer::glassSphere;
+using RayTracer::drawCubeScene1;
+using RayTracer::drawCubeScene2;
+using RayTracer::drawCubeScene3;
+using RayTracer::drawCubeScene4;
+using RayTracer::drawCylinderScene1;
+using RayTracer::drawCylinderScene2;
+using RayTracer::drawConeScene1;
+using RayTracer::drawConeScene2;
+using RayTracer::drawGroupScene1;
 
 using DoubleHelpers::MATH_PI;
 
@@ -157,53 +172,22 @@ public:
 		//drawDefaultScene4(image);
 		//drawMarbleMadness(image);
 		//drawDefaultRefractionScene1(image);
-		//drawSphereGrid(image);
-		drawCubeScene1(image);
+		drawSphereGrid(image);
+		//drawCubeScene1(image);
+		//drawCubeScene2(image);
+		//drawCubeScene3(image);
+		//drawCubeScene4(image);
+		//drawCylinderScene1(image);
+		//drawCylinderScene2(image);
+		//drawConeScene1(image);
+		//drawConeScene2(image);
+		//drawGroupScene1(image);
 		auto timeEnd = std::chrono::steady_clock::now();
 		auto drawDuration = std::chrono::duration_cast<std::chrono::milliseconds>(timeEnd - timeStart);
 		std::cout << "Time to draw: " << drawDuration.count() << std::endl;
-		
 		drawCanvasToScreen(image);
 		//saveToFile(image, "MarbleMadness.ppm");
 
-		//long long time = benchmarkCompareCubeIntersect(10000000);
-		//std::cout << "Time: " << time << std::endl;
-
-		//double test1[4] = { 1, 2, 3, 4 };
-		//double test2[4] = { 2, 4, 6, 8 };
-		//__m256d c = { 0, 0, 0, 0 };
-
-		//__m256d a = _mm256_load_pd(test1);
-		//__m256d b = _mm256_load_pd(test2);
-		//c = _mm256_fmadd_pd(a, b, c);
-		//c = _mm256_add_pd(c, c);
-		//double* c_p = (double*)&c;
-
-		//double values1[] =
-		//{
-		//	1, 2, 3, 4,
-		//	5, 6, 7, 8,
-		//	9, 8, 7, 6,
-		//	5, 4, 3, 2
-		//};
-
-		//Matrix a(4, 4, values1);
-		////Matrix b(4, 4, values1);
-
-		//Matrix e = a.getSubMatrix(0, 0);
-		//e.print();
-
-		//Matrix c = a * b;
-		//Matrix d = a.mul(b);
-		//std::cout << "Operator *" << std::endl;
-		//c.print();
-		//std::cout << std::endl << "Mul" << std::endl;
-		//d.print();
-
-		//std::cout << c_p[0] << ", " << c_p[1] << ", " << c_p[2] << ", " << c_p[3] << std::endl;
-
-		//long long matrixTime = benchmarkMatrixMult(100000000);
-		//std::cout << "Multiplication time: " << matrixTime << std::endl;
 
 		return true;
 	}
@@ -255,7 +239,7 @@ Game::Game()
 int main()
 {
 	Game game;
-	if (game.Construct(1024, 1024, 1, 1))
+	if (game.Construct(1024, 576, 1, 1))
 	{
 		game.Start();
 	}

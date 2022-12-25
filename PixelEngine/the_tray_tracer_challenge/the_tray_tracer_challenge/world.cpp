@@ -132,10 +132,9 @@ namespace RayTracer
 		Color color(0, 0, 0);
 
 		if ((comp.sin2t < 1) && 
-			(comp.object->material.transparency > DoubleHelpers::EPSILON_HALF) && 
+			(comp.object->material.transparency > DoubleHelpers::EPSILON) &&
 			(bounces > 0))
 		{
-			//double cos_t = std::sqrt(1 - comp.sin2t);
 			Tuple dir = (comp.normal * (comp.nRatio * comp.cos_i - comp.cos_t)) - (comp.eyeDir * comp.nRatio);
 
 			Ray refractRay(comp.underPoint, dir);
@@ -169,7 +168,7 @@ namespace RayTracer
 
 	Color getLighting(Shape* s, PointLight light, Tuple position, Tuple eyeDirection, Tuple normal, bool inShadow)
 	{
-		Color effectiveColor = s->material.getColor(position) * light.intensity;
+		Color effectiveColor = s->colorAt(position) * light.intensity;
 		Color diffuse(0, 0, 0);
 		Color specular(0, 0, 0);
 		if (false == inShadow)

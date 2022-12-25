@@ -11,15 +11,34 @@ namespace RayTracer
 	class Shape
 	{
 	public:
+		class ObjectHit
+		{
+		public:
+			Shape* object;
+			double i;
+
+			ObjectHit(double _i, Shape* s)
+			{
+				i = _i;
+				object = s;
+			}
+		};
 
 		// Variables
 		Matrix transform;
 		Matrix invTransform;
+		Matrix invTranspose;
 		Material material;
+
+		Shape* parent;
 
 		// Constructors
 		Shape()
-			: transform(Matrix::identityMatrix), invTransform(Matrix::identityMatrix), material(Material())
+			: transform(Matrix::identityMatrix), 
+			invTransform(Matrix::identityMatrix), 
+			invTranspose(Matrix::identityMatrix),
+			material(Material()),
+			parent(nullptr)
 		{
 
 		}
@@ -29,13 +48,50 @@ namespace RayTracer
 		{
 			transform = m;
 			invTransform = m.getInverse();
+			invTranspose = invTransform.getTranspose();
 		}
 
-		virtual Tuple getNormal(Tuple point) = 0;
+		Tuple getNormal(Tuple point)
+		{
+			Tuple LocalPoint = worldToObjectSpace(point);
+			Tuple localNormal = this->getLocalNormal(LocalPoint);
+			return normalToWorld(localNormal);
+		}
 
-		virtual std::vector<double> getIntersectTime(Ray& ray) = 0;
+		virtual Tuple getLocalNormal(Tuple point) = 0;
 
-		virtual const Color& colorAt(Tuple point) = 0;
+		//virtual std::vector<double> getIntersectTime(Ray& ray) = 0;
+		virtual std::vector<ObjectHit> getIntersectTime(Ray& ray) = 0;
+
+		Color colorAt(Tuple point)
+		{
+			return (material.pattern == nullptr) ? material.color :
+				material.pattern->colorAt(worldToObjectSpace(point));
+		}
+
+		Tuple worldToObjectSpace(Tuple p)
+		{
+			if (nullptr != parent)
+			{
+				p = parent->worldToObjectSpace(p);
+			}
+
+			return invTransform * p;
+		}
+
+		Tuple normalToWorld(Tuple n)
+		{
+			Tuple normal = invTranspose * n;
+			normal.w = 0;
+			normal = normal.getNormalized();
+
+			if (nullptr != parent)
+			{
+				normal = parent->normalToWorld(normal);
+			}
+
+			return normal;
+		}
 
 		// Operators
 		//virtual bool operator==(Shape s) = 0;
