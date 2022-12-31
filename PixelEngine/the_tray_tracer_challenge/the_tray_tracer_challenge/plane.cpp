@@ -29,12 +29,20 @@ namespace RayTracer
 		return intersectTimes;
 	}
 
+	BoundingBox Plane::getBoundingBox(void)
+	{
+		BoundingBox mBbox = BoundingBox(point(-INFINITY, 0, -INFINITY), point(INFINITY, 0, INFINITY));
+		mBbox.setTransform(transform);
+		
+		return mBbox;
+	}
+
+
+	// =========================== Operators ===========================
 	bool Plane::operator==(Shape const& s1)
 	{
 		return false;
 	}
-
-	// =========================== Operators ===========================
 
 
 	// ============================ Helpers =============================

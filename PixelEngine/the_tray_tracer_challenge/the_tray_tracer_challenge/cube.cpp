@@ -88,6 +88,14 @@ namespace RayTracer
 		return intersectTimes;
 	}
 
+	BoundingBox Cube::getBoundingBox(void)
+	{
+		BoundingBox mBbox(point(-1, -1, -1), point(1, 1, 1));
+		mBbox.setTransform(transform);
+		
+		return mBbox;
+	}
+
 	// =========================== Operators ===========================
 	bool Cube::operator==(Shape const& s1)
 	{

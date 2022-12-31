@@ -5,6 +5,7 @@
 #include "ray.h"
 #include "pattern.h"
 #include "raytracer_config.h"
+#include "bounding_box.h"
 
 namespace RayTracer
 {
@@ -59,8 +60,6 @@ namespace RayTracer
 		}
 
 		virtual Tuple getLocalNormal(Tuple point) = 0;
-
-		//virtual std::vector<double> getIntersectTime(Ray& ray) = 0;
 		virtual std::vector<ObjectHit> getIntersectTime(Ray& ray) = 0;
 
 		Color colorAt(Tuple point)
@@ -93,9 +92,14 @@ namespace RayTracer
 			return normal;
 		}
 
-		// Operators
-		//virtual bool operator==(Shape s) = 0;
+		virtual BoundingBox getBoundingBox(void) = 0;
 
+		virtual void divide(int threshold)
+		{
+			(void)threshold;
+		}
+
+		// Operators
 		virtual bool operator== (Shape const& s1) = 0;
 	};
 }

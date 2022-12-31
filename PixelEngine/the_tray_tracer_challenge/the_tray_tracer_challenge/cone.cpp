@@ -110,6 +110,29 @@ namespace RayTracer
 		return intersectTimes;
 	}
 
+	BoundingBox Cone::getBoundingBox(void)
+	{
+		BoundingBox mBbox;
+		if (true == closed)
+		{
+			double absMaxY = std::abs(maxY);
+			double absMinY = std::abs(minY);
+			double maxWidth = (absMaxY > absMinY) ? absMaxY : absMinY;
+
+			mBbox.max = point(maxWidth, maxY, maxWidth);
+			mBbox.min = point(-maxWidth, minY, -maxWidth);
+		}
+		else
+		{
+			mBbox.max = point(INFINITY, INFINITY, INFINITY);
+			mBbox.min = point(-INFINITY, -INFINITY, -INFINITY);
+		}
+
+		mBbox.setTransform(transform);
+		
+		return mBbox;
+	}
+
 	// =========================== Operators ===========================
 	bool Cone::operator==(Shape const& s1)
 	{

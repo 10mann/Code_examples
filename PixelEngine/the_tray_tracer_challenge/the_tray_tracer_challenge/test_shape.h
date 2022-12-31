@@ -9,7 +9,7 @@ namespace RayTracer
 	public:
 
 		// Variables
-
+		bool intersected = false;
 
 		// Constructors
 		TestShape()
@@ -25,13 +25,24 @@ namespace RayTracer
 
 		std::vector<Shape::ObjectHit> getIntersectTime(Ray& ray) override 
 		{
+			intersected = true;
 			return std::vector<ObjectHit>();
 		}
 
-		//Color colorAt(Tuple point) override
-		//{
-		//	return material.color;
-		//}
+		Tuple getMinimumBound(void)
+		{
+			return Tuple();
+		}
+
+		Tuple getMaximumBound(void)
+		{
+			return Tuple();
+		}
+
+		BoundingBox getBoundingBox(void)
+		{
+			return BoundingBox(point(-1, -1, -1), point(1, 1, 1));
+		}
 
 		// Operators
 		bool operator== (Shape const& s1)

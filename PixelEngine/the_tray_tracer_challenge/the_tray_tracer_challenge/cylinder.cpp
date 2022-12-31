@@ -97,6 +97,25 @@ namespace RayTracer
 		return intersectTimes;
 	}
 
+	BoundingBox Cylinder::getBoundingBox(void)
+	{
+		BoundingBox mBbox;
+		if (true == closed)
+		{
+			mBbox.max = point(1, maxY, 1);
+			mBbox.min = point(-1, minY, -1);
+		}
+		else
+		{
+			mBbox.max = point(1, INFINITY, 1);
+			mBbox.min = point(-1, -INFINITY, -1);
+		}
+
+		mBbox.setTransform(transform);
+		
+		return mBbox;
+	}
+
 	// =========================== Operators ===========================
 	bool Cylinder::operator==(Shape const& s1)
 	{

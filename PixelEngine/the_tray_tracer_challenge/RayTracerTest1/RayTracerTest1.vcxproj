@@ -106,7 +106,7 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <AdditionalLibraryDirectories>$(VCInstallDir)UnitTest\lib;C:\Users\Thailand\Documents\VSCode\Prosjekter\PixelEngine\the_tray_tracer_challenge\the_tray_tracer_challenge\x64\Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>tuple.obj;DoubleHelpers.obj;color.obj;canvas.obj;matrix.obj;ray.obj;sphere.obj;intersection.obj;intersection_list.obj;point_light.obj;material.obj;world.obj;camera.obj;plane.obj;stripe_pattern.obj;gradient_pattern.obj;ring_pattern.obj;checker_pattern.obj;cube.obj;cylinder.obj;cone.obj;group.obj;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>tuple.obj;DoubleHelpers.obj;color.obj;canvas.obj;matrix.obj;ray.obj;sphere.obj;intersection.obj;intersection_list.obj;point_light.obj;material.obj;world.obj;camera.obj;plane.obj;stripe_pattern.obj;gradient_pattern.obj;ring_pattern.obj;checker_pattern.obj;cube.obj;cylinder.obj;cone.obj;group.obj;bounding_box.obj;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -163,7 +163,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalLibraryDirectories>$(VCInstallDir)UnitTest\lib;C:\Users\Thailand\Documents\VSCode\Prosjekter\PixelEngine\the_tray_tracer_challenge\the_tray_tracer_challenge\x64\Release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>tuple.obj;DoubleHelpers.obj;color.obj;canvas.obj;matrix.obj;ray.obj;sphere.obj;intersection.obj;intersection_list.obj;point_light.obj;material.obj;world.obj;camera.obj;plane.obj;stripe_pattern.obj;gradient_pattern.obj;ring_pattern.obj;checker_pattern.obj;cube.obj;cylinder.obj;cone.obj;group.obj;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>tuple.obj;DoubleHelpers.obj;color.obj;canvas.obj;matrix.obj;ray.obj;sphere.obj;intersection.obj;intersection_list.obj;point_light.obj;material.obj;world.obj;camera.obj;plane.obj;stripe_pattern.obj;gradient_pattern.obj;ring_pattern.obj;checker_pattern.obj;cube.obj;cylinder.obj;cone.obj;group.obj;bounding_box.obj;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -187,6 +187,7 @@
     <ClCompile Include="RayTracerTest7.cpp" />
     <ClCompile Include="RayTracerTest8.cpp" />
     <ClCompile Include="RayTracerTest9.cpp" />
+    <ClCompile Include="RayTracerTestBonus1.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />

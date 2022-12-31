@@ -43,6 +43,14 @@ namespace RayTracer
 		return intersectTimes;
 	}
 
+	BoundingBox Sphere::getBoundingBox(void)
+	{
+		BoundingBox mBbox(point(-1, -1, -1), point(1, 1, 1));
+		mBbox.setTransform(transform);
+
+		return mBbox;
+	}
+
 	// =========================== Operators ===========================
 	bool Sphere::operator==(Shape const& s1)
 	{

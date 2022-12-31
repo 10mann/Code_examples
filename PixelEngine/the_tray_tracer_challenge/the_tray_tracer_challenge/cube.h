@@ -14,11 +14,9 @@ namespace RayTracer
 		Cube();
 
 		// Methods
-		//Tuple getNormal(Tuple point) override;
 		Tuple getLocalNormal(Tuple point) override;
-		//std::vector<double> getIntersectTime(Ray& ray) override;
 		std::vector<ObjectHit> getIntersectTime(Ray& ray) override;
-		//Color colorAt(Tuple point) override;
+		BoundingBox getBoundingBox(void) override;
 
 		// Operators
 		bool operator== (Shape const& s1) override;

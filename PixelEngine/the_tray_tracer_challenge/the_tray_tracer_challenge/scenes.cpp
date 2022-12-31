@@ -1004,6 +1004,7 @@ namespace RayTracer
 		floor.material.pattern = &floorPattern;
         world.objects.push_back(&floor);
 
+        Group group;
         std::shared_ptr<Sphere[]> marbles(new Sphere[MARBLES_SIZE]);
 
         for (int i = 0; i < MARBLES_SIZE; i++)
@@ -1029,9 +1030,11 @@ namespace RayTracer
             marbles[i].material.ambient = 0.1;
             marbles[i].material.reflective = 0.3;
 
-            world.objects.push_back(&marbles[i]);
+            //world.objects.push_back(&marbles[i]);
+            group.addChild(&marbles[i]);
         }
 
+        world.objects.push_back(&group);
         image = camera.render(world);
 	}
 
@@ -1077,17 +1080,15 @@ namespace RayTracer
 
     void drawSphereGrid(Canvas& image)
     {
-        int gridSize = 10;
+        int gridSize = 60;
         int marblesNumber = gridSize * gridSize * gridSize;
         World world;
-        world.lights.push_back(PointLight(Color(1.5, 1.5, 1.5), point(40, 40, -40)));
-
-        //Camera camera(image.width, image.height, MATH_PI / 3);
-        //camera.transform = viewTransform(point(50, 50, -20), point(20, 20, 0), vector(0, 1, 0));
+        world.lights.push_back(PointLight(Color(1.5, 1.5, 1.5), point(gridSize * 4, gridSize * 4, -gridSize * 4)));
 
         Camera camera(image.width, image.height, MATH_PI / 3);
-        camera.transform = viewTransform(point(50, 50, -20), point(20, 20, 0), vector(0, 1, 0));
+        camera.transform = viewTransform(point(gridSize * 5, gridSize * 5, -gridSize * 3), point(gridSize * 2, gridSize * 2, 0), vector(0, 1, 0));
 
+        Group group;
         std::shared_ptr<Sphere[]> marbles(new Sphere[marblesNumber]);
         int index = 0;
 
@@ -1111,16 +1112,18 @@ namespace RayTracer
                     marbles[index].material.specular = 0.9;
                     marbles[index].material.ambient = 0.1;
                     marbles[index].material.reflective = 0.9;
-                    //marbles[index].material.transparency = 0.5;
-                    //marbles[index].material.refractiveIndex = 1.5;
+                    marbles[index].material.transparency = 0.5;
+                    marbles[index].material.refractiveIndex = 1.5;
                     marbles[index].material.shininess = 200;
 
-                    world.objects.push_back(&marbles[index]);
+                    group.addChild(&marbles[index]);
                     index++;
                 }
             }
         }
 
+        group.divide(27);
+        world.objects.push_back(&group);
         image = camera.render(world);
     }
 
@@ -1539,7 +1542,7 @@ namespace RayTracer
         Group group;
         group.addChild(&cube);
         group.addChild(&cube1);
-        group.setTransform(rotationY(DoubleHelpers::MATH_PI / 4));
+        group.setTransform(rotationY(DoubleHelpers::MATH_PI / 4) * scaling(1.0, 1.0, 1.0));
         world.objects.push_back(&group);
 
 

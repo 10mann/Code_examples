@@ -1,10 +1,13 @@
 #pragma once
 
-#include "shape.h"
+#include "tuple.h"
+#include "ray.h"
+
+#include <vector>
 
 namespace RayTracer
 {
-	class BoundingBox : Shape
+	class BoundingBox
 	{
 	public:
 
@@ -12,14 +15,30 @@ namespace RayTracer
 		Tuple min;
 		Tuple max;
 
+		Matrix transform;
+		Matrix invTransform;
+
+		bool altered;
+
 		// Constructors
 		BoundingBox();
+		BoundingBox(Tuple p1, Tuple p2);
 
 		// Methods
-		Tuple getLocalNormal(Tuple point);
-		std::vector<ObjectHit> getIntersectTime(Ray& ray);
+		bool intersects(Ray& ray);
+
+		std::vector<BoundingBox> splitBounds(void);
+
+		void addPoint(Tuple p);
+		void addBox(BoundingBox box);
+		bool containsPoint(Tuple p);
+		bool containsBox(BoundingBox b);
+
+		void setTransform(Matrix m);
+
+		bool isAltered(void);
 
 		// Operators
-
 	};
+
 }
