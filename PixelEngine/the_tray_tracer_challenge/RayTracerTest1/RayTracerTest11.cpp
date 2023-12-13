@@ -17,6 +17,8 @@
 #include "../the_tray_tracer_challenge/world.h"
 #include "../the_tray_tracer_challenge/test_pattern.h"
 
+#include <format>
+
 
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
@@ -329,6 +331,12 @@ namespace RayTracerTest11
 			ComputeValues comp = list.getComputeValues(list[1], ray);
 			double reflectance = getSchlick(comp);
 
+			bool isEqual = isEqualDouble(reflectance, 0.04258);
+			if (!isEqual)
+			{
+				Logger::WriteMessage(std::format("Expected {} got {}", 0.04258, reflectance).c_str());
+			}
+
 			Assert::IsTrue(isEqualDouble(reflectance, 0.04258));
 		}
 
@@ -341,8 +349,12 @@ namespace RayTracerTest11
 			list.add(Intersection(1.8589, &shape));
 			ComputeValues comp = list.getComputeValues(list[0], ray);
 			double reflectance = getSchlick(comp);
-
-			Assert::IsTrue(isEqualDouble(reflectance, 0.4901));
+			bool isEqual = isEqualDouble(reflectance, 0.4901);
+			if (!isEqual)
+			{
+				Logger::WriteMessage(std::format("Expected {} got {}", 0.4901, reflectance).c_str());
+			}
+			Assert::IsTrue(isEqual);
 		}
 
 		TEST_METHOD(TestRefractColorRefractedReflectedRayGlassFloor)

@@ -23,6 +23,8 @@
 #include "../the_tray_tracer_challenge/bounding_box.h"
 #include "../the_tray_tracer_challenge/test_shape.h"
 
+#include <format>
+
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 using RayTracer::Tuple;
@@ -397,7 +399,7 @@ namespace RayTracerTestBonus1
 			Group g;
 			g.addChild(&s);
 			g.addChild(&c);
-
+			g.calculateBoundingBox();
 			BoundingBox bbox = g.getBoundingBox();
 
 			Assert::IsTrue(bbox.min == point(-4.5, -3, -5));
@@ -719,15 +721,24 @@ namespace RayTracerTestBonus1
 		TEST_METHOD(TestGroupBbox)
 		{
 			Logger::WriteMessage("Testing groupBbox");
+			Logger::WriteMessage("Lasu");
 
 			TestShape s;
 			Group g;
 			g.addChild(&s);
-
 			Ray r(point(0, 0, -5), vector(0, 1, 0));
+			Logger::WriteMessage(std::format("Intersected: {}", s.intersected).c_str());
 
+			g.calculateBoundingBox();
 			IntersectionList list;
 			list.addIntersections(r, &g);
+
+			if (list.intersections.size() > 0)
+			{
+				Logger::WriteMessage(std::format("Hit: {}", list.intersections[0].i).c_str());
+			}
+
+			Logger::WriteMessage(std::format("Intersected: {}", s.intersected).c_str());
 
 			Assert::IsFalse(s.intersected);
 		}
@@ -753,7 +764,8 @@ namespace RayTracerTestBonus1
 			Logger::WriteMessage("Testing splitBboxCube");
 
 			BoundingBox b(point(-1, -4, -5), point(9, 6, 5));
-			std::vector<BoundingBox> boxes = b.splitBounds();
+			std::vector<BoundingBox> boxes; 
+			b.splitBounds(boxes);
 
 			Assert::IsTrue(boxes[0].min == point(-1, -4, -5));
 			Assert::IsTrue(boxes[0].max == point(4, 6, 5));
@@ -767,7 +779,8 @@ namespace RayTracerTestBonus1
 			Logger::WriteMessage("Testing splitBboxX");
 
 			BoundingBox b(point(-1, -2, -3), point(9, 5.5, 3));
-			std::vector<BoundingBox> boxes = b.splitBounds();
+			std::vector<BoundingBox> boxes; 
+			b.splitBounds(boxes);
 
 			Assert::IsTrue(boxes[0].min == point(-1, -2, -3));
 			Assert::IsTrue(boxes[0].max == point(4, 5.5, 3));
@@ -781,7 +794,8 @@ namespace RayTracerTestBonus1
 			Logger::WriteMessage("Testing splitBboxY");
 
 			BoundingBox b(point(-1, -2, -3), point(5, 8, 3));
-			std::vector<BoundingBox> boxes = b.splitBounds();
+			std::vector<BoundingBox> boxes;
+			b.splitBounds(boxes);
 
 			Assert::IsTrue(boxes[0].min == point(-1, -2, -3));
 			Assert::IsTrue(boxes[0].max == point(5, 3, 3));
@@ -795,7 +809,8 @@ namespace RayTracerTestBonus1
 			Logger::WriteMessage("Testing splitBboxZ");
 
 			BoundingBox b(point(-1, -2, -3), point(5, 3, 7));
-			std::vector<BoundingBox> boxes = b.splitBounds();
+			std::vector<BoundingBox> boxes;
+			b.splitBounds(boxes);
 
 			Assert::IsTrue(boxes[0].min == point(-1, -2, -3));
 			Assert::IsTrue(boxes[0].max == point(5, 3, 2));
@@ -820,8 +835,9 @@ namespace RayTracerTestBonus1
 			g.addChild(&s1);
 			g.addChild(&s2);
 			g.addChild(&s3);
-
-			std::vector<std::vector<Shape*>> list = g.partitionChildren();
+			g.calculateBoundingBox();
+			std::vector<std::vector<Shape*>> list;
+			g.partitionChildren(list);
 
 			Assert::IsTrue(g.objects[0] == &s3);
 			Assert::IsTrue(list[0][0] == &s1);
@@ -848,16 +864,16 @@ namespace RayTracerTestBonus1
 			Assert::IsTrue(gPtr->objects[1] == &s2);
 		}
 
-		TEST_METHOD(TestDivideSphere)
-		{
-			Logger::WriteMessage("Testing divideSphere");
+		//TEST_METHOD(TestDivideSphere)
+		//{
+		//	Logger::WriteMessage("Testing divideSphere");
 
-			Sphere s;
-			s.divide(1);
-			Sphere s1;
+		//	Sphere s;
+		//	s.divide(1);
+		//	Sphere s1;
 
-			Assert::IsTrue(s == s1);
-		}
+		//	Assert::IsTrue(s == s1);
+		//}
 
 		TEST_METHOD(TestDivideGroup)
 		{

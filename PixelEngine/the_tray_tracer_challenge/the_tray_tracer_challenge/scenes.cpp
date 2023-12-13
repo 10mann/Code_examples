@@ -24,6 +24,8 @@
 #include "group.h"
 
 #include <memory>
+#include <chrono>
+#include <iostream>
 
 using RayTracer::Matrix;
 using RayTracer::Tuple;
@@ -1080,7 +1082,7 @@ namespace RayTracer
 
     void drawSphereGrid(Canvas& image)
     {
-        int gridSize = 60;
+        int gridSize = 100;
         int marblesNumber = gridSize * gridSize * gridSize;
         World world;
         world.lights.push_back(PointLight(Color(1.5, 1.5, 1.5), point(gridSize * 4, gridSize * 4, -gridSize * 4)));
@@ -1122,8 +1124,12 @@ namespace RayTracer
             }
         }
 
-        group.divide(27);
+        auto timeStart = std::chrono::steady_clock::now();
+        group.divide(10);
         world.objects.push_back(&group);
+        auto timeEnd = std::chrono::steady_clock::now();
+        auto drawDuration = std::chrono::duration_cast<std::chrono::milliseconds>(timeEnd - timeStart);
+        std::cout << "Time create BVH: " << drawDuration.count() << std::endl;
         image = camera.render(world);
     }
 

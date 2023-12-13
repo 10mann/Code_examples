@@ -2,11 +2,11 @@
 
 // ================ Render settings ==================
 #define MAX_RENDER_THREADS     80
-#define DEFAULT_RENDER_THREADS 20
+#define DEFAULT_RENDER_THREADS 10
 #define OVERRIDE_THREAD_COUNT  0
 
 // ================ Quality settings =================
-#define MAX_REFLECTIONS    4
+#define MAX_REFLECTIONS    3
 
 // ================ Material settings ================
 #define REFRACT_GLASS      1.52

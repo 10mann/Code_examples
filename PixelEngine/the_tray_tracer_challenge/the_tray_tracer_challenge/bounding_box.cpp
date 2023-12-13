@@ -68,10 +68,10 @@ namespace RayTracer
 		return success;
 	}
 
-	std::vector<BoundingBox> BoundingBox::splitBounds(void)
+	void BoundingBox::splitBounds(std::vector<BoundingBox>& boxes)
 	{
-		std::vector<BoundingBox> boxes;
-		boxes.reserve(2);
+		//std::vector<BoundingBox> boxes;
+		//boxes.reserve(2);
 
 		double sizeX = max.x - min.x;
 		double sizeY = max.y - min.y;
@@ -108,7 +108,7 @@ namespace RayTracer
 
 		}
 
-		return boxes;
+		//return boxes;
 	}
 
 	void BoundingBox::addPoint(Tuple p)
@@ -162,6 +162,11 @@ namespace RayTracer
 	bool BoundingBox::containsBox(BoundingBox b)
 	{
 		return (containsPoint(b.min) && containsPoint(b.max));
+	}
+
+	bool BoundingBox::containsBoxCenter(BoundingBox b)
+	{
+		return (containsPoint(b.min) || containsPoint(b.max));
 	}
 
 	void BoundingBox::setTransform(Matrix m)

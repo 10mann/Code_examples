@@ -35,13 +35,12 @@ namespace RayTracer
 
 		double lowestValid = INT_MAX;
 
-		for (int i = 0; i < intersections.size(); i++)
+		for (const auto& i : intersections)
 		{
-			double t = intersections[i].i;
-			if ((t > 0) && (t < lowestValid))
+			if ((i.i > 0) && (i.i < lowestValid))
 			{
-				lowestValid = t;
-				ret = intersections[i];
+				lowestValid = i.i;
+				ret = i;
 			}
 		}
 
@@ -63,12 +62,12 @@ namespace RayTracer
 
 	void IntersectionList::addIntersections(Ray& ray, Shape* shape)
 	{
-		std::vector<Shape::ObjectHit> intersectTimes = shape->getIntersectTime(ray);
+		std::vector<Shape::ObjectHit> intersectTimes;
+		shape->getIntersectTime(ray, intersectTimes);
 
-		for (auto it : intersectTimes)
+		for (auto& it : intersectTimes)
 		{
-			Intersection intersect(it.i, it.object);
-			add(intersect);
+			intersections.emplace_back(Intersection(it.i, it.object));
 		}
 	}
 
@@ -94,7 +93,8 @@ namespace RayTracer
 		computeValues.overPoint = computeValues.point + computeValues.normal * DoubleHelpers::EPSILON;
 		computeValues.underPoint = computeValues.point - computeValues.normal * DoubleHelpers::EPSILON;
 
-		for (int i = 0; i < this->count(); i++)
+		int objects = intersections.size();
+		for (int i = 0; i < objects; i++)
 		{
 			if (intersect == intersections[i])
 			{
@@ -108,19 +108,14 @@ namespace RayTracer
 				}
 			}
 
-			bool exists = false;
-			for (int j = 0; j < containers.size(); j++)
+			auto it = std::find(containers.begin(), containers.end(), (intersections[i].object));
+			if(containers.end() != it)
 			{
-				if (intersections[i].object == containers[j])
-				{
-					exists = true;
-					containers.erase(containers.begin() + j);
-					break;
-				}
+				containers.erase(it);
 			}
-			if (false == exists)
+			else
 			{
-				containers.push_back(intersections[i].object);
+				containers.emplace_back(intersections[i].object);
 			}
 
 			if (intersect == intersections[i])

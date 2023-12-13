@@ -43,6 +43,24 @@ namespace RayTracer
 		return intersectTimes;
 	}
 
+	void RayTracer::Sphere::getIntersectTime(Ray& ray, std::vector<Shape::ObjectHit>& intersectTimes)
+	{
+		Ray transformedRay = ray.transform(invTransform);
+
+		Tuple sphereVector = transformedRay.origin - (point(0, 0, 0));
+		double a = 2 * transformedRay.direction.dotProduct(transformedRay.direction);
+		double b = 2 * transformedRay.direction.dotProduct(sphereVector);
+		double discriminant = (b * b) - (2 * a * (sphereVector.dotProduct(sphereVector) - 1.0));
+
+		if (discriminant > (-DoubleHelpers::EPSILON))
+		{
+			ObjectHit objHit1((-1 * (b + std::sqrt(discriminant))) / (a), this);
+			ObjectHit objHit2((std::sqrt(discriminant) - b) / (a), this);
+			intersectTimes.push_back(objHit1);
+			intersectTimes.push_back(objHit2);
+		}
+	}
+
 	BoundingBox Sphere::getBoundingBox(void)
 	{
 		BoundingBox mBbox(point(-1, -1, -1), point(1, 1, 1));

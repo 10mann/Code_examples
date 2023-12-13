@@ -154,7 +154,7 @@ public:
 
 		if (OVERRIDE_THREAD_COUNT == 0)
 		{
-			threadCount = std::thread::hardware_concurrency() * 2;
+			threadCount = std::thread::hardware_concurrency() * 4;
 			if (threadCount == 0)
 			{
 				threadCount = DEFAULT_RENDER_THREADS;

@@ -28,6 +28,10 @@ namespace RayTracer
 			intersected = true;
 			return std::vector<ObjectHit>();
 		}
+		void getIntersectTime(Ray& ray, std::vector<Shape::ObjectHit>& intersectTimes) override
+		{
+			intersected = true;
+		}
 
 		Tuple getMinimumBound(void)
 		{

@@ -61,6 +61,7 @@ namespace RayTracer
 
 		virtual Tuple getLocalNormal(Tuple point) = 0;
 		virtual std::vector<ObjectHit> getIntersectTime(Ray& ray) = 0;
+		virtual void getIntersectTime(Ray& ray, std::vector<Shape::ObjectHit>& intersectTimes) = 0;
 
 		Color colorAt(Tuple point)
 		{

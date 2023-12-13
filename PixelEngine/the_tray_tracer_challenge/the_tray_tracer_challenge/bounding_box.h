@@ -27,12 +27,14 @@ namespace RayTracer
 		// Methods
 		bool intersects(Ray& ray);
 
-		std::vector<BoundingBox> splitBounds(void);
+		//std::vector<BoundingBox> splitBounds(void);
+		void splitBounds(std::vector<BoundingBox>& boxes);
 
 		void addPoint(Tuple p);
 		void addBox(BoundingBox box);
 		bool containsPoint(Tuple p);
 		bool containsBox(BoundingBox b);
+		bool containsBoxCenter(BoundingBox b);
 
 		void setTransform(Matrix m);
 
