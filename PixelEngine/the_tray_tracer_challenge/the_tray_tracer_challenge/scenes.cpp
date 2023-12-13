@@ -1129,7 +1129,7 @@ namespace RayTracer
         world.objects.push_back(&group);
         auto timeEnd = std::chrono::steady_clock::now();
         auto drawDuration = std::chrono::duration_cast<std::chrono::milliseconds>(timeEnd - timeStart);
-        std::cout << "Time create BVH: " << drawDuration.count() << std::endl;
+        std::cout << "Time create BVH: " << drawDuration.count() << "ms" << std::endl;
         image = camera.render(world);
     }
 

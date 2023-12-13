@@ -186,7 +186,7 @@ public:
 		//drawGroupScene1(image);
 		auto timeEnd = std::chrono::steady_clock::now();
 		auto drawDuration = std::chrono::duration_cast<std::chrono::milliseconds>(timeEnd - timeStart);
-		std::cout << "Time to draw: " << drawDuration.count() << std::endl;
+		std::cout << "Time to draw: " << drawDuration.count() << "ms" << std::endl;
 		drawCanvasToScreen(image);
 		//saveToFile(image, "MarbleMadness.ppm");
 
