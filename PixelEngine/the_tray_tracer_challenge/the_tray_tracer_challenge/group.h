@@ -22,6 +22,7 @@ namespace RayTracer
 		Tuple getLocalNormal(Tuple point) override;
 		std::vector<ObjectHit> getIntersectTime(Ray& ray) override;
 		void getIntersectTime(Ray& ray, std::vector<Shape::ObjectHit>& intersectTimes) override;
+		void getIntersections(Ray ray, std::vector<Shape::ObjectHit>& intersectTimes) override;
 		BoundingBox getBoundingBox(void) override;
 
 		void addChild(Shape* child);
@@ -29,7 +30,7 @@ namespace RayTracer
 		void calculateBoundingBox(void);
 
 		//std::vector<std::vector<Shape*>> partitionChildren(void);
-		void partitionChildren(std::vector<std::vector<Shape*>>& partitions);
+		void partitionChildren(std::vector<std::vector<Shape*>>&  partitions);
 		void makeSubGroup(const std::vector<Shape*>& children);
 		void divide(int threshold);
 

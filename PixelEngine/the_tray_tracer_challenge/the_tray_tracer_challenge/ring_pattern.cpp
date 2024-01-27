@@ -20,7 +20,7 @@ namespace RayTracer
 	// ============================ Methods ============================
 	Color RingPattern::colorAt(Tuple point)
 	{
-		Tuple localPoint = invTransform * point;
+		Tuple localPoint = point * invTransform;
 		double n = std::sqrt((localPoint.x * localPoint.x) + (localPoint.z * localPoint.z));
 		return (((int)std::floor(n) % 2) == 0 ? a : b);
 	}

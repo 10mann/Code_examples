@@ -62,6 +62,7 @@ namespace RayTracer
 		virtual Tuple getLocalNormal(Tuple point) = 0;
 		virtual std::vector<ObjectHit> getIntersectTime(Ray& ray) = 0;
 		virtual void getIntersectTime(Ray& ray, std::vector<Shape::ObjectHit>& intersectTimes) = 0;
+		virtual void getIntersections(Ray ray, std::vector<Shape::ObjectHit>& intersectTimes) = 0;
 
 		Color colorAt(Tuple point)
 		{
@@ -76,12 +77,12 @@ namespace RayTracer
 				p = parent->worldToObjectSpace(p);
 			}
 
-			return invTransform * p;
+			return p * invTransform;
 		}
 
-		Tuple normalToWorld(Tuple n)
+		Tuple normalToWorld(Tuple normal)
 		{
-			Tuple normal = invTranspose * n;
+			normal *= invTranspose;
 			normal.w = 0;
 			normal = normal.getNormalized();
 

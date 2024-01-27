@@ -24,6 +24,7 @@ namespace RayTracer
 		// Method
 		Tuple getPosition(double time);
 		Ray transform(Matrix const& m);
+		void transformed(Matrix const& m);
 
 	};
 

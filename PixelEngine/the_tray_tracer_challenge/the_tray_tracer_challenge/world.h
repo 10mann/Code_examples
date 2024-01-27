@@ -23,19 +23,20 @@ namespace RayTracer
 		// Methods
 		bool containsObject(const Shape* s);
 		bool containsLight(const PointLight& s);
-		IntersectionList getIntersections(Ray& ray);
+		void getIntersections(Ray& ray, IntersectionList& list);
 		Color getHitColor(ComputeValues computeValues, int bounces);
 		Color getColor(Ray& ray, int bounces);
 		bool isInShadow(Tuple point, PointLight light);
 		void calculateInverseTransforms(void);
-		Color getReflectedColor(ComputeValues comp, int bounces);
-		Color getRefractedColor(ComputeValues comp, int bounces);
+		Color getReflectedColor(ComputeValues& comp, int bounces);
+		Color getRefractedColor(ComputeValues& comp, int bounces);
 
 		// Operators
 		
 	};
 
 	Color getLighting(Shape* s, PointLight light, Tuple position, Tuple eyeDirection, Tuple normal, bool inShadow);
+	Color getLighting(ComputeValues& c, PointLight light, bool inShadow);
 	World createDfaultWorld();
 
 	double getSchlick(ComputeValues comp);

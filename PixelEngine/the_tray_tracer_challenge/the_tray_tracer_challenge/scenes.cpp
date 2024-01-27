@@ -945,6 +945,7 @@ namespace RayTracer
 		s1.material.color = Color(0.25, 0.74, 0.96);
 		s1.material.reflective = 0.7;
 		s1.material.diffuse = 0.6;
+        s1.material.shininess = 1000;
 
 		Sphere s2;
 		s2.transform = translation(-0.5, 2.9, -2) * scaling(0.35, 0.35, 0.35);
@@ -1085,10 +1086,18 @@ namespace RayTracer
         int gridSize = 100;
         int marblesNumber = gridSize * gridSize * gridSize;
         World world;
-        world.lights.push_back(PointLight(Color(1.5, 1.5, 1.5), point(gridSize * 4, gridSize * 4, -gridSize * 4)));
+        //world.lights.push_back(PointLight(Color(1, 1, 1), point(gridSize * 4, gridSize * 4, -gridSize * 4)));
+        world.lights.push_back(PointLight(Color(1, 1, 1), point(gridSize * 2, gridSize * 2, -gridSize)));
+        double padSpace = 3;
+        double halvPadSpace = padSpace / 2.0;
+        double doublePadSpace = padSpace * 2;
+        double zoomOut = 1.1;
 
         Camera camera(image.width, image.height, MATH_PI / 3);
-        camera.transform = viewTransform(point(gridSize * 5, gridSize * 5, -gridSize * 3), point(gridSize * 2, gridSize * 2, 0), vector(0, 1, 0));
+        //camera.transform = viewTransform(point(gridSize * doublePadSpace * zoomOut, gridSize * doublePadSpace * 0.7 * zoomOut, -gridSize * padSpace * zoomOut), point(gridSize * halvPadSpace, gridSize * halvPadSpace, gridSize * halvPadSpace), vector(0, 1, 0));
+        //camera.transform = viewTransform(point(58, 48, -58), point(0, -8, 0), vector(0, 1, 0));
+        //camera.transform = viewTransform(point(36, 30, -36), point(0, -5, 0), vector(0, 1, 0));
+        camera.transform = viewTransform(point(1.6 * gridSize, 1.2 * gridSize, -1.6 * gridSize), point(0, -0.12, 0), vector(0, 1, 0));
 
         Group group;
         std::shared_ptr<Sphere[]> marbles(new Sphere[marblesNumber]);
@@ -1107,30 +1116,91 @@ namespace RayTracer
                             (double)y / (double)gridSize, 
                             (double)z / (double)gridSize);
 
+                    //marbles[index].setTransform(
+                    //    translation(x * padSpace, y * padSpace, z * padSpace));
                     marbles[index].setTransform(
-                        translation(x * 3, y * 3, z * 3));
+                        translation(-gridSize / 2 + x, -gridSize / 2 + y, -gridSize / 2 + z) * scaling(0.33, 0.33, 0.33));
 
                     marbles[index].material.diffuse = 0.9;
                     marbles[index].material.specular = 0.9;
                     marbles[index].material.ambient = 0.1;
-                    marbles[index].material.reflective = 0.9;
-                    marbles[index].material.transparency = 0.5;
+                    marbles[index].material.reflective = 0.2;
+                    marbles[index].material.transparency = 1;
                     marbles[index].material.refractiveIndex = 1.5;
                     marbles[index].material.shininess = 200;
 
                     group.addChild(&marbles[index]);
+                    //world.objects.push_back(&marbles[index]);
                     index++;
                 }
             }
         }
 
         auto timeStart = std::chrono::steady_clock::now();
-        group.divide(10);
+        group.divide(8);
         world.objects.push_back(&group);
         auto timeEnd = std::chrono::steady_clock::now();
         auto drawDuration = std::chrono::duration_cast<std::chrono::milliseconds>(timeEnd - timeStart);
         std::cout << "Time create BVH: " << drawDuration.count() << "ms" << std::endl;
+        timeStart = std::chrono::steady_clock::now();
         image = camera.render(world);
+        timeEnd = std::chrono::steady_clock::now();
+        drawDuration = std::chrono::duration_cast<std::chrono::milliseconds>(timeEnd - timeStart);
+        std::cout << "Time to draw: " << drawDuration.count() << "ms" << std::endl;
+    }
+
+    void drawSphereGridBruteForce(Canvas& image)
+    {
+        int gridSize = 10;
+        int marblesNumber = gridSize * gridSize * gridSize;
+        World world;
+        world.lights.push_back(PointLight(Color(1, 1, 1), point(gridSize * 2, gridSize * 2, -gridSize)));
+        double padSpace = 3;
+        double halvPadSpace = padSpace / 2.0;
+        double doublePadSpace = padSpace * 2;
+        double zoomOut = 1.1;
+
+        Camera camera(image.width, image.height, MATH_PI / 3);
+        camera.transform = viewTransform(point(1.6 * gridSize, 1.2 * gridSize, -1.6 * gridSize), point(0, -0.12, 0), vector(0, 1, 0));
+
+        std::shared_ptr<Sphere[]> marbles(new Sphere[marblesNumber]);
+        int index = 0;
+
+        for (int x = 0; x < gridSize; x++)
+        {
+            for (int y = 0; y < gridSize; y++)
+            {
+                for (int z = 0; z < gridSize; z++)
+                {
+
+                    marbles[index].material.color =
+                        Color(
+                            (double)x / (double)gridSize,
+                            (double)y / (double)gridSize,
+                            (double)z / (double)gridSize);
+
+                    marbles[index].setTransform(
+                        translation(-gridSize / 2 + x, -gridSize / 2 + y, -gridSize / 2 + z) * scaling(0.33, 0.33, 0.33));
+
+                    marbles[index].material.diffuse = 0.9;
+                    marbles[index].material.specular = 0.9;
+                    marbles[index].material.ambient = 0.1;
+                    marbles[index].material.reflective = 0.2;
+                    marbles[index].material.transparency = 1;
+                    marbles[index].material.refractiveIndex = 1.5;
+                    marbles[index].material.shininess = 200;
+
+                    world.objects.push_back(&marbles[index]);
+                    index++;
+                }
+            }
+        }
+
+        auto timeStart = std::chrono::steady_clock::now();
+        image = camera.render(world);
+        auto timeEnd = std::chrono::steady_clock::now();
+        auto drawDuration = std::chrono::duration_cast<std::chrono::milliseconds>(timeEnd - timeStart);
+        std::cout << "Time to draw: " << drawDuration.count() << "ms" << std::endl;
     }
 
     void drawCubeScene1(Canvas& image)

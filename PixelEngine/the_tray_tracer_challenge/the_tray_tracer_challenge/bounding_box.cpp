@@ -21,6 +21,7 @@ namespace RayTracer
 	{
 		bool success = false;
 		Ray transformedRay = ray.transform(invTransform);
+		//ray.transformed(invTransform);
 
 		double xMin, yMin, zMin, xMax, yMax, zMax, temp, tMin, tMax;
 
@@ -68,11 +69,59 @@ namespace RayTracer
 		return success;
 	}
 
+	bool BoundingBox::hits(Ray ray)
+	{
+		bool success = false;
+		ray.transformed(invTransform);
+
+		double xMin, yMin, zMin, xMax, yMax, zMax, temp, tMin, tMax;
+
+		xMin = (min.x - ray.origin.x) / ray.direction.x;
+		xMax = (max.x - ray.origin.x) / ray.direction.x;
+
+		if (xMin > xMax)
+		{
+			temp = xMin;
+			xMin = xMax;
+			xMax = temp;
+		}
+
+		yMin = (min.y - ray.origin.y) / ray.direction.y;
+		yMax = (max.y - ray.origin.y) / ray.direction.y;
+
+		if (yMin > yMax)
+		{
+			temp = yMin;
+			yMin = yMax;
+			yMax = temp;
+		}
+
+		zMin = (min.z - ray.origin.z) / ray.direction.z;
+		zMax = (max.z - ray.origin.z) / ray.direction.z;
+
+		if (zMin > zMax)
+		{
+			temp = zMin;
+			zMin = zMax;
+			zMax = temp;
+		}
+
+		temp = (xMin > yMin) ? xMin : yMin;
+		tMin = (zMin > temp) ? zMin : temp;
+
+
+		temp = (xMax < yMax) ? xMax : yMax;
+		tMax = (zMax < temp) ? zMax : temp;
+		if (tMax > tMin)
+		{
+			success = true;
+		}
+
+		return success;
+	}
+
 	void BoundingBox::splitBounds(std::vector<BoundingBox>& boxes)
 	{
-		//std::vector<BoundingBox> boxes;
-		//boxes.reserve(2);
-
 		double sizeX = max.x - min.x;
 		double sizeY = max.y - min.y;
 		double sizeZ = max.z - min.z;
@@ -107,8 +156,6 @@ namespace RayTracer
 				point(max.x, max.y, max.z)));
 
 		}
-
-		//return boxes;
 	}
 
 	void BoundingBox::addPoint(Tuple p)
@@ -183,14 +230,14 @@ namespace RayTracer
 		min = point(INFINITY, INFINITY, INFINITY);
 		max = point(-INFINITY, -INFINITY, -INFINITY);
 
-		addPoint(m * p1);
-		addPoint(m * p2);
-		addPoint(m * p3);
-		addPoint(m * p4);
-		addPoint(m * p5);
-		addPoint(m * p6);
-		addPoint(m * p7);
-		addPoint(m * p8);
+		addPoint(p1 * m);
+		addPoint(p2 * m);
+		addPoint(p3 * m);
+		addPoint(p4 * m);
+		addPoint(p5 * m);
+		addPoint(p6 * m);
+		addPoint(p7 * m);
+		addPoint(p8 * m);
 	}
 
 	bool BoundingBox::isAltered(void)

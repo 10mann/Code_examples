@@ -1,5 +1,7 @@
 #pragma once
 
+#include "matrix.h"
+
 namespace RayTracer
 {
 	class Tuple
@@ -40,8 +42,12 @@ namespace RayTracer
 		friend Tuple operator* (Tuple const& t1, double n);
 		//friend Tuple operator* (Tuple t1, double n);
 		Tuple operator/(double n);
+		Tuple& operator*(Matrix const& m);
+		Tuple& operator*=(Matrix const& m);
 	};
 
 	Tuple point(double x, double y, double z);
 	Tuple vector(double x, double y, double z);
+
+	Matrix viewTransform(Tuple from, Tuple to, Tuple up);
 }

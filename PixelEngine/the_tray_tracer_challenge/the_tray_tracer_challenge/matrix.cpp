@@ -23,25 +23,29 @@ namespace RayTracer
 	Matrix::Matrix()
 		:rows(4), cols(4)
 	{
-		for (int i = 0; i < rows; i++)
-		{
-			for (int j = 0; j < cols; j++)
-			{
-				m[i][j] = 0;
-			}
-		}
+		//for (int i = 0; i < rows; i++)
+		//{
+		//	for (int j = 0; j < cols; j++)
+		//	{
+		//		m[i][j] = 0;
+		//	}
+		//}
+
+		memset(m, 0,sizeof(m));
 	}
 
 	Matrix::Matrix(int rows, int cols)
 		:rows(rows), cols(cols)
 	{
-		for (int i = 0; i < rows; i++)
-		{
-			for (int j = 0; j < cols; j++)
-			{
-				m[i][j] = 0;
-			}
-		}
+		//for (int i = 0; i < rows; i++)
+		//{
+		//	for (int j = 0; j < cols; j++)
+		//	{
+		//		m[i][j] = 0;
+		//	}
+		//}
+
+		memset(m, 0, sizeof(m));
 	}
 
 	Matrix::Matrix(int r, int c, double p[16])
@@ -49,13 +53,15 @@ namespace RayTracer
 		rows = r;
 		cols = c;
 
-		for (int y = 0; y < rows; y++)
-		{
-			for (int x = 0; x < cols; x++)
-			{
-				m[y][x] = p[x + cols * y];
-			}
-		}
+		//for (int y = 0; y < rows; y++)
+		//{
+		//	for (int x = 0; x < cols; x++)
+		//	{
+		//		m[y][x] = p[x + cols * y];
+		//	}
+		//}
+
+		memcpy(m, p, sizeof(m));
 	}
 
 	Matrix::Matrix(double a, double b, double c, double d)
@@ -329,63 +335,63 @@ namespace RayTracer
 		return prodMatrix;
 	}
 
-	Tuple operator*(Matrix const& m, Tuple const& tuple)
-	{
-		double x =
-			m.m[0][0] * tuple.x +
-			m.m[0][1] * tuple.y +
-			m.m[0][2] * tuple.z +
-			m.m[0][3] * tuple.w;
+	//Tuple operator*(Matrix const& m, Tuple const& tuple)
+	//{
+	//	double x =
+	//		m.m[0][0] * tuple.x +
+	//		m.m[0][1] * tuple.y +
+	//		m.m[0][2] * tuple.z +
+	//		m.m[0][3] * tuple.w;
 
-		double y =
-			m.m[1][0] * tuple.x +
-			m.m[1][1] * tuple.y +
-			m.m[1][2] * tuple.z +
-			m.m[1][3] * tuple.w;
+	//	double y =
+	//		m.m[1][0] * tuple.x +
+	//		m.m[1][1] * tuple.y +
+	//		m.m[1][2] * tuple.z +
+	//		m.m[1][3] * tuple.w;
 
-		double z =
-			m.m[2][0] * tuple.x +
-			m.m[2][1] * tuple.y +
-			m.m[2][2] * tuple.z +
-			m.m[2][3] * tuple.w;
+	//	double z =
+	//		m.m[2][0] * tuple.x +
+	//		m.m[2][1] * tuple.y +
+	//		m.m[2][2] * tuple.z +
+	//		m.m[2][3] * tuple.w;
 
-		double w =
-			m.m[3][0] * tuple.x +
-			m.m[3][1] * tuple.y +
-			m.m[3][2] * tuple.z +
-			m.m[3][3] * tuple.w;
+	//	double w =
+	//		m.m[3][0] * tuple.x +
+	//		m.m[3][1] * tuple.y +
+	//		m.m[3][2] * tuple.z +
+	//		m.m[3][3] * tuple.w;
 
-		return Tuple(x, y, z, w);
-	}
+	//	return Tuple(x, y, z, w);
+	//}
 
-	Tuple operator*(Matrix m, Tuple& tuple)
-	{
-		double x =
-			m.m[0][0] * tuple.x +
-			m.m[0][1] * tuple.y +
-			m.m[0][2] * tuple.z +
-			m.m[0][3] * tuple.w;
+	//Tuple operator*(Matrix m, Tuple& tuple)
+	//{
+	//	double x =
+	//		m.m[0][0] * tuple.x +
+	//		m.m[0][1] * tuple.y +
+	//		m.m[0][2] * tuple.z +
+	//		m.m[0][3] * tuple.w;
 
-		double y =
-			m.m[1][0] * tuple.x +
-			m.m[1][1] * tuple.y +
-			m.m[1][2] * tuple.z +
-			m.m[1][3] * tuple.w;
+	//	double y =
+	//		m.m[1][0] * tuple.x +
+	//		m.m[1][1] * tuple.y +
+	//		m.m[1][2] * tuple.z +
+	//		m.m[1][3] * tuple.w;
 
-		double z =
-			m.m[2][0] * tuple.x +
-			m.m[2][1] * tuple.y +
-			m.m[2][2] * tuple.z +
-			m.m[2][3] * tuple.w;
+	//	double z =
+	//		m.m[2][0] * tuple.x +
+	//		m.m[2][1] * tuple.y +
+	//		m.m[2][2] * tuple.z +
+	//		m.m[2][3] * tuple.w;
 
-		double w =
-			m.m[3][0] * tuple.x +
-			m.m[3][1] * tuple.y +
-			m.m[3][2] * tuple.z +
-			m.m[3][3] * tuple.w;
+	//	double w =
+	//		m.m[3][0] * tuple.x +
+	//		m.m[3][1] * tuple.y +
+	//		m.m[3][2] * tuple.z +
+	//		m.m[3][3] * tuple.w;
 
-		return Tuple(x, y, z, w);
-	}
+	//	return Tuple(x, y, z, w);
+	//}
 
 
 
@@ -451,21 +457,21 @@ namespace RayTracer
 		return shearingMatrix;
 	}
 
-	Matrix viewTransform(Tuple from, Tuple to, Tuple up)
-	{
-		Tuple forward = (to - from).getNormalized();
-		Tuple left = forward.crossProduct(up.getNormalized());
-		Tuple trueUp = forward.crossProduct(left);
-		double values[] =
-		{
-			left.x, left.y, left.z, 0,
-			trueUp.x, trueUp.y, trueUp.z, 0,
-			-forward.x, -forward.y, -forward.z, 0,
-			0, 0, 0, 1
-		};
+	//Matrix viewTransform(Tuple from, Tuple to, Tuple up)
+	//{
+	//	Tuple forward = (to - from).getNormalized();
+	//	Tuple left = forward.crossProduct(up.getNormalized());
+	//	Tuple trueUp = forward.crossProduct(left);
+	//	double values[] =
+	//	{
+	//		left.x, left.y, left.z, 0,
+	//		trueUp.x, trueUp.y, trueUp.z, 0,
+	//		-forward.x, -forward.y, -forward.z, 0,
+	//		0, 0, 0, 1
+	//	};
 
-		Matrix viewMatrix = Matrix(4, 4, values) * translation(-from.x, -from.y, -from.z);
+	//	Matrix viewMatrix = Matrix(4, 4, values) * translation(-from.x, -from.y, -from.z);
 
-		return viewMatrix;
-	}
+	//	return viewMatrix;
+	//}
 }

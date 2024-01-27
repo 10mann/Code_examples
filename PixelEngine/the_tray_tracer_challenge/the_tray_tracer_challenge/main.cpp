@@ -141,15 +141,6 @@ public:
 		sAppName = "TheRayTracerChallenge";
 		canvas = RayTracer::Canvas(ScreenWidth(), ScreenHeight());
 
-		//projectile = Projectile(
-		//	RayTracer::Tuple(9.0, 14.0, 0.0, 0.0),
-		//	RayTracer::Tuple(0.0, 0.0, 0.0, 0.0));
-
-		//environment = Environment(
-		//	RayTracer::Tuple(-0.0, 0.0, 0.0, 0.0),
-		//	RayTracer::Tuple(0.0, -0.4, 0.0, 0.0));
-
-
 		unsigned int threadCount = DEFAULT_RENDER_THREADS;
 
 		if (OVERRIDE_THREAD_COUNT == 0)
@@ -167,6 +158,8 @@ public:
 		std::cout << "Render threads: " << threadCount << std::endl;
 		Camera::setRenderThreads(threadCount);
 
+		//RayTracer::benchmarkTransformRay(100000000LL);
+
 		Canvas image(ScreenWidth(), ScreenHeight());
 		auto timeStart = std::chrono::steady_clock::now();
 		//drawDefaultScene(image);
@@ -174,7 +167,8 @@ public:
 		//drawDefaultScene4(image);
 		//drawMarbleMadness(image);
 		//drawDefaultRefractionScene1(image);
-		drawSphereGrid(image);
+		//drawSphereGrid(image);
+		drawSphereGridBruteForce(image);
 		//drawCubeScene1(image);
 		//drawCubeScene2(image);
 		//drawCubeScene3(image);
@@ -186,46 +180,8 @@ public:
 		//drawGroupScene1(image);
 		auto timeEnd = std::chrono::steady_clock::now();
 		auto drawDuration = std::chrono::duration_cast<std::chrono::milliseconds>(timeEnd - timeStart);
-		std::cout << "Time to draw: " << drawDuration.count() << "ms" << std::endl;
+		std::cout << "Total time: " << drawDuration.count() << "ms" << std::endl;
 		drawCanvasToScreen(image);
-		//saveToFile(image, "MarbleMadness.ppm");
-
-		//Sphere s1;
-		//s1.setTransform(translation(-2, -2, 0));
-
-		//Sphere s2;
-		//s2.setTransform(translation(-2, 2, 0));
-
-		//Sphere s3;
-		//s3.setTransform(scaling(4, 4, 4));
-
-		//std::cout << "S1: " << &s1 << "\n";
-		//std::cout << "S2: " << &s2 << "\n";
-		//std::cout << "S3: " << &s3 << "\n";
-
-		//Group g;
-		//g.addChild(&s1);
-		//g.addChild(&s2);
-		//g.addChild(&s3);
-		//g.divide(1);
-
-		//Group* sg = (Group*)(g.objects[1]);
-		//Group* ssg1 = (Group*)(sg->objects[0]);
-		//Group* ssg2 = (Group*)(sg->objects[1]);
-		//std::cout << "G count: " << g.objects.size() << std::endl;
-		//std::cout << "SubG count: " << sg->objects.size() << std::endl;
-		//std::cout << "G[0]: " << g.objects[0] << "\n";
-		//std::cout << "SG[0]: " << sg->objects[0] << "\n";
-		//std::cout << "SG[1]: " << sg->objects[1] << "\n";
-		//std::cout << "SSG1[0]: " << ssg1->objects[0] << "\n";
-		//std::cout << "SSG2[0]: " << ssg2->objects[0] << "\n";
-		////std::cout << "Left count: " << list[0].size() << std::endl;
-		////std::cout << "Right count: " << list[1].size() << std::endl;
-
-		////Group* g = new Group();
-		////delete g;
-
-		////Group g;
 
 		return true;
 	}

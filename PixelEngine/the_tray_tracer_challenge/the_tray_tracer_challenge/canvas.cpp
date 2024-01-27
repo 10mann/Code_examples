@@ -14,6 +14,8 @@ namespace RayTracer
 	{
 		this->width = width;
 		this->height = height;
+		this->index = 0;
+		this->segment_width = 1;
 
 		this->pixels = std::vector<Color>(width * height, color);
 	}
@@ -109,6 +111,13 @@ namespace RayTracer
 		ppmStr.append("\n");
 
 		return ppmStr;
+	}
+
+	int Canvas::getNextIndex()
+	{
+		int index = this->index;
+		this->index += segment_width;
+		return index;
 	}
 
 	void Canvas::print()

@@ -30,4 +30,5 @@ namespace RayTracer
 	long long benchmarkGetInverse(int iterations);
 	long long benchmarkGetSubMatrix(int iterations);
 	long long benchmarkCompareCubeIntersect(int iterations);
+	void benchmarkTransformRay(int times);
 }

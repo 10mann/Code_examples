@@ -18,6 +18,7 @@ namespace RayTracer
 		Tuple getLocalNormal(Tuple point) override;
 		std::vector<ObjectHit> getIntersectTime(Ray& ray) override;
 		void getIntersectTime(Ray& ray, std::vector<Shape::ObjectHit>& intersectTimes) override;
+		void getIntersections(Ray ray, std::vector<Shape::ObjectHit>& intersectTimes) override;
 		BoundingBox getBoundingBox(void) override;
 
 		// Operators

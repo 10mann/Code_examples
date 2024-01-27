@@ -181,6 +181,77 @@ namespace RayTracer
 		}
 	}
 
+	void Cone::getIntersections(Ray ray, std::vector<Shape::ObjectHit>& intersectTimes)
+	{
+		ray.transformed(invTransform);
+
+		double a = (ray.direction.x * ray.direction.x) -
+			(ray.direction.y * ray.direction.y) +
+			(ray.direction.z * ray.direction.z);
+
+		double b = 2 * ((ray.origin.x * ray.direction.x) -
+			(ray.origin.y * ray.direction.y) +
+			(ray.origin.z * ray.direction.z));
+
+		if ((std::abs(a) > DoubleHelpers::EPSILON) || (std::abs(b) > DoubleHelpers::EPSILON))
+		{
+			double c = (ray.origin.x * ray.origin.x) -
+				(ray.origin.y * ray.origin.y) +
+				(ray.origin.z * ray.origin.z);
+
+			if ((std::abs(a) > DoubleHelpers::EPSILON))
+			{
+				double disc = ((b * b) - (4 * a * c));
+				if (disc > -DoubleHelpers::EPSILON_HALF)
+				{
+					double discSqrt = std::sqrt(disc);
+					double t0 = (-b - discSqrt) / (2 * a);
+					double t1 = (discSqrt - b) / (2 * a);
+
+					if (((ray.origin.y + (t0 * ray.direction.y) < maxY) &&
+						((ray.origin.y + (t0 * ray.direction.y)) > minY)))
+					{
+						ObjectHit objHit(t0, this);
+						intersectTimes.push_back(objHit);
+					}
+
+					if (((ray.origin.y + (t1 * ray.direction.y) < maxY) &&
+						((ray.origin.y + (t1 * ray.direction.y)) > minY)))
+					{
+						ObjectHit objHit(t1, this);
+						intersectTimes.push_back(objHit);
+					}
+				}
+			}
+			else
+			{
+				ObjectHit objHit(-c / (2 * b), this);
+				intersectTimes.push_back(objHit);
+			}
+		}
+
+		if (closed && ((ray.direction.y > DoubleHelpers::EPSILON_HALF) || (ray.direction.y < (-DoubleHelpers::EPSILON_HALF))))
+		{
+			double t = (minY - ray.origin.y) / ray.direction.y;
+			double x = ray.origin.x + (t * ray.direction.x);
+			double z = ray.origin.z + (t * ray.direction.z);
+			if ((x * x + z * z) <= (minY * minY))
+			{
+				ObjectHit objHit(t, this);
+				intersectTimes.push_back(objHit);
+			}
+
+			t = (maxY - ray.origin.y) / ray.direction.y;
+			x = ray.origin.x + (t * ray.direction.x);
+			z = ray.origin.z + (t * ray.direction.z);
+			if ((x * x + z * z) <= (maxY * maxY))
+			{
+				ObjectHit objHit(t, this);
+				intersectTimes.push_back(objHit);
+			}
+		}
+	}
+
 	BoundingBox Cone::getBoundingBox(void)
 	{
 		BoundingBox mBbox;

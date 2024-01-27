@@ -14,6 +14,8 @@ namespace RayTracer
 		// Variables
 		int width;
 		int height;
+		int index;
+		int segment_width;
 
 		std::vector<Color> pixels;
 
@@ -25,6 +27,7 @@ namespace RayTracer
 		void writePixel(int x, int y, Color color);
 		Color getPixel(int x, int y);
 		std::string getPPM();
+		int getNextIndex();
 		
 		void print();
 	};

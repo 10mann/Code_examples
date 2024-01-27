@@ -26,7 +26,13 @@ namespace RayTracer
 
 	Ray Ray::transform(Matrix const& m)
 	{
-		return Ray(m * origin, m * direction);
+		return Ray(origin * m, direction * m);
+	}
+
+	void Ray::transformed(Matrix const& m)
+	{
+		origin *= m;
+		direction *= m;
 	}
 
 	// =========================== Operators ===========================

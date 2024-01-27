@@ -15,6 +15,7 @@ namespace RayTracer
 	void drawDefaultRefractionScene1(Canvas& image);
 
 	void drawSphereGrid(Canvas& image);
+	void drawSphereGridBruteForce(Canvas& image);
 
 	void drawCubeScene1(Canvas& image);
 	void drawCubeScene2(Canvas& image);

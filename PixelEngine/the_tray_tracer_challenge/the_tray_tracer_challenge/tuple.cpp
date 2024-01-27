@@ -127,6 +127,74 @@ namespace RayTracer
 		return Tuple(x / n, y / n, z / n, w / n);
 	}
 
+	Tuple& Tuple::operator*(Matrix const& m)
+	{
+			double x =
+				m.m[0][0] * this->x +
+				m.m[0][1] * this->y +
+				m.m[0][2] * this->z +
+				m.m[0][3] * this->w;
+
+			double y =
+				m.m[1][0] * this->x +
+				m.m[1][1] * this->y +
+				m.m[1][2] * this->z +
+				m.m[1][3] * this->w;
+
+			double z =
+				m.m[2][0] * this->x +
+				m.m[2][1] * this->y +
+				m.m[2][2] * this->z +
+				m.m[2][3] * this->w;
+
+			double w =
+				m.m[3][0] * this->x +
+				m.m[3][1] * this->y +
+				m.m[3][2] * this->z +
+				m.m[3][3] * this->w;
+
+			this->x = x;
+			this->y = y;
+			this->z = z;
+			this->w = w;
+
+			return *this;
+	}
+
+	Tuple& Tuple::operator*=(Matrix const& m)
+	{
+		double x =
+			m.m[0][0] * this->x +
+			m.m[0][1] * this->y +
+			m.m[0][2] * this->z +
+			m.m[0][3] * this->w;
+
+		double y =
+			m.m[1][0] * this->x +
+			m.m[1][1] * this->y +
+			m.m[1][2] * this->z +
+			m.m[1][3] * this->w;
+
+		double z =
+			m.m[2][0] * this->x +
+			m.m[2][1] * this->y +
+			m.m[2][2] * this->z +
+			m.m[2][3] * this->w;
+
+		double w =
+			m.m[3][0] * this->x +
+			m.m[3][1] * this->y +
+			m.m[3][2] * this->z +
+			m.m[3][3] * this->w;
+
+		this->x = x;
+		this->y = y;
+		this->z = z;
+		this->w = w;
+
+		return *this;
+	}
+
 	Tuple point(double x, double y, double z)
 	{
 		return Tuple(x, y, z, 1.0);
@@ -135,5 +203,21 @@ namespace RayTracer
 	Tuple vector(double x, double y, double z)
 	{
 		return Tuple(x, y, z, 0.0);
+	}
+
+	Matrix viewTransform(Tuple from, Tuple to, Tuple up)
+	{
+		Tuple forward = (to - from).getNormalized();
+		Tuple left = forward.crossProduct(up.getNormalized());
+		Tuple trueUp = forward.crossProduct(left);
+		double values[] =
+		{
+			left.x, left.y, left.z, 0,
+			trueUp.x, trueUp.y, trueUp.z, 0,
+			-forward.x, -forward.y, -forward.z, 0,
+			0, 0, 0, 1
+		};
+
+		return Matrix(4, 4, values) * translation(-from.x, -from.y, -from.z);
 	}
 }

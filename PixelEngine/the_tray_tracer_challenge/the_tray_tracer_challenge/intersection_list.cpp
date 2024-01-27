@@ -47,25 +47,16 @@ namespace RayTracer
 		return ret;
 	}
 
-	void IntersectionList::add(Intersection intersect)
-	{
-		intersections.push_back(intersect);
-	}
-
-	void IntersectionList::addList(IntersectionList intersect)
-	{
-		for (auto& in : intersect.intersections)
-		{
-			add(in);
-		}
-	}
-
 	void IntersectionList::addIntersections(Ray& ray, Shape* shape)
 	{
 		std::vector<Shape::ObjectHit> intersectTimes;
-		shape->getIntersectTime(ray, intersectTimes);
+		//shape->getIntersectTime(ray, intersectTimes);
+		shape->getIntersections(ray, intersectTimes);
 
-		for (auto& it : intersectTimes)
+		//intersections.reserve(intersectTimes.size());
+		//intersections.insert(intersections.begin(), intersectTimes.begin(), intersectTimes.end());
+
+		for (const auto& it : intersectTimes)
 		{
 			intersections.emplace_back(Intersection(it.i, it.object));
 		}
@@ -85,7 +76,7 @@ namespace RayTracer
 		computeValues.eyeDir = -ray.direction;
 		computeValues.normal = computeValues.object->getNormal(computeValues.point);
 		computeValues.inside = (computeValues.normal.dotProduct(computeValues.eyeDir) < (DoubleHelpers::EPSILON_HALF));
-		if (true == computeValues.inside)
+		if (computeValues.inside)
 		{
 			computeValues.normal = -computeValues.normal;
 		}

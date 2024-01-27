@@ -39,6 +39,15 @@ namespace RayTracer
 		return Color(red - color.red, green - color.green, blue - color.blue, alpha - color.alpha);
 	}
 
+	Color& Color::operator+=(Color const& color)
+	{
+		red += color.red; 
+		green += color.green;
+		blue += color.blue;
+		alpha += color.alpha;
+		return *this;
+	}
+
 	bool operator==(Color const& c1, Color const& c2)
 	{
 		return ((isEqualDouble(c1.red, c2.red)) &&
@@ -46,9 +55,13 @@ namespace RayTracer
 			(isEqualDouble(c1.blue, c2.blue)));
 	}
 
-	Color Color::operator*(double n)
+	Color& Color::operator*(double n)
 	{
-		return Color(red * n, green * n, blue * n);
+		red *= n;
+		green *= n;
+		blue *= n;
+		return *this;
+		//return Color(red * n, green * n, blue * n);
 	}
 
 	Color operator*(Color const& c1, double n)

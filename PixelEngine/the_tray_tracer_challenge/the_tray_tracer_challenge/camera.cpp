@@ -6,6 +6,7 @@
 #include <thread>
 #include <iostream>
 #include <chrono>
+#include <future>
 
 
 using DoubleHelpers::EPSILON;
@@ -52,11 +53,11 @@ namespace RayTracer
 
 	Ray Camera::getRay(double x, double y)
 	{
-		Tuple pixel = invTransform * point(
+		Tuple pixel = point(
 			(halfViewX - ((x + 0.5) * pixelSize)),
-			(halfViewY - ((y + 0.5) * pixelSize)), -1);
+			(halfViewY - ((y + 0.5) * pixelSize)), -1) * invTransform;
 
-		Tuple origin = invTransform * point(0, 0, 0);
+		Tuple origin = point(0, 0, 0) * invTransform;
 		Tuple direction = (pixel - origin).getNormalized();
 
 		return Ray(origin, direction);
@@ -65,38 +66,26 @@ namespace RayTracer
 	Canvas Camera::render(World& world)
 	{
 		Canvas image(width, height);
+		int threads = renderThreads;
 
-		int subWidth = width / renderThreads;
+		int subWidth = width / threads;
 		int startX = 0;
 		int startY = 0;
 
 		world.calculateInverseTransforms();
 		calculateInverseTransform();
 
-		std::thread threads[MAX_RENDER_THREADS];
-		for (int i = 0; i < (renderThreads - 1); i++)
+
+		for (int i = 0; i < threads - 1; i++)
 		{
-			threads[i] = std::thread(&Camera::renderPartScreen, this,
+			futures.push_back(std::async(std::launch::async, &Camera::renderPartScreen, this,
 				std::ref(world),
-				std::ref(image),
-				startX + subWidth * i, 
-				startY, 
-				subWidth, 
-				height);
+				std::ref(image)));
 		}
 
-		threads[renderThreads - 1] = std::thread(&Camera::renderPartScreen, this,
-			std::ref(world),
-			std::ref(image),
-			startX + subWidth * (renderThreads - 1),
-			startY,
-			width - (startX + subWidth * (renderThreads - 1)),
-			height);
-
-
-		for (int i = 0; i < renderThreads; i++)
+		for (auto& f : futures)
 		{
-			threads[i].join();
+			f.wait();
 		}
 
 		return image;
@@ -108,14 +97,16 @@ namespace RayTracer
 
 	// ============================ Helpers =============================
 
-	void Camera::renderPartScreen(World& world, Canvas& canvas, int startX, int startY, int width, int height)
+	void Camera::renderPartScreen(World& world, Canvas& canvas)
 	{
-		for (int y = startY; y < height; y++)
+		int index = 0;
+		while (index < canvas.width)
 		{
-			for (int x = startX; x < (startX + width); x++)
+			index = canvas.getNextIndex();
+			for (int y = 0; y < canvas.height; y++)
 			{
-				RayTracer::Ray ray = getRay(x, y);
-				canvas.writePixel(x, y, world.getColor(ray, MAX_REFLECTIONS));
+				RayTracer::Ray ray = getRay(index, y);
+				canvas.writePixel(index, y, world.getColor(ray, MAX_REFLECTIONS));
 			}
 		}
 	}
@@ -124,8 +115,4 @@ namespace RayTracer
 	{
 		Camera::renderThreads = nThreads;
 	}
-
-
 }
-
-

@@ -26,6 +26,7 @@ namespace RayTracer
 
 		// Methods
 		bool intersects(Ray& ray);
+		bool hits(Ray ray);
 
 		//std::vector<BoundingBox> splitBounds(void);
 		void splitBounds(std::vector<BoundingBox>& boxes);

@@ -26,12 +26,24 @@ namespace RayTracer
 	std::vector<Shape::ObjectHit> RayTracer::Sphere::getIntersectTime(Ray& ray)
 	{
 		std::vector<ObjectHit> intersectTimes;
-		Ray transformedRay = ray.transform(invTransform);
+		//Ray transformedRay = ray.transform(invTransform);
 
-		Tuple sphereVector = transformedRay.origin - (point(0, 0, 0));
-		double a = 2 * transformedRay.direction.dotProduct(transformedRay.direction);
-		double b = 2 * transformedRay.direction.dotProduct(sphereVector);
-		double discriminant = (b * b) - (2 * a * (sphereVector.dotProduct(sphereVector) - 1.0));
+		//Tuple sphereVector = transformedRay.origin - (point(0, 0, 0));
+		ray.transformed(invTransform);
+		//Tuple sphereVector = transformedRay.origin - (point(0, 0, 0));
+		//double a = 2 * transformedRay.direction.dotProduct(transformedRay.direction);
+		//double a = 2 * transformedRay.direction.dotProduct(transformedRay.direction);
+		//double b = 2 * transformedRay.direction.dotProduct(sphereVector);
+		//double discriminant = (b * b) - (2 * a * (sphereVector.dotProduct(sphereVector) - 1.0));
+
+/*		Tuple sphereVector = ray.origin - (point(0, 0, 0));
+		double a = 2 * ray.direction.dotProduct(ray.direction);
+		double b = 2 * ray.direction.dotProduct(sphereVector);
+		double discriminant = (b * b) - (2 * a * (sphereVector.dotProduct(sphereVector) - 1.0));	*/	
+		
+		double a = 2 * ray.direction.dotProduct(ray.direction);
+		double b = 2 * ray.direction.dotProduct(ray.origin);
+		double discriminant = (b * b) - (2 * a * (ray.origin.dotProduct(ray.origin) - 1.0));
 
 		if (discriminant > (-DoubleHelpers::EPSILON))
 		{
@@ -52,12 +64,38 @@ namespace RayTracer
 		double b = 2 * transformedRay.direction.dotProduct(sphereVector);
 		double discriminant = (b * b) - (2 * a * (sphereVector.dotProduct(sphereVector) - 1.0));
 
+		//ray.transformed(invTransform);
+		//double a = 2 * ray.direction.dotProduct(ray.direction);
+		//double b = 2 * ray.direction.dotProduct(ray.origin);
+		//double discriminant = (b * b) - (2 * a * (ray.origin.dotProduct(ray.origin) - 1.0));
+
+		//Tuple sphereVector = ray.origin - (point(0, 0, 0));
+		//double a = 2 * ray.direction.dotProduct(ray.direction);
+		//double b = 2 * ray.direction.dotProduct(sphereVector);
+		//double discriminant = (b * b) - (2 * a * (sphereVector.dotProduct(sphereVector) - 1.0));
+
 		if (discriminant > (-DoubleHelpers::EPSILON))
 		{
 			ObjectHit objHit1((-1 * (b + std::sqrt(discriminant))) / (a), this);
 			ObjectHit objHit2((std::sqrt(discriminant) - b) / (a), this);
 			intersectTimes.push_back(objHit1);
 			intersectTimes.push_back(objHit2);
+		}
+	}
+
+	void Sphere::getIntersections(Ray ray, std::vector<Shape::ObjectHit>& intersectTimes)
+	{
+		ray.transformed(invTransform);
+		ray.origin.w = 0;
+		double a = 2 * ray.direction.dotProduct(ray.direction);
+		double b = 2 * ray.direction.dotProduct(ray.origin);
+		double discriminant = (b * b) - (2 * a * (ray.origin.dotProduct(ray.origin) - 1.0));
+
+		if (discriminant > 0)
+		{
+			double sqr = std::sqrt(discriminant);
+			intersectTimes.emplace_back(ObjectHit((-1 * (b + sqr)) / (a), this));
+			intersectTimes.emplace_back(ObjectHit((sqr - b) / (a), this));
 		}
 	}
 

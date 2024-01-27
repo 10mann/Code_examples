@@ -139,6 +139,57 @@ namespace RayTracer
 		}
 	}
 
+	void Cube::getIntersections(Ray ray, std::vector<Shape::ObjectHit>& intersectTimes)
+	{
+		ray.transformed(invTransform);
+
+		double xMin, yMin, zMin, xMax, yMax, zMax, temp, tMin, tMax;
+
+		xMin = (-1 - ray.origin.x) / ray.direction.x;
+		xMax = (1 - ray.origin.x) / ray.direction.x;
+
+		if (xMin > xMax)
+		{
+			temp = xMin;
+			xMin = xMax;
+			xMax = temp;
+		}
+
+		yMin = (-1 - ray.origin.y) / ray.direction.y;
+		yMax = (1 - ray.origin.y) / ray.direction.y;
+
+		if (yMin > yMax)
+		{
+			temp = yMin;
+			yMin = yMax;
+			yMax = temp;
+		}
+
+		zMin = (-1 - ray.origin.z) / ray.direction.z;
+		zMax = (1 - ray.origin.z) / ray.direction.z;
+
+		if (zMin > zMax)
+		{
+			temp = zMin;
+			zMin = zMax;
+			zMax = temp;
+		}
+
+		temp = (xMin > yMin) ? xMin : yMin;
+		tMin = (zMin > temp) ? zMin : temp;
+
+
+		temp = (xMax < yMax) ? xMax : yMax;
+		tMax = (zMax < temp) ? zMax : temp;
+		if (tMax > tMin)
+		{
+			ObjectHit objHit1(tMin, this);
+			ObjectHit objHit2(tMax, this);
+			intersectTimes.push_back(objHit1);
+			intersectTimes.push_back(objHit2);
+		}
+	}
+
 	BoundingBox Cube::getBoundingBox(void)
 	{
 		BoundingBox mBbox(point(-1, -1, -1), point(1, 1, 1));

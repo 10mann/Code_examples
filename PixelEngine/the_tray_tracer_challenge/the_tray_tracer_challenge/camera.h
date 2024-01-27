@@ -5,6 +5,8 @@
 #include "canvas.h"
 #include "world.h"
 
+#include <future>
+
 namespace RayTracer
 {
 	class Camera
@@ -22,6 +24,7 @@ namespace RayTracer
 		double halfViewX;
 		double halfViewY;
 		double aspectRatio;
+		std::vector<std::future<void>> futures;
 
 		// Constructors
 		Camera();
@@ -35,7 +38,7 @@ namespace RayTracer
 		// Operators
 
 		// Helpers
-		void renderPartScreen(World& world, Canvas& canvas, int startX, int startY, int width, int height);
+		void renderPartScreen(World& world, Canvas& canvas);
 		static void setRenderThreads(int nThreads);
 	};
 }

@@ -40,6 +40,17 @@ namespace RayTracer
 		}
 	}
 
+	void Plane::getIntersections(Ray ray, std::vector<Shape::ObjectHit>& intersectTimes)
+	{
+		ray.transformed(invTransform);
+
+		if (std::abs(ray.direction.y) > DoubleHelpers::EPSILON)
+		{
+			ObjectHit objHit(-ray.origin.y / ray.direction.y, this);
+			intersectTimes.push_back(objHit);
+		}
+	}
+
 	BoundingBox Plane::getBoundingBox(void)
 	{
 		BoundingBox mBbox = BoundingBox(point(-INFINITY, 0, -INFINITY), point(INFINITY, 0, INFINITY));

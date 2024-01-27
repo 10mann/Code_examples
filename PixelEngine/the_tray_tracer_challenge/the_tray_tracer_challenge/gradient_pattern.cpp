@@ -20,7 +20,7 @@ namespace RayTracer
 	// ============================ Methods ============================
 	Color GradientPattern::colorAt(Tuple point)
 	{
-		Tuple localPoint = invTransform * point;
+		Tuple localPoint = point * invTransform;
 		double frac = localPoint.x - std::floor(localPoint.x);
 		Color dist = b - a;
 		return a + dist * frac;

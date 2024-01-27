@@ -22,7 +22,7 @@ namespace RayTracer
 	// ============================ Methods ============================
 	Color StripePattern::colorAt(Tuple point)
 	{
-		return ((int)(std::floor((invTransform * point).x)) % 2) ? b : a;
+		return ((int)(std::floor((point * invTransform).x)) % 2) ? b : a;
 	}
 
 	void StripePattern::setTransform(Matrix m)

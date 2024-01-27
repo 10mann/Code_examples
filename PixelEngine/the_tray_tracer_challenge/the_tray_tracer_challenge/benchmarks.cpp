@@ -313,4 +313,33 @@ namespace RayTracer
 		//return duration.count();
 		return 0;
 	}
+
+	void benchmarkTransformRay(int times)
+	{
+		Ray ray;
+		Matrix m;
+		auto timeStart = std::chrono::high_resolution_clock::now();
+		Ray r;
+		for (int i = 0; i < times; i++)
+		{
+			r = ray.transform(m);
+			r.direction.x += 1;
+		}
+		std::cout << "R: " << r.direction.x << std::endl;
+		auto timeEnd = std::chrono::high_resolution_clock::now();
+		auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(timeEnd - timeStart);
+		std::cout << "Time transform: " << duration << "\n";
+
+		timeStart = std::chrono::high_resolution_clock::now();
+		for (int i = 0; i < times; i++)
+		{
+			ray.transformed(m);
+			ray.direction.x += 1;
+		}
+		std::cout << "R: " << ray.direction.x << std::endl;
+		timeEnd = std::chrono::high_resolution_clock::now();
+		duration = std::chrono::duration_cast<std::chrono::milliseconds>(timeEnd - timeStart);
+		std::cout << "Time transformed: " << duration << "\n";
+
+	}
 }

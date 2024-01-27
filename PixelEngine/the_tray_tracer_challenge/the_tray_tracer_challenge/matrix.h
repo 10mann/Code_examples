@@ -1,6 +1,6 @@
 #pragma once
 
-#include "tuple.h"
+//#include "tuple.h"
 
 namespace RayTracer
 {
@@ -39,7 +39,7 @@ namespace RayTracer
 		friend bool operator== (Matrix const m1, Matrix const m2);
 		friend Matrix operator* (Matrix m1, Matrix m2);
 		//Tuple operator*(Tuple const& tuple);
-		friend Tuple operator* (Matrix const& m, Tuple const& tuple);
+		//friend Tuple operator* (Matrix const& m, Tuple const& tuple);
 	};
 
 	Matrix translation(double x, double y, double z);
@@ -48,5 +48,5 @@ namespace RayTracer
 	Matrix rotationY(double rotation);
 	Matrix rotationZ(double rotation);
 	Matrix shearing(double xY, double xZ, double yX, double yZ, double zX, double zY);
-	Matrix viewTransform(Tuple from, Tuple to, Tuple up);
+	//Matrix viewTransform(Tuple from, Tuple to, Tuple up);
 }
